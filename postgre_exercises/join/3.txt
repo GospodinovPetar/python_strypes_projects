@@ -1,0 +1,13 @@
+Question
+How can you output a list of all members who have recommended another member? Ensure that there are no duplicates in the list, and that results are ordered by (surname, firstname).
+
+select distinct
+  m1.firstname,
+  m1.surname
+from
+  cd.members AS m1
+join
+  cd.members AS m2
+  on m1.memid = m2.recommendedby
+order by
+  m1.surname, m1.firstname;

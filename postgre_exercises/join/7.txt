@@ -1,0 +1,8 @@
+Question
+How can you output a list of all members, including the individual who recommended them (if any), without using any joins? Ensure that there are no duplicates in the list, and that each firstname + surname pairing is formatted as a column and ordered.
+
+select distinct
+firstname || ' ' || surname as member,
+(select  firstname || ' ' || surname as recommender from cd.members as m2 where m2.memid = m.recommendedby) as recommendedby
+from cd.members as m
+order by member
