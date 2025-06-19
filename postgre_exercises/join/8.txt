@@ -1,0 +1,22 @@
+SELECT
+  member,
+  facility,
+  cost
+FROM (
+  SELECT
+    CASE
+      WHEN m.memid = 0 THEN 'GUEST GUEST'
+      ELSE m.firstname || ' ' || m.surname
+    END AS member,
+    f.name AS facility,
+    CASE
+      WHEN m.memid = 0 THEN f.guestcost * b.slots
+      ELSE f.membercost * b.slots
+    END AS cost
+  FROM cd.bookings AS b
+  JOIN cd.members AS m ON b.memid = m.memid
+  JOIN cd.facilities AS f ON b.facid = f.facid
+  WHERE b.starttime >= '2012-09-14' AND b.starttime < '2012-09-15'
+) AS booking_costs
+WHERE cost > 30
+ORDER BY cost DESC;
