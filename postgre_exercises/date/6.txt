@@ -1,0 +1,14 @@
+Work out the number of days in each month of 2012
+
+Question
+For each month of the year in 2012, output the number of days in that month. Format the output as an integer column containing the month of the year, and a second column containing an interval data type.
+
+SELECT 
+  EXTRACT(MONTH FROM gs.day) AS month, 
+  COUNT(*)||' days' AS length
+FROM 
+  generate_series('2012-01-01'::date, '2012-12-31'::date, '1 day'::interval) AS gs(day)
+GROUP BY 
+  month
+ORDER BY 
+  month;
