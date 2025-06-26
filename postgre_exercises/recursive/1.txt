@@ -1,0 +1,31 @@
+Question
+Find the upward recommendation chain for member ID 27: that is, the member who recommended them, and the member who recommended that member, and so on. Return member ID, first name, and surname. Order by descending member id.
+
+WITH RECURSIVE edisikvo AS (
+    -- База/старт от 27
+    SELECT
+        memid AS recommender,
+        firstname,
+        surname,
+        recommendedby
+    FROM cd.members
+    WHERE memid = 27
+
+    UNION ALL
+
+    -- Рекурсия:
+    SELECT
+        m.memid AS recommender,
+        m.firstname,
+        m.surname,
+        m.recommendedby
+    FROM cd.members m
+    JOIN edisikvo e ON m.memid = e.recommendedby
+)
+SELECT
+    recommender,
+    firstname,
+    surname
+FROM edisikvo
+WHERE recommender != 27  -- махаме стартиращия номер
+ORDER BY recommender DESC;

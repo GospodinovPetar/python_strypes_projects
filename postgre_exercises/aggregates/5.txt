@@ -1,0 +1,34 @@
+Classify facilities by value
+Question
+Classify facilities into equally sized groups of high, average, and low based on their revenue. Order by classification and facility name.
+
+##STILL NEEDS MORE WORK
+
+WITH revenue_by_facility AS (
+  SELECT
+    f.name,
+    COALESCE(SUM(
+      CASE
+        WHEN b.memid = 0 THEN b.slots * f.guestcost
+        ELSE b.slots * f.membercost
+      END
+    ), 0) AS revenue
+  FROM cd.facilities f
+  LEFT JOIN cd.bookings b ON f.facid = b.facid
+  GROUP BY f.name
+),
+classified AS (
+  SELECT
+    name,
+    NTILE(3) OVER (ORDER BY revenue DESC) AS class
+  FROM revenue_by_facility
+)
+SELECT
+  name,
+  CASE
+    WHEN class = 1 THEN 'high'
+    WHEN class = 2 THEN 'average'
+    ELSE 'low'
+  END AS revenue
+FROM classified
+ORDER BY revenue, name;

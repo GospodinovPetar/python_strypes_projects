@@ -1,0 +1,37 @@
+Calculate a rolling average of total revenue 
+Question
+For each day in August 2012, calculate a rolling average of total revenue over the previous 15 days. Output should contain date and revenue columns, sorted by the date. Remember to account for the possibility of a day having zero revenue. This one's a bit tough, so don't be afraid to check out the hint!
+
+WITH all_days AS (
+  SELECT generate_series(
+    DATE '2012-07-18',
+    DATE '2012-08-31',
+    INTERVAL '1 day'
+  )::date AS date
+),
+daily_revenue AS (
+  SELECT d.date,
+         COALESCE(SUM(
+           CASE
+             WHEN b.memid = 0 THEN b.slots * f.guestcost
+             ELSE b.slots * f.membercost
+           END
+         ), 0) AS revenue
+  FROM all_days d
+  LEFT JOIN cd.bookings b ON DATE(b.starttime) = d.date
+  LEFT JOIN cd.facilities f ON b.facid = f.facid
+  GROUP BY d.date
+),
+rolling_avg AS (
+  SELECT
+    date,
+    AVG(revenue) OVER (
+      ORDER BY date
+      ROWS BETWEEN 14 PRECEDING AND CURRENT ROW
+    ) AS revenue
+  FROM daily_revenue
+)
+SELECT *
+FROM rolling_avg
+WHERE date BETWEEN DATE '2012-08-01' AND DATE '2012-08-31'
+ORDER BY date;

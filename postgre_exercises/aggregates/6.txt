@@ -1,0 +1,17 @@
+Calculate the payback time for each facility 
+Question
+Based on the 3 complete months of data so far, calculate the amount of time each facility will take to repay its cost of ownership. Remember to take into account ongoing monthly maintenance. Output facility name and payback time in months, order by facility name. Don't worry about differences in month lengths, we're only looking for a rough value here!
+
+SELECT
+  f.name,
+  f.initialoutlay / NULLIF(
+    (SUM(
+      CASE
+        WHEN b.memid = 0 THEN b.slots * f.guestcost
+        ELSE b.slots * f.membercost
+      END) / 3.0) - f.monthlymaintenance, 0
+  ) AS months
+FROM cd.facilities f
+LEFT JOIN cd.bookings b ON f.facid = b.facid
+GROUP BY f.facid, f.name, f.initialoutlay, f.monthlymaintenance
+ORDER BY f.name;
