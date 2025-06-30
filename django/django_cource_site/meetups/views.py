@@ -10,3 +10,14 @@ def meetups(request):
         'meetups': meetups,
         'show_meetups': True
     })
+
+def meetup_details(request, meetup_slug):
+    selected_meetup = {
+        'title': 'The first meetup',
+        'description': 'This is the first meetup'
+    }
+    return render(request, 'meetups/meetup-details.html', {
+        'meetup_title': selected_meetup['title'],
+        'meetup_description': selected_meetup['description']
+    }
+)
