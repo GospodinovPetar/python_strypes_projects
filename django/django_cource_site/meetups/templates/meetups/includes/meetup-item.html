@@ -1,0 +1,18 @@
+{% load static %}
+
+<li class="meetup-item">
+    <article>
+        <div class="meetup-summary">
+            <div class="meetup-image">
+                <img src="{% static 'meetups/images/placeholder.jpg' %}" alt="{{ title }}">
+            </div>
+            <div class="meetup-details">
+                <h3>{{ title }}</h3>
+                <address>{{ location }}</address>
+            </div>
+        </div>
+        <div class="meetup-actions">
+            <a href="{% url 'meetup-details' meetup_item.slug %}" class="btn">More details</a>
+        </div>
+    </article>
+</li>
