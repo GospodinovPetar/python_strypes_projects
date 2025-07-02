@@ -4,6 +4,7 @@
 {% block site_css %}<link rel="stylesheet" href="{% static 'meetups/styles/meetup-detail.css' %}">{%endblock %}
 {%block main_heading %} {{meetup_title}} {%endblock%}
 {%block body%}
+{% if meetup_found %}
     <article>
         <img src="" alt="">
 
@@ -28,4 +29,10 @@
         </section>
 
     </article>
+{% else %}
+<div style="text-align:center">
+<h2>No Meetup found!</h2>
+<h3>This link has expired and is no longer in use. <br> Go back to the homepage from <a href="{% url 'meetups' %}">here</a>.</h3>
+</div>
+{%endif%}
 {%endblock%}
