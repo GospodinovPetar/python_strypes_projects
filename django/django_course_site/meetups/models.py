@@ -16,6 +16,8 @@ class Location(models.Model):
         return f'{self.name} - {self.address}'
 class Meetup(models.Model):
     name = models.CharField(max_length=100)
+    organizer_email = models.EmailField()
+    date = models.DateField()
     slug = models.SlugField(unique=True)
     description = models.TextField()
     image = models.ImageField(upload_to='images/', null=True, blank=True)
