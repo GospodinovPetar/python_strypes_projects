@@ -52,24 +52,4 @@ def confirm_registration(request, meetup_slug):
         },
     )
 
-
-def request_meetup(request):
-    if request.method == "POST":
-        form = RequestMeetupForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data["name"]
-            email = form.cleaned_data["email"]
-            topic = form.cleaned_data["topic"]
-
-            # Compose email
-            subject = f"New Meetup Request from {name}"
-            message = f"Name: {name}\nEmail: {email}\n\nSuggested Topic:\n{topic}"
-            recipient_list = ["your_email@example.com"]  # Where you want to receive it
-
-            send_mail(subject, message, email, recipient_list)
-
-            return render(request, "meetups/registration_success.html")
-    else:
-        form = RequestMeetupForm()
-
     return render(request, "meetups/request_meetup.html", {"form": form})
