@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+
+{% block main_heading %}
+  <h1 style="text-align: center;">Request a Meetup</h1>
+{% endblock %}
+
+{% block header_content %}
+  <p style="text-align: center;">Submit your idea or message for a new meetup.</p>
+{% endblock %}
+
+{% block body %}
+  <div style="display: flex; justify-content: center; align-items: center; min-height: 10vh;">
+    <div style="width: 100%; max-width: 500px;">
+      <div id="thank-you" style="display: none; background-color: #d4edda; padding: 12px; margin-bottom: 15px; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+        ✅ Thank you! Your message has been sent.
+        <br><br>
+        <button onclick="window.location.href='/'" style="padding: 8px 16px; margin-top: 10px;">
+          ⬅ Back to Home
+        </button>
+      </div>
+
+      <!-- Formspree form -->
+      <form
+        id="formspree-form"
+        action="https://formspree.io/f/mqabvlqr"
+        method="POST"
+        target="hidden_iframe"
+        onsubmit="handleFormSubmit();"
+        style="text-align: left;"
+      >
+        <label>
+          Your email:<br>
+          <input type="email" name="email" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        </label>
+        <br>
+        <label>
+          Your message:<br>
+          <textarea name="message" required style="width: 100%; padding: 8px; height: 120px; margin-bottom: 10px;"></textarea>
+        </label>
+        <br>
+        <button type="submit" style="padding: 10px 20px;">Send</button>
+      </form>
+
+      <iframe name="hidden_iframe" style="display: none;" onload="showSuccessMessage()"></iframe>
+    </div>
+  </div>
+
+  <script>
+    let formSubmitted = false;
+
+    function handleFormSubmit() {
+      formSubmitted = true;
+    }
+
+    function showSuccessMessage() {
+      if (formSubmitted) {
+        document.getElementById('formspree-form').style.display = 'none';
+        document.getElementById('thank-you').style.display = 'block';
+        formSubmitted = false;
+      }
+    }
+  </script>
+{% endblock %}

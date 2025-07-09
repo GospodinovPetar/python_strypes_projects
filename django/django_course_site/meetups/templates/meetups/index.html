@@ -16,6 +16,10 @@
 {% endblock %}
 
 {% block body %}
+<form action="{% url 'request_meetup' %}" method="get" style="text-align: center; margin: 1rem 0;">
+  <button type="submit" id="btn">Request a meetup</button>
+</form>
+
 <section>
     <h2>Upcoming Meetups</h2>
     <ol>

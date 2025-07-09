@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block title %} You registered successfully! {% endblock %}
+
+{% block site_css %}
+
+{% endblock %}
+
+{% block main_heading %}
+Thanks for signing up!
+{% endblock %}
+
+{%block body%}
+<section id="confirmation" style="text-align:center">
+    <h2>You registered successfully!</h2>
+    <p>Thanks for signing up! See you at the meetup!</p>
+    <p>Got questions? <a href="mailto: {{ meetup.organizer_email}}">Contact the host!</a></p>
+</section>
+{% endblock %}
