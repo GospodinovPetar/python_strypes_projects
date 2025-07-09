@@ -3,6 +3,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from .models import Meetup
 
+
 @receiver(post_delete, sender=Meetup)
 def delete_meetup_image(sender, instance, **kwargs):
     """

@@ -7,61 +7,69 @@ from meetups.models import Meetup, Participant
 
 # Create your views here.
 
+
 def meetups(request):
     meetups = Meetup.objects.all()
-    return render(request, 'meetups/index.html', {
-        'meetups': meetups
-    })
+    return render(request, "meetups/index.html", {"meetups": meetups})
+
 
 def meetup_details(request, meetup_slug):
     try:
         selected_meetup = Meetup.objects.get(slug=meetup_slug)
-        if request.method == 'GET':
+        if request.method == "GET":
             registration_form = RegistrationForm()
         else:
             registration_form = RegistrationForm(request.POST)
             if registration_form.is_valid():
-                user_email = registration_form.cleaned_data['email']
-                participant, _was_created = Participant.objects.get_or_create(email=user_email)
+                user_email = registration_form.cleaned_data["email"]
+                participant, _was_created = Participant.objects.get_or_create(
+                    email=user_email
+                )
                 selected_meetup.participant.add(participant)
-                return redirect('confirm_registration', meetup_slug=meetup_slug)
+                return redirect("confirm_registration", meetup_slug=meetup_slug)
 
-        return render(request, 'meetups/meetup-details.html', {
-            'meetup_found': True,
-            'meetup': selected_meetup,
-            'form': registration_form
-        })
+        return render(
+            request,
+            "meetups/meetup-details.html",
+            {
+                "meetup_found": True,
+                "meetup": selected_meetup,
+                "form": registration_form,
+            },
+        )
 
     except Exception as exc:
-        return render(request, 'meetups/meetup-details.html', {
-            'meetup_found' : False
-        })
+        return render(request, "meetups/meetup-details.html", {"meetup_found": False})
+
 
 def confirm_registration(request, meetup_slug):
     meetup = Meetup.objects.get(slug=meetup_slug)
-    return render(request, 'meetups/registration_success.html',{
-        'organizer_email': meetup.organizer_email,
-    })
+    return render(
+        request,
+        "meetups/registration_success.html",
+        {
+            "organizer_email": meetup.organizer_email,
+        },
+    )
+
 
 def request_meetup(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RequestMeetupForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            topic = form.cleaned_data['topic']
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            topic = form.cleaned_data["topic"]
 
             # Compose email
             subject = f"New Meetup Request from {name}"
             message = f"Name: {name}\nEmail: {email}\n\nSuggested Topic:\n{topic}"
-            recipient_list = ['your_email@example.com']  # Where you want to receive it
+            recipient_list = ["your_email@example.com"]  # Where you want to receive it
 
             send_mail(subject, message, email, recipient_list)
 
-            return render(request, 'meetups/registration_success.html')
+            return render(request, "meetups/registration_success.html")
     else:
         form = RequestMeetupForm()
 
-    return render(request, 'meetups/request_meetup.html', {
-        'form': form
-    })
+    return render(request, "meetups/request_meetup.html", {"form": form})
