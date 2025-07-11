@@ -11,6 +11,5 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Allow all hosts (update as needed in production)
       DJANGO_ALLOWED_HOSTS: "*"
     restart: unless-stopped
