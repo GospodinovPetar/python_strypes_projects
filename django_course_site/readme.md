@@ -1,67 +1,60 @@
+# README.md
+
 # DjangoMeetups 🎉
 
-Welcome to **DjangoMeetups**! 🚀 This is a simple yet powerful Django project designed to help users find, sign up for, and even request their own meetups. It’s built with Django, using an SQLite database, and adds a little extra flair with an email notification system for meetup requests. 
+Welcome to **DjangoMeetups**! 🚀 This is a simple yet powerful Django project designed to help users find, sign up for, and request their own meetups. It’s built with Django and uses an SQLite database for storage.
 
 ### Features:
 - **Meetups Management**: Admins can create and manage meetups.
-- **Signup**: People can sign up for a meetup by providing their email address.
-- **Request a Meetup**: Users can request a new meetup by filling out a form. Once submitted, you’ll get an email with the details! (Implemented by yours truly 😉)
-  
+- **Signup**: Users can sign up for a meetup by providing their email address.
+- **Request a Meetup**: Users can request a new meetup via a form; organizers receive an email notification.
+
 ## 🚀 Getting Started
 
-### Prerequisites
+All setup and run commands use Docker. Ensure you have Docker and Docker Compose installed.
 
-You’ll need a few things before you start:
-
-- Python 3.x
-- Django 3.x (or higher)
-- SQLite (default database used in this project)
-
-### Install & Set Up
-
-1. **Clone or download the project**:
+1. **Clone the repository**
    ```bash
    git clone https://github.com/GospodinovPetar/python_strypes_projects.git
-   ```
-
-2. **Go to the project directory**:
-   ```bash
    cd django_course_site
    ```
 
-3. **Install dependencies**:
-   This project has a `requirements.txt` file to install all the packages you need:
+2. **Build and start the containers**
    ```bash
-   pip install -r requirements.txt
+   docker-compose up --build -d
+   ```
+   This command will:
+   - Build the Docker image
+   - Run database migrations
+   - Start the web service on port 8000
+
+3. **Access the application**
+   Open your browser and go to:
+   ```
+   http://127.0.0.1:8000/
    ```
 
-4. **Set up the database**:
-   Now, let's set up the database (it’s an SQLite database by default):
+4. **Stopping the application**
    ```bash
-   python manage.py migrate
+   docker-compose down
    ```
 
-### 🎉 Running the Server
+---
 
-Now you're ready to run the app!
+## Docker Configuration
 
-Start the Django development server:
-```bash
-python manage.py runserver
-```
+The project includes two files for containerization:
 
-Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to see the app in action.
+- **Dockerfile**: Builds the Python environment and installs dependencies.
+- **docker-compose.yml**: Defines the `web` service, volume mounts, port mappings, and run commands.
 
 ## 📧 Request a Meetup
 
-One cool feature I added is the ability for users to **request a meetup**! 🎉  
-Using Formspree, users can send a request with the meetup’s details, and you’ll get an email with all the information. Here’s how it works:
+1. Navigate to **Request a Meetup** in the app.
+2. Fill out the meetup details form.
+3. Submit and check the organizer’s email for the notification.
 
-1. Navigate to the "Request a Meetup" page on the website.
-2. Fill out the form with your meetup details.
-3. Hit submit, and boom! The meetup request is sent to your inbox via email. 📬
-
-This ensures everything is set up and working as expected!
+---
 
 ## 📝 License
 
@@ -69,5 +62,4 @@ This project is licensed under the MIT License. Feel free to use, modify, and sh
 
 ---
 
-Enjoy building with **djangoMeetups**! If you have any questions or run into any issues, don’t hesitate to reach out. Happy coding! 🙌💻✨
-```
+Happy coding with **DjangoMeetups**! 🎉

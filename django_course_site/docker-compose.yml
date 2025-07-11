@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    container_name: django-meetups-web
+    command: [
+      "sh", "-c",
+      "python manage.py migrate && gunicorn django_course_site.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    ]
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      # Allow all hosts (update as needed in production)
+      DJANGO_ALLOWED_HOSTS: "*"
+    restart: unless-stopped
