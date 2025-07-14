@@ -2,6 +2,7 @@
 Views module for handling meetup listings, details, registrations,
 and meetup requests.
 """
+
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 
@@ -10,6 +11,7 @@ from meetups.models import Meetup, Participant
 
 
 # Create your views here.
+
 
 def meetups(request):
     """
