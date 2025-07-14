@@ -55,7 +55,6 @@ The project includes two files for containerization:
 3. Submit and check the organizer’s email for the notification.
 
 ![Screenshot of the Application](media/screenshots/request_page.png "Screenshot")
-![Screenshot of the Application](media/screenshots/email.png "Screenshot")
 ---
 
 ## 📝 License
