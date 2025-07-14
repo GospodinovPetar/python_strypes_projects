@@ -3,7 +3,7 @@
 # DjangoMeetups 🎉
 
 Welcome to **DjangoMeetups**! 🚀 This is a simple yet powerful Django project designed to help users find, sign up for, and request their own meetups. It’s built with Django and uses an SQLite database for storage.
-
+![Screenshot of the Application](media/screenshots/main_page.png "Screenshot")
 ### Features:
 - **Meetups Management**: Admins can create and manage meetups.
 - **Signup**: Users can sign up for a meetup by providing their email address.
@@ -54,6 +54,8 @@ The project includes two files for containerization:
 2. Fill out the meetup details form.
 3. Submit and check the organizer’s email for the notification.
 
+![Screenshot of the Application](media/screenshots/request_page.png "Screenshot")
+![Screenshot of the Application](media/screenshots/email.png "Screenshot")
 ---
 
 ## 📝 License
