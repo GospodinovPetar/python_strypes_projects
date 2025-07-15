@@ -3,9 +3,9 @@ from sqlalchemy import Integer, String, Boolean, Column, ForeignKey
 
 
 class Users(Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index = True)
+    id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     username = Column(String, unique=True)
     first_name = Column(String)
@@ -23,4 +23,4 @@ class Todos(Base):
     description = Column(String(1000), nullable=False)
     priority = Column(Integer, nullable=False)
     complete = Column(Boolean, nullable=False)
-    owner_id = Column(Integer, ForeignKey('users.id'))
+    owner_id = Column(Integer, ForeignKey("users.id"))

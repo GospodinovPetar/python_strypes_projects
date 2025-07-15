@@ -10,6 +10,7 @@ from routers import auth
 
 router = APIRouter()
 
+
 def get_db():
     db = SessionLocal()
     try:
