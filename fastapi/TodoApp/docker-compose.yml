@@ -1,0 +1,58 @@
+version: "3.8"
+
+# Important: Use `docker compose down` (no `-v`) to preserve Postgres data.
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: TodoApplicationDatabase
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      pg-network:
+        aliases:
+          - my-postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "127.0.0.1:8080:80"
+    networks:
+      - pg-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: todo-app-image
+    container_name: todo-app
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      SQLALCHEMY_DATABASE_URL: "postgresql://postgres:mysecretpassword@my-postgres:5432/TodoApplicationDatabase"
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - pg-network
+    command: [
+      "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"
+    ]
+
+networks:
+  pg-network:
+
+volumes:
+  db-data: {}
