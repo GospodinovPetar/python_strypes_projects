@@ -14,7 +14,6 @@ class Users(Base):
     is_active = Column(Boolean, default=True)
     role = Column(String)
 
-
 class Todos(Base):
     __tablename__ = "todosapp"
 
