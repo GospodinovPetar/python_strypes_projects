@@ -6,8 +6,7 @@ from typing import List
 from db import get_db
 from models import Article as ArticleModel
 from schemas import ArticleSchema
-from scraper import scrape_trafficnews
-
+from scraper import scrape_trafficnews, fetch_latest_news
 
 app = FastAPI()
 db_dependency: Session = Depends(get_db)
@@ -21,6 +20,41 @@ class ScrapeRequest(BaseModel):
         json_schema_extra={"example": {"url": "https://trafficnews.bg/...."}},
     )
 
+
+@app.get("/items", response_model=List[ArticleSchema])
+def read_all_news(db: Session = db_dependency):
+    return db.query(ArticleModel).all()
+
+@app.get("/items/{item_id}", response_model=ArticleSchema)
+def read_item(item_id: int, db: Session = db_dependency):
+    return db.query(ArticleModel).get(item_id)
+
+@app.get("/latest_news_from_db/", response_model=ArticleSchema)
+def latest_news_from_db(db: Session = db_dependency):
+    article = db.query(ArticleModel).order_by(ArticleModel.id.desc()).first()
+
+    if not article:
+        raise HTTPException(404, detail="Няма новини")
+    return article
+
+@app.post("/scrape/latest", response_model=ArticleSchema)
+def scrape_latest(db: Session = Depends(get_db)) -> ArticleModel:
+    """
+    1) Взимаме данните на най-новата статия
+    2) Вмъкваме или ъпдейтваме (merge) в БД
+    3) Връщаме записания Article
+    """
+    news = fetch_latest_news()
+
+    existing = db.query(ArticleModel).filter_by(url=news['url']).first()
+    if existing:
+        return existing
+
+    article = ArticleModel(**news)
+    db.add(article)
+    db.commit()
+    db.refresh(article)
+    return article
 
 @app.post("/scrape", response_model=ArticleSchema)
 def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
@@ -37,16 +71,11 @@ def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
     db.commit()
     return article
 
-
-@app.get("/read_all_news/", response_model=List[ArticleSchema])
-def read_all_news(db: Session = db_dependency):
-    return db.query(ArticleModel).all()
-
-
-@app.get("/latest_news/", response_model=ArticleSchema)
-def latest_news(db: Session = db_dependency):
-    article = db.query(ArticleModel).order_by(ArticleModel.id.desc()).first()
-
+@app.delete("/items/{item_id}")
+def delete_item(item_id: int, db: Session = db_dependency):
+    article = db.query(ArticleModel).get(item_id)
     if not article:
-        raise HTTPException(404, detail="Няма новини")
-    return article
+        raise HTTPException(status_code=404, detail="Article not found")
+    db.delete(article)
+    db.commit()
+    return {"Item deleted": item_id}

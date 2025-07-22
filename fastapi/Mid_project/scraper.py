@@ -1,14 +1,31 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
+# 1) Общи константи
+HEADERS     = {"User-Agent": "TrafficNewsScraper"}
+LISTING_URL = "https://trafficnews.bg/bulgaria/"
 
-def scrape_trafficnews(url: str) -> dict:
-    headers = {
-        "User-Agent": "TrafficNewsScraper"
-    } # Never stay anonymous
-    resp = requests.get(url, headers=headers)
+# 2) Утилитна функция: прави GET + raise_for_status + връща soup
+def get_soup(url: str) -> BeautifulSoup:
+    resp = requests.get(url, headers=HEADERS)
     resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
+    return BeautifulSoup(resp.text, "html.parser")
+
+# 3) Връща абсолютния URL на първата <article> от listing-а
+def fetch_latest_article_url(listing_url: str = LISTING_URL) -> str:
+    soup = get_soup(listing_url)
+    first = soup.find("article")
+    if not first:
+        raise RuntimeError("Не намерих <article> на listing страницата")
+    a = first.find("a", href=True)
+    if not a:
+        raise RuntimeError("Първият <article> няма <a href>")
+    return urljoin(listing_url, a["href"])
+
+# 4) Скрапва една статия — използва get_soup вместо повторен код
+def scrape_trafficnews(url: str) -> dict:
+    soup = get_soup(url)
 
     # 1) Заглавие
     title_tag = soup.find(class_="new-title")
@@ -24,10 +41,7 @@ def scrape_trafficnews(url: str) -> dict:
 
     # 3) Дата и час
     time_tag = soup.select_one("div.single-infos.mb10 > span.time")
-    if time_tag:
-        date = time_tag.text.strip()
-    else:
-        date = None
+    date = time_tag.text.strip() if time_tag else None
 
     # 4) Параграфи
     paragraphs = []
@@ -39,8 +53,15 @@ def scrape_trafficnews(url: str) -> dict:
                 paragraphs.append(txt)
 
     return {
-        "title": title,
-        "image_url": img_url,
-        "date": date,
+        "title":      title,
+        "image_url":  img_url,
+        "date":       date,
         "paragraphs": paragraphs,
     }
+
+# 5) Удобен wrapper: взима url + скрейпва
+def fetch_latest_news(listing_url: str = LISTING_URL) -> dict:
+    url  = fetch_latest_article_url(listing_url)
+    data = scrape_trafficnews(url)
+    data["url"] = url
+    return data
