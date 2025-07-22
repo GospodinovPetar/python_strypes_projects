@@ -15,7 +15,7 @@ sniffio==1.3.1
 soupsieve==2.7
 SQLAlchemy==2.0.41
 sqlmodel==0.0.24
-starlette==0.47.1
+tarlette>=0.47.2
 typing-inspection==0.4.1
 typing_extensions==4.14.1
 urllib3==2.5.0
