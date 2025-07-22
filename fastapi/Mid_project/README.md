@@ -6,12 +6,12 @@ A FastAPI service that scrapes news articles from `trafficnews.bg/bulgaria/`, st
 
 | Method | Path                     | Description                                                                           |
 | ------ | ------------------------ | ------------------------------------------------------------------------------------- |
-| **POST**   | `/scrape`               | Scrape a given article URL and upsert it into the database.                          |
 | **GET**    | `/items`                | Retrieve all stored articles.                                                        |
 | **GET**    | `/items/{item_id}`      | Retrieve a single article by its numeric `id`.                                       |
+| **GET**    | `/latest_news_from_db/` | Fetch the most recently inserted article (by `id`) from the database.     ___________|
 | **DELETE** | `/items/{item_id}`      | Delete an article by its numeric `id`.                                               |
-| **GET**    | `/latest_news_from_db/` | Fetch the most recently inserted article (by `id`) from the database.                |
 | **POST**   | `/scrape/latest`        | Scrape the latest article from the listing page and upsert it into the database.     |
+| **POST**   | `/scrape`               | Scrape a given article URL and upsert it into the database.                          |
 
 ### Request / Response Models
 
