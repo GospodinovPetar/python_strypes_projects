@@ -64,3 +64,5 @@ This project is licensed under the MIT License. Feel free to use, modify, and sh
 ---
 
 Happy coding with **DjangoMeetups**! 🎉
+> _Created by Petar Gospodinov_  
+
