@@ -75,8 +75,6 @@ A FastAPI service that scrapes news articles from `trafficnews.bg/bulgaria/`, st
 
 - [ ] Create and document `.env.example` (database credentials, other settings).
 - [ ] Add integration tests for all endpoints.
-- [ ] Enhance error handling and logging.
-- [ ] Configure health-check endpoint (e.g. `/health`).
-- [ ] Add CI pipeline (GitHub Actions, GitLab CI, etc.).
+- [ ] Enhance error handling.
 
 > _Created by Petar Gospodinov_  
