@@ -4,14 +4,14 @@ A FastAPI service that scrapes news articles from `trafficnews.bg/bulgaria/`, st
 
 ## Endpoints
 
-| Method | Path                     | Description                                                                           |
-| ------ | ------------------------ | ------------------------------------------------------------------------------------- |
-| **GET**    | `/items`                | Retrieve all stored articles.                                                        |
-| **GET**    | `/items/{item_id}`      | Retrieve a single article by its numeric `id`.                                       |
-| **GET**    | `/latest_news_from_db/` | Fetch the most recently inserted article (by `id`) from the database.     ___________|
-| **DELETE** | `/items/{item_id}`      | Delete an article by its numeric `id`.                                               |
-| **POST**   | `/scrape/latest`        | Scrape the latest article from the listing page and upsert it into the database.     |
-| **POST**   | `/scrape`               | Scrape a given article URL and upsert it into the database.                          |
+| Method | Path                          | Description                                                                           |
+| ------ |-------------------------------| ------------------------------------------------------------------------------------- |
+| **GET**    | `trafficnews/items`           | Retrieve all stored articles.                                                        |
+| **GET**    | `trafficnews/items/{item_id}` | Retrieve a single article by its numeric `id`.                                       |
+| **GET**    | `trafficnews/latest_news_from_db/`       | Fetch the most recently inserted article (by `id`) from the database.     ___________|
+| **DELETE** | `trafficnews/items/{item_id}`            | Delete an article by its numeric `id`.                                               |
+| **POST**   | `trafficnews/scrape/latest`              | Scrape the latest article from the listing page and upsert it into the database.     |
+| **POST**   | `trafficnews/scrape`                     | Scrape a given article URL and upsert it into the database.                          |
 
 ### Request / Response Models
 
