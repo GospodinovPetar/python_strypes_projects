@@ -15,7 +15,5 @@ class Article(Base):
     date = Column(String, nullable=False)
     paragraphs = Column(JSONB, nullable=False)
     created_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
