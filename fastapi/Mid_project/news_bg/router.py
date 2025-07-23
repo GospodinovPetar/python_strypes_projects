@@ -1,17 +1,27 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, HttpUrl
+from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
 
 from db import get_db
 from models import NewsBgArticle
 from schemas import NewsBgArticleSchema
 from news_bg.news_bg import fetch_first_recent_link, scrape_news
-from trafficnews.trafficnews import ScrapeRequest
 
 router = APIRouter(
     prefix="/newsbg",
     tags=["newsbg"],
 )
+
+class ScrapeRequest(BaseModel):
+    url: HttpUrl
+
+    model_config = ConfigDict(
+        url_allowed_hosts={"news.bg", "www.news.bg"},
+        json_schema_extra={"example": {"url": "https://news.bg/...."}},
+    )
+
 get_db_dep = Depends(get_db)
 
 @router.get("/items", response_model=List[NewsBgArticleSchema])
