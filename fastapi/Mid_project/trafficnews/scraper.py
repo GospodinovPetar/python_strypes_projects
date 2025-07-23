@@ -64,7 +64,6 @@ def scrape_trafficnews(url: str) -> dict:
     }
 
 
-# 5) Удобен wrapper: взима url + скрейпва
 def fetch_latest_news(listing_url: str = LISTING_URL) -> dict:
     url = fetch_latest_article_url(listing_url)
     data = scrape_trafficnews(url)

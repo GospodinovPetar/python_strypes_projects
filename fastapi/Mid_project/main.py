@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import models
 from db import engine
+from devbgnews import devnewsbg
 from news_bg.router import router as newsbg_router
 from trafficnews import trafficnews as trafficnews_router
 
@@ -10,3 +11,4 @@ models.Base.metadata.create_all(bind=engine)
 
 app.include_router(newsbg_router)
 app.include_router(trafficnews_router.router)
+app.include_router(devnewsbg.router)
