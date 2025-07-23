@@ -1,80 +1,98 @@
-# TrafficNews Scraper API
+# Project Summary
 
-A FastAPI service that scrapes news articles from `trafficnews.bg/bulgaria/`, stores them in PostgreSQL, and provides RESTful endpoints to manage and retrieve the data. The application and database are spun up together using Docker Compose.
+This project provides a web service that scrapes the latest news articles from **DEV.BG**, **NEWS.BG** and **TRAFFICNEWS.BG** and stores them in a **PostgreSQL** database. It uses **FastAPI** to expose RESTful endpoints for:
 
-## Endpoints
+* **Listing all scraped articles**
+* **Retrieving a single article by ID**
+* **Retrieving the most recent article from the database**
+* **Scraping and returning the latest live article**
+* **Scraping and storing a user‑provided article URL**
+* **Deleting an article**
 
-| Method | Path                          | Description                                                           |
-| ------ |-------------------------------| --------------------------------------------------------------------- |
-| **GET**    | `trafficnews/items`           | Retrieve all stored articles.                                        |
-| **GET**    | `trafficnews/items/{item_id}` | Retrieve a single article by its numeric `id`.                       |
-| **GET**    | `trafficnews/latest_news_from_db/`       | Fetch the most recently inserted article (by `id`) from the database.|
-| **DELETE** | `trafficnews/items/{item_id}`            | Delete an article by its numeric `id`.                               |
-| **POST**   | `trafficnews/scrape/latest`              | Scrape the latest article from the listing page and upsert it into the database. |
-| **POST**   | `trafficnews/scrape`                     | Scrape a given article URL and upsert it into the database.          |
+Under the hood, the scraper fetches a listing page, finds the first `<article>`, scrapes its content (title, image URL, date, paragraphs), and commits it to the corresponding table via **SQLAlchemy**.
 
-### Request / Response Models
+## Setup Instructions
 
-- **`ScrapeRequest`** (used by `/scrape`):
-  ```json
-  {
-    "url": "https://trafficnews.bg/..."
-  }
-  ```
-- **`ArticleSchema`** includes:
-  - `id`: integer
-  - `url`: string
-  - `title`: string
-  - `image_url`: string
-  - `date`: string (original scraped date)
-  - `paragraphs`: string[]
-  - `created_at`: datetime
+1. **Clone the repository**
 
-## Installation & Running
-
-1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-org/trafficnews-scraper.git
-   cd trafficnews-scraper
+   git clone https://github.com/GospodinovPetar/python_strypes_projects.git
+   cd fastapi/Mid_project
    ```
 
-2. **Create an environment file**:
-   - Copy `.env.example` to `.env`
-   - Fill in your database credentials:
-     ```dotenv
-     DATABASE_URL=postgresql+psycopg2://<DB_USER>:<DB_PASS>@<DB_HOST>:<DB_PORT>/<DB_NAME>
-     ```
+2. **Configure environment variables**
 
-3. **Start the application with Docker Compose** (it will build and run both the FastAPI app and Postgres):
+   Create a `.env` file in the project root with the following content:
+
+   ```ini
+   DB_USER=admin
+   DB_PASS=admin
+   DB_NAME=news
+   DB_HOST=localhost
+   DB_PORT=5432
+
+   PGADMIN_DEFAULT_EMAIL=admin@admin.com
+   PGADMIN_DEFAULT_PASSWORD=admin
+   PGADMIN_PORT=8080
+   ```
+
+3. **Start services with Docker Compose**
+
    ```bash
    docker-compose up --build
    ```
 
-4. **Access the API**:
-   - Swagger UI: `http://localhost:8000/docs`
-   - ReDoc:       `http://localhost:8000/redoc`
+## Example API Calls
 
-## Project Structure
+* **List all articles**
 
+  ```bash
+  http://localhost:8000/devnews/items
+  ```
+
+* **Get an article by ID**
+
+  ```bash
+  http://localhost:8000/devnews/items/1
+  ```
+
+* **Get the most recent article from DB**
+
+  ```bash
+  http://localhost:8000/devnews/latest_news_from_db/
+  ```
+
+* **Scrape & return the latest live article**
+
+  ```bash
+  
+  ```
+
+* **Scrape & store a specific URL**
+
+  ```bash
+  
+  ```
+
+* **Delete an article**
+
+  ```bash
+  
+  ```
+
+## Logging
+
+The scraper and API log key events to the console. You should see lines indicating:
+
+* **INFO** when items are found or operations succeed
+* **ERROR** if scraping fails or the HTML structure changes
+
+Example log output:
+
+```text
+INFO    Scraper      Found article link: https://dev.bg/it-news/example
+INFO    Scraper      Scraped 5 paragraphs
+ERROR   Scraper      Could not find `<article>` tag on page
 ```
-.
-├── app/
-│   ├── main.py           # FastAPI application & endpoints
-│   ├── db.py             # SQLAlchemy engine, Base, session factory
-│   ├── models.py         # ORM model `Article`
-│   ├── schemas.py        # Pydantic model `ArticleSchema`
-│   ├── scraper.py        # `scrape_trafficnews()`, `fetch_latest_news()`, etc.
-│   └── tasks.py          # Optional helper functions
-├── docker-compose.yml    # Defines app + database services
-├── Dockerfile            # Builds the FastAPI application image
-├── .env.example          # Example environment variables
-└── README.md             # This file
-```
 
-## TODOs
-
-- [ ] Create and document `.env.example` (database credentials, other settings).
-- [ ] Add integration tests for all endpoints.
-- [ ] Enhance error handling.
-
-> _Created by Petar Gospodinov_  
+Be sure to run the FastAPI server in a terminal to observe these logs in real time.
