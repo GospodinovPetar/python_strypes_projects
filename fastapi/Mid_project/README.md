@@ -146,3 +146,7 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 ## 📄 License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for details.
+
+> _Created by Petar Gospodinov_  
+
+
