@@ -63,7 +63,7 @@ def scrape_latest(db: Session = get_db_dep):
     return article
 
 
-@router.post("/scrape", response_model=ArticleSchema)
+@router.post("/scrape_specific", response_model=ArticleSchema)
 def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     url = str(req.url)
     data = scrape_news(url)
@@ -77,7 +77,7 @@ def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     return article
 
 
-@router.delete("/items/{item_id}")
+@router.delete("/items/delete/{item_id}")
 def delete_item(item_id: int, db: Session = get_db_dep):
     article = db.get(NewsBgArticle, item_id)
     if not article:

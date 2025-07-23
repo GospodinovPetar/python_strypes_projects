@@ -60,7 +60,7 @@ def scrape_latest(db: Session = Depends(get_db)) -> ArticleModel:
     return article
 
 
-@router.post("/scrape", response_model=ArticleSchema)
+@router.post("/scrape_specific", response_model=ArticleSchema)
 def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
     try:
         data = scrape_trafficnews(str(req.url))
@@ -76,7 +76,7 @@ def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
     return article
 
 
-@router.delete("/items/{item_id}")
+@router.delete("/items/delete/{item_id}")
 def delete_item(item_id: int, db: Session = db_dependency):
     article = db.query(ArticleModel).get(item_id)
     if not article:
