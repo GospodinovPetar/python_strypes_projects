@@ -138,10 +138,6 @@ Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
 
 ## 📸 Screenshots
 
-> *Placeholder: Replace with actual mobile UI captures*
-
-![Home Screen](path/to/screenshots/home.png)
-
 ---
 
 ## 🛠 Logging
