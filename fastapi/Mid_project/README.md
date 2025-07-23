@@ -62,7 +62,7 @@ git clone https://github.com/GospodinovPetar/python_strypes_projects.git
 cd fastapi/Mid_project
 ```
 
-### 2. Configure Environment
+### 2. Configure Environment Configure Environment
 
 ```bash
 cp env.example .env
@@ -83,7 +83,6 @@ docker-compose up --build
 
   * `db` (PostgreSQL)
   * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
-  * `Admin panel` (pgAdmin for Postgres) 
 
 > *Tip: Use a cron or scheduler to `POST /{site}/scrape` periodically.*
 
@@ -91,30 +90,57 @@ docker-compose up --build
 
 ## 📡 Example API Calls
 
-### Fetch Latest Article
+Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
 
-```bash
-curl http://localhost:8000/trafficnews/latest
-```
+* **Read Latest Article**
 
-### List Articles (Paginated)
+  ```bash
+  curl http://localhost:8000/{site}/latest
+  ```
 
-```bash
-curl "http://localhost:8000/newsbg/items?limit=10&page=1"
-```
+  Retrieves the most recently stored article from the database.
 
-#### Common Query Parameters
+* **Read All Articles**
 
-* `limit` (int): number of articles
-* `page` (int): page number
-* `date_from`, `date_to` (YYYY-MM-DD)
-* `keyword` (string)
+  ```bash
+  curl http://localhost:8000/{site}/items
+  ```
 
----
+  Retrieves all stored articles. Supports optional filtering via query parameters:
+
+  * `date_from=YYYY-MM-DD`
+  * `date_to=YYYY-MM-DD`
+  * `keyword=search_term`
+
+* **Read Article by ID**
+
+  ```bash
+  curl http://localhost:8000/{site}/items/{id}
+  ```
+
+  Retrieves a single article by its database ID.
+
+* **Scrape Latest Article**
+
+  ```bash
+  curl -X POST http://localhost:8000/{site}/scrape/latest
+  ```
+
+  Scrapes the newest article from the site feed and stores it in the database.
+
+* **Delete an Article**
+
+  ```bash
+  curl -X DELETE http://localhost:8000/{site}/items/{id}
+  ```
+
+  Deletes the specified article by its database ID.
 
 ## 📸 Screenshots
 
+> *Placeholder: Replace with actual mobile UI captures*
 
+![Home Screen](path/to/screenshots/home.png)
 
 ---
 
@@ -148,5 +174,3 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 Distributed under the MIT License.
 
 > _Created by Petar Gospodinov_  
-
-
