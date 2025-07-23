@@ -1,5 +1,3 @@
-# README.md
-
 # DjangoMeetups 🎉
 
 Welcome to **DjangoMeetups**! 🚀 This is a simple yet powerful Django project designed to help users find, sign up for, and request their own meetups. It’s built with Django and uses an SQLite database for storage.
