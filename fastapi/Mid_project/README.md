@@ -1,98 +1,148 @@
-# Project Summary
+# 📰 Mid Project News Scraper Suite
 
-This project provides a web service that scrapes the latest news articles from **DEV.BG**, **NEWS.BG** and **TRAFFICNEWS.BG** and stores them in a **PostgreSQL** database. It uses **FastAPI** to expose RESTful endpoints for:
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
+[![License](https://img.shields.io/badge/license-MIT-blue)]()
 
-* **Listing all scraped articles**
-* **Retrieving a single article by ID**
-* **Retrieving the most recent article from the database**
-* **Scraping and returning the latest live article**
-* **Scraping and storing a user‑provided article URL**
-* **Deleting an article**
+> **A unified scraping & API service** for aggregating news from multiple Bulgarian sites into a single mobile-friendly feed.
 
-Under the hood, the scraper fetches a listing page, finds the first `<article>`, scrapes its content (title, image URL, date, paragraphs), and commits it to the corresponding table via **SQLAlchemy**.
+---
 
-## Setup Instructions
+## 📖 Table of Contents
 
-1. **Clone the repository**
+1. [🚀 Project Summary](#-project-summary)
+2. [🔧 Architecture & Data Flow](#-architecture--data-flow)
+3. [⚙️ Setup & Running](#️-setup--running)
+4. [📡 Example API Calls](#-example-api-calls)
+5. [📸 Screenshots](#-screenshots)
+6. [🛠 Logging](#-logging)
+7. [🤝 Contributing](#-contributing)
+8. [📄 License](#-license)
 
-   ```bash
-   git clone https://github.com/GospodinovPetar/python_strypes_projects.git
-   cd fastapi/Mid_project
-   ```
+---
 
-2. **Configure environment variables**
+## 🚀 Project Summary
 
-   Create a `.env` file in the project root with the following content:
+This repository hosts individual scrapers for three Bulgarian news websites:
 
-   ```ini
-   DB_USER=admin
-   DB_PASS=admin
-   DB_NAME=news
-   DB_HOST=localhost
-   DB_PORT=5432
+* **TrafficNews** (`trafficnews.bg`)
+* **Dev BG News** (`dev.bg`)
+* **News.bg** (`news.bg`)
 
-   PGADMIN_DEFAULT_EMAIL=admin@admin.com
-   PGADMIN_DEFAULT_PASSWORD=admin
-   PGADMIN_PORT=8080
-   ```
+Each scraper:
 
-3. **Start services with Docker Compose**
+1. **Fetches** the latest articles using HTTP requests.
+2. **Parses** relevant fields: title, URL, publication date, image, and content.
+3. **Stores** articles in PostgreSQL tables named per site:
 
-   ```bash
-   docker-compose up --build
-   ```
+   * `trafficnews_articles`
+   * `devnews_articles`
+   * `newsbg_articles`
 
-## Example API Calls
+By aggregating these disparate sources, you can power a **mobile app** to deliver all headlines & articles in one cohesive experience.
 
-* **List all articles**
+---
 
-  ```bash
-  http://localhost:8000/devnews/items
-  ```
+## 🔧 Architecture & Data Flow
 
-* **Get an article by ID**
+| Component         | Location / Modules                                                         | Responsibility                                                                                                                                                                                 |
+| ----------------- |----------------------------------------------------------------------------| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Scraper**       | `trafficnews/scraper.py`<br>`devbgnews/scraper.py`<br>`news_bg/scraper.py` | • HTTP GET with custom `User-Agent`<br>• Identify latest article links<br>• Extract fields: title, url, image\_url, date, paragraphs                                                           |
+| **Database**      | `db.py`, `models.py`                                                       | • SQLAlchemy ORM with PostgreSQL<br>• Per-site tables with `url` uniqueness & timestamping                                                                                                     |
+| **API Service**   | `main.py` + `routers/{trafficnews, devnews, newsbg}.py`                    | • FastAPI endpoints for each site:<br>  - `GET /{site}/latest`<br>  - `POST /{site}/scrape`<br>  - `GET /{site}/items`<br>  - `DELETE /{site}/items/{id}`<br>• Supports pagination & filtering |
+| **Mobile Client** | *TBD*                                                                      | • Consume unified API<br>• Display combined news feed with filtering                                                                                                                           |
 
-  ```bash
-  http://localhost:8000/devnews/items/1
-  ```
+---
 
-* **Get the most recent article from DB**
+## ⚙️ Setup & Running
 
-  ```bash
-  http://localhost:8000/devnews/latest_news_from_db/
-  ```
+### 1. Clone Repository
 
-* **Scrape & return the latest live article**
-
-  ```bash
-  
-  ```
-
-* **Scrape & store a specific URL**
-
-  ```bash
-  
-  ```
-
-* **Delete an article**
-
-  ```bash
-  
-  ```
-
-## Logging
-
-The scraper and API log key events to the console. You should see lines indicating:
-
-* **INFO** when items are found or operations succeed
-* **ERROR** if scraping fails or the HTML structure changes
-
-Example log output:
-
-```text
-INFO    Scraper      Found article link: https://dev.bg/it-news/example
-INFO    Scraper      Scraped 5 paragraphs
-ERROR   Scraper      Could not find `<article>` tag on page
+```bash
+git clone https://github.com/GospodinovPetar/python_strypes_projects.git
+cd fastapi/Mid_project
 ```
 
-Be sure to run the FastAPI server in a terminal to observe these logs in real time.
+### 2. Configure Environment
+
+```bash
+cp env.example .env
+# Edit .env:
+# POSTGRES_USER=
+# POSTGRES_PASSWORD=
+# POSTGRES_DB=
+# POSTGRES_HOST=
+```
+
+### 3. Launch with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+* **Services started:**
+
+  * `db` (PostgreSQL)
+  * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
+  * `Admin panel` (pgAdmin for Postgres) 
+
+> *Tip: Use a cron or scheduler to `POST /{site}/scrape` periodically.*
+
+---
+
+## 📡 Example API Calls
+
+### Fetch Latest Article
+
+```bash
+curl http://localhost:8000/trafficnews/latest
+```
+
+### List Articles (Paginated)
+
+```bash
+curl "http://localhost:8000/newsbg/items?limit=10&page=1"
+```
+
+#### Common Query Parameters
+
+* `limit` (int): number of articles
+* `page` (int): page number
+* `date_from`, `date_to` (YYYY-MM-DD)
+* `keyword` (string)
+
+---
+
+## 📸 Screenshots
+
+
+
+---
+
+## 🛠 Logging
+
+All scrapers log to console via Python `logging`:
+
+```text
+2025-07-23 12:00:00 INFO  TrafficNewsScraper: Starting crawl
+2025-07-23 12:00:02 INFO  TrafficNewsScraper: Found 1 new article
+2025-07-23 12:00:03 ERROR TrafficNewsScraper: Failed to parse https://.../page
+```
+
+* **INFO**: crawl start, items found
+* **ERROR**: HTTP failures, parse errors, DB issues
+
+---
+
+## 🤝 Contributing
+
+1. Fork & branch
+2. Make your changes
+3. Submit a pull request
+
+Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for details.

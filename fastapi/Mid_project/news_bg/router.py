@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from db import get_db
 from models import NewsBgArticle
 from schemas import ArticleSchema
-from news_bg.news_bg import fetch_first_recent_link, scrape_news
+from news_bg.scraper import fetch_first_recent_link, scrape_news
 
 router = APIRouter(
     prefix="/newsbg",
