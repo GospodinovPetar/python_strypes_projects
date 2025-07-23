@@ -1,14 +1,12 @@
 from typing import List
-
 from fastapi import Depends, HTTPException, APIRouter
 from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
-
 from db import get_db
 from models import Article as ArticleModel
 from schemas import ArticleSchema
-from scraper import scrape_trafficnews, fetch_latest_news
+from trafficnews.scraper import fetch_latest_news, scrape_trafficnews
 
 router = APIRouter(prefix="/trafficnews", tags=["trafficnews"])
 db_dependency: Session = Depends(get_db)

@@ -1,19 +1,33 @@
-from sqlalchemy import Column, String, Text, func
-from sqlalchemy.dialects.postgresql.json import JSONB
-from sqlalchemy.sql.sqltypes import Integer, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, JSON, func
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 
-from db import Base
-
+Base = declarative_base()
 
 class Article(Base):
-    __tablename__ = "article"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    url = Column(String, unique=True, nullable=False, index=True)
-    title = Column(Text, nullable=False)
+    __tablename__ = "trafficnews_articles"
+    id = Column(Integer, primary_key=True, index=True)
+    url = Column(String, unique=True, index=True)
+    title = Column(String, nullable=False)
     image_url = Column(String, nullable=True)
-    date = Column(String, nullable=False)
-    paragraphs = Column(JSONB, nullable=False)
+    date = Column(String, nullable=True)
+    paragraphs = Column(JSON, nullable=False)
     created_at = Column(
-        DateTime(timezone=True), nullable=False, server_default=func.now()
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+class NewsBgArticle(Base):
+    __tablename__ = "newsbg_articles"
+    id = Column(Integer, primary_key=True, index=True)
+    url = Column(String, unique=True, index=True)
+    title = Column(String, nullable=False)
+    image_url = Column(String, nullable=True)
+    date = Column(String, nullable=True)
+    paragraphs = Column(JSON, nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
     )
