@@ -14,6 +14,7 @@ router = APIRouter(
     tags=["newsbg"],
 )
 
+
 class ScrapeRequest(BaseModel):
     url: HttpUrl
 
@@ -22,11 +23,14 @@ class ScrapeRequest(BaseModel):
         json_schema_extra={"example": {"url": "https://news.bg/...."}},
     )
 
+
 get_db_dep = Depends(get_db)
+
 
 @router.get("/items", response_model=List[NewsBgArticleSchema])
 def read_all_news(db: Session = get_db_dep):
     return db.query(NewsBgArticle).all()
+
 
 @router.get("/items/{item_id}", response_model=NewsBgArticleSchema)
 def read_item(item_id: int, db: Session = get_db_dep):
@@ -35,6 +39,7 @@ def read_item(item_id: int, db: Session = get_db_dep):
         raise HTTPException(404, "Article not found")
     return article
 
+
 @router.get("/latest_news_from_db/", response_model=NewsBgArticleSchema)
 def latest_news_from_db(db: Session = get_db_dep):
     article = db.query(NewsBgArticle).order_by(NewsBgArticle.id.desc()).first()
@@ -42,6 +47,7 @@ def latest_news_from_db(db: Session = get_db_dep):
     if not article:
         raise HTTPException(404, detail="Няма новини")
     return article
+
 
 @router.post("/scrape/latest", response_model=NewsBgArticleSchema)
 def scrape_latest(db: Session = get_db_dep):
@@ -56,6 +62,7 @@ def scrape_latest(db: Session = get_db_dep):
     db.refresh(article)
     return article
 
+
 @router.post("/scrape", response_model=NewsBgArticleSchema)
 def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     url = str(req.url)
@@ -68,6 +75,7 @@ def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     db.commit()
     db.refresh(article)
     return article
+
 
 @router.delete("/items/{item_id}")
 def delete_item(item_id: int, db: Session = get_db_dep):

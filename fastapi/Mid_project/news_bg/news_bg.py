@@ -52,7 +52,9 @@ def scrape_news(url: str) -> dict:
 
     # 2) Картинка
     img_el = article.select_one("div.img-or-video img")
-    image_url = urljoin(LISTING_URL, img_el["src"]) if img_el and img_el.get("src") else None
+    image_url = (
+        urljoin(LISTING_URL, img_el["src"]) if img_el and img_el.get("src") else None
+    )
 
     # 3) Дата и час
     time_tag = article.select_one("div.article-info p.time")

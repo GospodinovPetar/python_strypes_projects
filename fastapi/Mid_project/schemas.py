@@ -16,6 +16,7 @@ class ArticleSchema(BaseModel):
     class Config:
         orm_mode = True
 
+
 class NewsBgArticleSchema(BaseModel):
     id: int
     url: HttpUrl

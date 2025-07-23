@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 Base = declarative_base()
 
+
 class Article(Base):
     __tablename__ = "trafficnews_articles"
     id = Column(Integer, primary_key=True, index=True)
@@ -20,6 +21,7 @@ class Article(Base):
         server_default=func.timezone("Europe/Sofia", func.now()),
         nullable=False,
     )
+
 
 class NewsBgArticle(Base):
     __tablename__ = "newsbg_articles"
