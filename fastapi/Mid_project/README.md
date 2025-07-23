@@ -83,6 +83,7 @@ docker-compose up --build
 
   * `db` (PostgreSQL)
   * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
+  * `admin panel` (pgAdmin for Postgres)
 
 > *Tip: Use a cron or scheduler to `POST /{site}/scrape` periodically.*
 
