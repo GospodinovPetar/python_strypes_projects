@@ -25,7 +25,7 @@ A FastAPI service that scrapes news articles from `trafficnews.bg/bulgaria/`, st
   - `id`: integer
   - `url`: string
   - `title`: string
-  - `image_url`: string | null
+  - `image_url`: string
   - `date`: string (original scraped date)
   - `paragraphs`: string[]
   - `created_at`: datetime
