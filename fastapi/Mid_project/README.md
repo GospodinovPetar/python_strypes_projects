@@ -83,6 +83,7 @@ docker-compose up --build
 
   * `db` (PostgreSQL)
   * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
+  * `admin panel` (pgAdmin for Postgres)
 
 > *Tip: Use a cron or scheduler to `POST /{site}/scrape` periodically.*
 
@@ -137,10 +138,6 @@ Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
   Deletes the specified article by its database ID.
 
 ## 📸 Screenshots
-
-> *Placeholder: Replace with actual mobile UI captures*
-
-![Home Screen](path/to/screenshots/home.png)
 
 ---
 
