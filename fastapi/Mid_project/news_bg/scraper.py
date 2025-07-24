@@ -1,72 +1,54 @@
 from urllib.parse import urljoin
-
 import requests
 from bs4 import BeautifulSoup
 
-# 1) Общи константи
 HEADERS = {"User-Agent": "NewsScraper"}
 LISTING_URL = "https://news.bg"
 
 
-def get_soup(url: str) -> BeautifulSoup:
-    resp = requests.get(url, headers=HEADERS)
+def get_soup(url: str, headers: dict = HEADERS) -> BeautifulSoup:
+    resp = requests.get(url, headers=headers)
     resp.raise_for_status()
     return BeautifulSoup(resp.text, "html.parser")
 
 
 def fetch_first_recent_link(listing_url: str = LISTING_URL) -> str:
-    """
-    Fetches the first <li> under <ul id="recent-articles">
-    and returns the href of its <h2><a> tag.
-    """
-    headers = {"User-Agent": "RecentArticlesScraper"}
-    resp = requests.get(listing_url, headers=headers)
-    resp.raise_for_status()
-
-    soup = BeautifulSoup(resp.text, "html.parser")
-    ul = soup.find("ul", id="recent-articles")
-    if not ul:
-        raise RuntimeError("Could not find <ul id='recent-articles'>")
-
-    first_li = ul.find("li")
-    if not first_li:
-        raise RuntimeError("No <li> found inside <ul id='recent-articles'>")
-
-    a_tag = first_li.find("h2").find("a", href=True)
-    if not a_tag:
-        raise RuntimeError("No <a> tag with href inside the first <li><h2>")
-
-    return a_tag["href"]
+    link = get_soup(
+        listing_url, headers={"User-Agent": "RecentArticlesScraper"}
+    ).select_one("ul#recent-articles li h2 a[href]")
+    if not link:
+        raise RuntimeError("Could not find recent article link")
+    return link["href"]
 
 
 def scrape_news(url: str) -> dict:
     soup = get_soup(url)
-    # 0) Main article container
-    article = soup.find("article", class_="article-inner")
+    article = soup.select_one("article.article-inner")
     if not article:
         raise RuntimeError("Could not find the main <article> element")
 
     # 1) Заглавие
-    title_tag = article.find("h1", itemprop="headline")
-    title = title_tag.get_text(strip=True) if title_tag else None
+    title_el = article.select_one("h1[itemprop='headline']")
+    title = title_el.get_text(strip=True) if title_el else None
 
     # 2) Картинка
     img_el = article.select_one("div.img-or-video img")
     image_url = (
-        urljoin(LISTING_URL, img_el["src"]) if img_el and img_el.get("src") else None
+        urljoin(LISTING_URL, img_el["src"])
+        if img_el and img_el.has_attr("src")
+        else None
     )
 
     # 3) Дата и час
-    time_tag = article.select_one("div.article-info p.time")
-    date = time_tag.get_text(strip=True) if time_tag else None
+    time_el = article.select_one("div.article-info p.time")
+    date = time_el.get_text(strip=True) if time_el else None
 
-    # 4) Параграфи — все <p> без class (skip the time, author, etc.)
-    paragraphs = []
-    for p in article.find_all("p"):
-        if not p.has_attr("class"):
-            txt = p.get_text(strip=True)
-            if txt:
-                paragraphs.append(txt)
+    # 4) Параграфи — все <p> без class
+    paragraphs = [
+        p.get_text(strip=True)
+        for p in article.select("p:not([class])")
+        if p.get_text(strip=True)
+    ]
 
     return {
         "title": title,

@@ -3,7 +3,8 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
 
-> **A unified scraping & API service** for aggregating news from multiple Bulgarian sites into a single mobile-friendly feed.
+> **A unified scraping & API service** for aggregating news from multiple Bulgarian sites into a single mobile-friendly
+> feed.
 
 ---
 
@@ -34,18 +35,19 @@ Each scraper:
 2. **Parses** relevant fields: title, URL, publication date, image, and content.
 3. **Stores** articles in PostgreSQL tables named per site:
 
-   * `trafficnews_articles`
-   * `devnews_articles`
-   * `newsbg_articles`
+    * `trafficnews_articles`
+    * `devnews_articles`
+    * `newsbg_articles`
 
-By aggregating these disparate sources, you can power a **mobile app** to deliver all headlines & articles in one cohesive experience.
+By aggregating these disparate sources, you can power a **mobile app** to deliver all headlines & articles in one
+cohesive experience.
 
 ---
 
 ## 🔧 Architecture & Data Flow
 
 | Component         | Location / Modules                                                         | Responsibility                                                                                                                                                                                 |
-| ----------------- |----------------------------------------------------------------------------| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-------------------|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Scraper**       | `trafficnews/scraper.py`<br>`devbgnews/scraper.py`<br>`news_bg/scraper.py` | • HTTP GET with custom `User-Agent`<br>• Identify latest article links<br>• Extract fields: title, url, image\_url, date, paragraphs                                                           |
 | **Database**      | `db.py`, `models.py`                                                       | • SQLAlchemy ORM with PostgreSQL<br>• Per-site tables with `url` uniqueness & timestamping                                                                                                     |
 | **API Service**   | `main.py` + `routers/{trafficnews, devnews, newsbg}.py`                    | • FastAPI endpoints for each site:<br>  - `GET /{site}/latest`<br>  - `POST /{site}/scrape`<br>  - `GET /{site}/items`<br>  - `DELETE /{site}/items/{id}`<br>• Supports pagination & filtering |
@@ -81,9 +83,9 @@ docker-compose up --build
 
 * **Services started:**
 
-  * `db` (PostgreSQL)
-  * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
-  * `admin panel` (pgAdmin for Postgres)
+    * `db` (PostgreSQL)
+    * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
+    * `admin panel` (pgAdmin for Postgres)
 
 > *Tip: Use a cron or scheduler to `POST /{site}/scrape` periodically.*
 
@@ -109,9 +111,9 @@ Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
 
   Retrieves all stored articles. Supports optional filtering via query parameters:
 
-  * `date_from=YYYY-MM-DD`
-  * `date_to=YYYY-MM-DD`
-  * `keyword=search_term`
+    * `date_from=YYYY-MM-DD`
+    * `date_to=YYYY-MM-DD`
+    * `keyword=search_term`
 
 * **Read Article by ID**
 

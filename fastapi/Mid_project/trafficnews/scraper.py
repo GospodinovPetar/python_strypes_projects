@@ -1,64 +1,45 @@
 from urllib.parse import urljoin
-
 import requests
 from bs4 import BeautifulSoup
 
-# 1) Общи константи
 HEADERS = {"User-Agent": "TrafficNewsScraper"}
 LISTING_URL = "https://trafficnews.bg/bulgaria/"
 
 
-# 2) Утилитна функция: прави GET + raise_for_status + връща soup
-def get_soup(url: str) -> BeautifulSoup:
-    resp = requests.get(url, headers=HEADERS)
+def get_soup(url: str, headers: dict = HEADERS) -> BeautifulSoup:
+    resp = requests.get(url, headers=headers)
     resp.raise_for_status()
     return BeautifulSoup(resp.text, "html.parser")
 
 
-# 3) Връща абсолютния URL на първата <article> от listing-а
 def fetch_latest_article_url(listing_url: str = LISTING_URL) -> str:
-    soup = get_soup(listing_url)
-    first = soup.find("article")
-    if not first:
-        raise RuntimeError("Не намерих <article> на listing страницата")
-    a = first.find("a", href=True)
-    if not a:
-        raise RuntimeError("Първият <article> няма <a href>")
-    return urljoin(listing_url, a["href"])
+    link = get_soup(listing_url).select_one("article a[href]")
+    if not link:
+        raise RuntimeError("Не намерих <article> или <a href> на listing страницата")
+    return urljoin(listing_url, link["href"])
 
 
-# 4) Скрапва една статия — използва get_soup вместо повторен код
 def scrape_trafficnews(url: str) -> dict:
     soup = get_soup(url)
 
-    # 1) Заглавие
-    title_tag = soup.find(class_="new-title")
-    title = title_tag.get_text(strip=True) if title_tag else None
+    title = soup.select_one(".new-title")
+    title = title.get_text(strip=True) if title else None
 
-    # 2) Картинка
-    img_url = None
-    img_container = soup.find(class_="article-img")
-    if img_container:
-        img = img_container.find("img")
-        if img and img.get("src"):
-            img_url = img["src"]
+    img = soup.select_one(".article-img img[src]")
+    image_url = img["src"] if img else None
 
-    # 3) Дата и час
-    time_tag = soup.select_one("div.single-infos.mb10 > span.time")
-    date = time_tag.text.strip() if time_tag else None
+    time_el = soup.select_one("div.single-infos.mb10 > span.time")
+    date = time_el.get_text(strip=True) if time_el else None
 
-    # 4) Параграфи
-    paragraphs = []
-    content_div = soup.find("div", class_="article-text single-content")
-    if content_div:
-        for p in content_div.find_all("p"):
-            txt = p.get_text(strip=True)
-            if txt:
-                paragraphs.append(txt)
+    paragraphs = [
+        p.get_text(strip=True)
+        for p in soup.select("div.article-text.single-content p")
+        if p.get_text(strip=True)
+    ]
 
     return {
         "title": title,
-        "image_url": img_url,
+        "image_url": image_url,
         "date": date,
         "paragraphs": paragraphs,
     }

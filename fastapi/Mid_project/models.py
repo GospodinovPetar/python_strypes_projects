@@ -1,10 +1,12 @@
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import Column, Integer, String, DateTime, JSON, func
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime, timezone
 
 Base = declarative_base()
+
+SOFIA = ZoneInfo("Europe/Sofia")
 
 
 class Article(Base):
@@ -17,7 +19,7 @@ class Article(Base):
     paragraphs = Column(JSON, nullable=False)
     created_at = Column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(ZoneInfo("Europe/Sofia")),
+        default=lambda: datetime.now(SOFIA),
         server_default=func.timezone("Europe/Sofia", func.now()),
         nullable=False,
     )
@@ -33,7 +35,7 @@ class NewsBgArticle(Base):
     paragraphs = Column(JSON, nullable=False)
     created_at = Column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(ZoneInfo("Europe/Sofia")),
+        default=lambda: datetime.now(SOFIA),
         server_default=func.timezone("Europe/Sofia", func.now()),
         nullable=False,
     )
@@ -50,6 +52,7 @@ class DevNewsArticle(Base):
     paragraphs = Column(JSON, nullable=False)
     created_at = Column(
         DateTime(timezone=True),
-        server_default=func.now(),
+        default=lambda: datetime.now(SOFIA),
+        server_default=func.timezone("Europe/Sofia", func.now()),
         nullable=False,
     )

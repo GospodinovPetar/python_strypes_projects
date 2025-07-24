@@ -1,8 +1,10 @@
 from typing import List
+
 from fastapi import Depends, HTTPException, APIRouter
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
+
 from db import get_db
 from models import Article as ArticleModel
 from schemas import ArticleSchema
@@ -13,8 +15,6 @@ db_dependency: Session = Depends(get_db)
 
 
 class ScrapeRequest(BaseModel):
-    url: HttpUrl
-
     model_config = ConfigDict(
         url_allowed_hosts={"trafficnews.bg", "www.trafficnews.bg"},
         json_schema_extra={"example": {"url": "https://trafficnews.bg/...."}},
