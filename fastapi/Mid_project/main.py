@@ -6,7 +6,15 @@ from news_bg.router import router as newsbg_router
 from trafficnews import router as trafficnews_router
 from devbgnews import router as devbgnews_router
 
-app = FastAPI()
+app = FastAPI(
+    title="News API",
+    description="🛣️ Real‑time news articles from Bulgaria",
+    version="1.2.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    contact={"name": "Petar Gospodinov", "email": "petarjordanov2003@gmail.com"},
+    license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
+)
 
 models.Base.metadata.create_all(bind=engine)
 
