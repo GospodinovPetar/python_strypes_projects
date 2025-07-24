@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-
 import models
 from db import engine
 from news_bg.router import router as newsbg_router
