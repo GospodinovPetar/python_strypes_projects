@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from db import get_db
 from devbgnews.scraper import fetch_first_recent_link, scrape_devnews_article
+from logger import logger
 from models import DevNewsArticle
 from schemas import ArticleSchema
 
@@ -37,6 +38,13 @@ def read_all_news(db: Session = get_db_dep):
     - **date**
     - **paragraphs**
     - **created_at**"""
+    article = db.query(DevNewsArticle).all()
+    if not article:
+        logger.info("[DEVNEWS] ERROR: A requested item was not found")
+        raise HTTPException(404, detail="Няма новини")
+
+    logger.info("[DEVNEWS] OK: Fetching latest trafficnews article from database")
+    logger.debug(f"Scraped data: {article}")
     return db.query(DevNewsArticle).all()
 
 
@@ -52,10 +60,15 @@ def read_item(item_id: int, db: Session = get_db_dep):
     - **date**
     - **paragraphs**
     - **created_at**"""
-    article = db.get(DevNewsArticle, item_id)
-    if not article:
-        raise HTTPException(status_code=404, detail="Article not found")
-    return article
+    item = db.query(DevNewsArticle).get(item_id)
+
+    if not item:
+        logger.info(
+            f"[DEVNEWS] ERROR: Fetching specific item: {item_id}, but not found."
+        )
+        raise HTTPException(status_code=404, detail="Item not found")
+    logger.info(f"[DEVNEWS] OK: Fetching specific item: {item_id}")
+    return item
 
 
 @router.get("/latest_news_from_db/", response_model=ArticleSchema)
@@ -71,8 +84,13 @@ def latest_news_from_db(db: Session = get_db_dep):
     - **paragraphs**
     - **created_at**"""
     article = db.query(DevNewsArticle).order_by(DevNewsArticle.id.desc()).first()
+
     if not article:
-        raise HTTPException(status_code=404, detail="No articles in database")
+        logger.info("[DEVNEWS] ERROR: A requested item was not found")
+        raise HTTPException(404, detail="Няма новини")
+
+    logger.info("[DEVNEWS] OK: Fetching latest trafficnews article from database")
+    logger.debug(f"Scraped data: {article}")
     return article
 
 
@@ -99,6 +117,7 @@ def scrape_latest(db: Session = get_db_dep):
 
     existing = db.query(DevNewsArticle).filter_by(url=url).one_or_none()
     if existing:
+        logger.info("[DEVNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries")
         existing.title = data["title"]
         existing.image_url = data["image_url"]
         existing.date = data["date"]
@@ -106,6 +125,8 @@ def scrape_latest(db: Session = get_db_dep):
         article = existing
     else:
         article = DevNewsArticle(**data)
+        logger.info("[DEVNEWS] OK: Scraping latest news from website")
+        logger.debug(f"[DEVNEWS] Scraped data: {article}")
         db.add(article)
 
     db.commit()
@@ -130,11 +151,19 @@ def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     try:
         data = scrape_devnews_article(url)
     except Exception:
+        logger.info(
+            "[DEVNEWS] ERROR: Error scraping data from dev.bg news article",
+        )
         raise HTTPException(status_code=502, detail="Error scraping the page")
     if not data.get("title"):
+        logger.info(
+            "[DEVNEWS] ERROR: A requested item was not found",
+        )
         raise HTTPException(status_code=404, detail="No data found on this page")
     # upsert via merge
     article = db.merge(DevNewsArticle(url=url, **data))
+    logger.info("[DEVNEWS] OK: Scraping latest news from url")
+    logger.debug(f"[DEVNEWS] Scraped data: {article}")
     db.commit()
     db.refresh(article)
     return article
@@ -147,7 +176,13 @@ def delete_item(item_id: int, db: Session = get_db_dep):
     """
     article = db.get(DevNewsArticle, item_id)
     if not article:
+        logger.info(
+            "[DEVNEWS] ERROR: A delete request was opened, but no article was found."
+        )
         raise HTTPException(status_code=404, detail="Article not found")
     db.delete(article)
+    logger.info(
+        f"[DEVNEWS] OK: Deleted a specific item from the database with id {item_id}"
+    )
     db.commit()
     return {"deleted_id": item_id}
