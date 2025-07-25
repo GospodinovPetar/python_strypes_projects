@@ -170,7 +170,7 @@ def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
 )
 def delete_item(item_id: int, db: Session = db_dependency):
     """
-    # This will deletea specific item from the database, based on the id in our database
+    # This will delete a specific item from the database, based on the id in our database
     """
     article = db.query(ArticleModel).get(item_id)
     if not article:
