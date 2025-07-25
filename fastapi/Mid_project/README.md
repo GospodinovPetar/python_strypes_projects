@@ -145,16 +145,6 @@ Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
 
 ## 🛠 Logging
 
-All scrapers log to console via Python `logging`:
-
-```text
-2025-07-23 12:00:00 INFO  TrafficNewsScraper: Starting crawl
-2025-07-23 12:00:02 INFO  TrafficNewsScraper: Found 1 new article
-2025-07-23 12:00:03 ERROR TrafficNewsScraper: Failed to parse https://.../page
-```
-
-* **INFO**: crawl start, items found
-* **ERROR**: HTTP failures, parse errors, DB issues
 
 ---
 
