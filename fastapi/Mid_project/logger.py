@@ -15,9 +15,11 @@ logger.setLevel(logging.INFO)
 # 4) Attach just one FileHandler (append mode, same file every time)
 fh = logging.FileHandler(LOG_FILE, mode="a")
 fh.setLevel(logging.INFO)
-fh.setFormatter(logging.Formatter(
-    "%(asctime)s %(levelname)-8s [%(name)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-))
+fh.setFormatter(
+    logging.Formatter(
+        "%(asctime)s %(levelname)-8s [%(name)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+)
 
 logger.addHandler(fh)

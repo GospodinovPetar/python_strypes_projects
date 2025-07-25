@@ -13,6 +13,7 @@ from trafficnews.scraper import fetch_latest_news, scrape_trafficnews
 router = APIRouter(prefix="/trafficnews", tags=["Traffic News"])
 db_dependency: Session = Depends(get_db)
 
+
 class ScrapeRequest(BaseModel):
     model_config = ConfigDict(
         url_allowed_hosts={"trafficnews.bg", "www.trafficnews.bg"},
@@ -60,7 +61,9 @@ def read_item(item_id: int, db: Session = db_dependency):
     item = db.query(ArticleModel).get(item_id)
 
     if not item:
-        logger.info(f"[TRAFFICNEWS] ERROR: Fetching specific item: {item_id}, but not found.")
+        logger.info(
+            f"[TRAFFICNEWS] ERROR: Fetching specific item: {item_id}, but not found."
+        )
         raise HTTPException(status_code=404, detail="Item not found")
     logger.info(f"[TRAFFICNEWS] OK: Fetching specific item: {item_id}")
     return item
@@ -116,7 +119,9 @@ def scrape_latest(db: Session = Depends(get_db)) -> ArticleModel:
     news = fetch_latest_news()
     existing = db.query(ArticleModel).filter_by(url=news["url"]).first()
     if existing:
-        logger.info("[TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries")
+        logger.info(
+            "[TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries"
+        )
         return existing
 
     article = ArticleModel(**news)
@@ -174,9 +179,13 @@ def delete_item(item_id: int, db: Session = db_dependency):
     """
     article = db.query(ArticleModel).get(item_id)
     if not article:
-        logger.info("[TRAFFICNEWS] ERROR: A delete request was opened, but no article was found.")
+        logger.info(
+            "[TRAFFICNEWS] ERROR: A delete request was opened, but no article was found."
+        )
         raise HTTPException(status_code=404, detail="Article not found")
     db.delete(article)
-    logger.info(f"[TRAFFICNEWS] OK: Deleted a specific item from the database with id {item_id}")
+    logger.info(
+        f"[TRAFFICNEWS] OK: Deleted a specific item from the database with id {item_id}"
+    )
     db.commit()
     return {"Item deleted": item_id}
