@@ -95,6 +95,7 @@ def latest_news_from_db(db: Session = get_db_dep):
     logger.debug(f"Scraped data: {article}")
     return article
 
+
 @router.post("/scrape/latest", response_model=ArticleSchema)
 def scrape_latest(db: Session = get_db_dep):
     """
@@ -145,7 +146,9 @@ def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     data = scrape_news(url)
     existing = db.query(NewsBgArticle).filter_by(url=url).first()
     if existing:
-        logger.info("[NEWSBG] OK: Scraping latest news from url.. Already exists in database, outputing directly from DB")
+        logger.info(
+            "[NEWSBG] OK: Scraping latest news from url.. Already exists in database, outputing directly from DB"
+        )
         return existing
     article = NewsBgArticle(url=url, **data)
     logger.info("[NEWSBG] OK: Scraping latest news from url")

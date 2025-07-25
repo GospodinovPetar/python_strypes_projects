@@ -117,7 +117,9 @@ def scrape_latest(db: Session = get_db_dep):
 
     existing = db.query(DevNewsArticle).filter_by(url=url).one_or_none()
     if existing:
-        logger.info("[DEVNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries")
+        logger.info(
+            "[DEVNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries"
+        )
         existing.title = data["title"]
         existing.image_url = data["image_url"]
         existing.date = data["date"]
