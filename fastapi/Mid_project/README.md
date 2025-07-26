@@ -46,12 +46,11 @@ cohesive experience.
 
 ## 🔧 Architecture & Data Flow
 
-| Component         | Location / Modules                                                         | Responsibility                                                                                                                                                                                 |
-|-------------------|----------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Scraper**       | `trafficnews/scraper.py`<br>`devbgnews/scraper.py`<br>`news_bg/scraper.py` | • HTTP GET with custom `User-Agent`<br>• Identify latest article links<br>• Extract fields: title, url, image\_url, date, paragraphs                                                           |
-| **Database**      | `db.py`, `models.py`                                                       | • SQLAlchemy ORM with PostgreSQL<br>• Per-site tables with `url` uniqueness & timestamping                                                                                                     |
-| **API Service**   | `main.py` + `routers/{trafficnews, devnews, newsbg}.py`                    | • FastAPI endpoints for each site:<br>  - `GET /{site}/latest`<br>  - `POST /{site}/scrape`<br>  - `GET /{site}/items`<br>  - `DELETE /{site}/items/{id}`<br>• Supports pagination & filtering |
-| **Mobile Client** | *TBD*                                                                      | • Consume unified API<br>• Display combined news feed with filtering                                                                                                                           |
+| Component         | Location / Modules                                                                   | Responsibility                                                                                                                                                                                 |
+|-------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Scraper**       | `app/scrapers/devbgnews.py`<br>`app/scrapers/technews.py`<br>`app/scrapers/wired.py` | • Identify latest article links <br>• Extract fields: title, url, image\_url, date, paragraphs                                                                                                 |
+| **Database**      | `database/models.py`, `database/session.py`                                          | • SQLAlchemy ORM with PostgreSQL <br>                                                                                                                                                          |
+| **API Service**   | `app/main.py` + `app/routers/{devbgnews, technewsbg, wired}.py`                      | • FastAPI endpoints for each site:<br>  - `GET /{site}/latest`<br>  - `POST /{site}/scrape`<br>  - `GET /{site}/items`<br>  - `DELETE /{site}/items/{id}`<br>• Supports pagination & filtering ||
 
 ---
 
@@ -83,9 +82,9 @@ docker-compose up --build
 
 * **Services started:**
 
-    * `db` (PostgreSQL)
-    * `app` (FastAPI server at [http://localhost:8000](http://localhost:8000))
-    * `admin panel` (pgAdmin for Postgres)
+    * `postgres` (PostgreSQL)
+    * `web` (FastAPI server at [http://localhost:8000](http://localhost:8000))
+    * `pgadmin` (pgAdmin for Postgres)
 
 > *Tip: Use a cron or scheduler to `POST /{site}/scrape` periodically.*
 
@@ -147,14 +146,15 @@ Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
 ### Logging is saved in logs/app.log
 Here is a quick example:
 ```
-2025-07-24 13:26:28 INFO     [news_api] [TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries
-2025-07-24 16:22:36 INFO     [news_api] [TRAFFICNEWS] OK: Scraping latest news from website
-2025-07-24 16:26:14 INFO     [news_api] [TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries
-2025-07-25 09:14:56 INFO     [news_api] [TRAFFICNEWS] OK: Scraping latest news from website
-2025-07-25 11:21:53 INFO     [news_api] [NEWSBG] ERROR: A requested item was not found
-2025-07-25 11:21:58 INFO     [news_api] [NEWSBG] ERROR: Fetching specific item: 54, but not found.
-2025-07-25 11:22:09 INFO     [news_api] [DEVNEWS] OK: Scraping latest news from website
-2025-07-25 11:22:18 INFO     [news_api] [DEVNEWS] OK: Deleted a specific item from the database with id 1
+2025-07-26 12:53:49 INFO     [news_api] [WIRED] Fetching all articles from DB
+2025-07-26 12:54:10 INFO     [news_api] [WIRED] Fetching article 1
+2025-07-26 12:54:16 INFO     [news_api] [WIRED] Fetching latest article from DB
+2025-07-26 12:54:23 INFO     [news_api] [WIRED] Deleted article 1
+2025-07-26 12:54:37 INFO     [news_api] [WIRED] Saved latest article to DB
+2025-07-26 12:54:46 INFO     [news_api] [WIRED] Deleted article 2
+2025-07-26 12:54:49 INFO     [news_api] [WIRED] Delete failed, article 12 not found
+2025-07-26 12:55:02 INFO     [news_api] [WIRED] Saved specific article to DB
+2025-07-26 12:55:11 INFO     [news_api] [TECHNEWSBG] Fetching all articles from DB
 
 ```
 
