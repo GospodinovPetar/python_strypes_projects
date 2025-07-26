@@ -18,13 +18,13 @@ def fetch_latest_news() -> dict:
     html = get_page_html(BASE_URL)
     soup = BeautifulSoup(html, "html.parser")
 
-    link_el = soup.select_one("article.hentry a[href]")
-    if not link_el:
+    link = soup.select_one("article.hentry a[href]")
+    if not link:
         raise RuntimeError(
             "Could not find the latest article link on TechNews.bg homepage"
         )
 
-    href = link_el["href"]
+    href = link["href"]
     article_url = href if href.startswith("http") else urljoin(BASE_URL, href)
 
     return scrape_news(article_url)
@@ -35,15 +35,15 @@ def scrape_news(url: str) -> dict:
     soup = BeautifulSoup(html, "html.parser")
 
     # Title
-    title_el = soup.select_one("h1.entry-title")
-    title = title_el.get_text(strip=True) if title_el else None
+    title = soup.select_one("h1.entry-title")
+    title = title.get_text(strip=True) if title else None
 
     # Publish date
-    time_el = soup.select_one("time.entry-date.published")
-    if time_el and time_el.has_attr("datetime"):
-        date = time_el["datetime"]
-    elif time_el:
-        date = time_el.get_text(strip=True)
+    time = soup.select_one("time.entry-date.published")
+    if time and time.has_attr("datetime"):
+        date = time["datetime"]
+    elif time:
+        date = time.get_text(strip=True)
     else:
         date = None
 
