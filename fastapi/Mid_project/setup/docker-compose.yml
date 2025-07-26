@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    depends_on:
+      - postgres
+
+  web:
+    build:
+      context: ..  # project root
+      dockerfile: setup/Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ../app:/app/app
+      - ../database:/app/database
+      - .env:/app/.env
+      - ./requirements.txt:/app/requirements.txt
+    ports:
+      - "8000:8000"
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    depends_on:
+      - postgres
