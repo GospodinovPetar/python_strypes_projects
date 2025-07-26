@@ -5,13 +5,13 @@ from pydantic import BaseModel, HttpUrl
 
 
 class ArticleSchema(BaseModel):
-    id: int
+    id: Optional[int]
     url: HttpUrl
     title: str
-    image_url: List[HttpUrl]
     date: Optional[str]
+    image_url: List[str]
     paragraphs: List[str]
-    created_at: Optional[datetime] = None
+    created_at: Optional[datetime]
 
     class Config:
         orm_mode = True

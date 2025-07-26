@@ -1,8 +1,14 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import Column, Integer, String, DateTime, JSON, func, text
+
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.functions import func
+from sqlalchemy.sql.schema import Column
+from sqlalchemy.sql.sqltypes import Integer, String, JSON, DateTime
+
+from database.session import engine
 
 Base = declarative_base()
 
@@ -34,10 +40,9 @@ class WiredArticle(Base):
     url = Column(String, unique=True, index=True, nullable=False)
     title = Column(String, nullable=False)
 
-    # These must exactly match your scraper + Pydantic schema
-    image_url = Column(JSON, nullable=False)  # List[HttpUrl] JSON array
-    paragraphs = Column(JSON, nullable=False)  # List[str] JSON array
-    date = Column(String, nullable=True)  # stored as text
+    image_url = Column(JSON, nullable=False)
+    paragraphs = Column(JSON, nullable=False)
+    date = Column(String, nullable=True)
     created_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(SOFIA),
@@ -61,3 +66,5 @@ class DevNewsArticle(Base):
         server_default=func.timezone("Europe/Sofia", func.now()),
         nullable=False,
     )
+
+Base.metadata.create_all(bind=engine)

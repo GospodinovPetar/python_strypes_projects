@@ -9,20 +9,12 @@ HEADERS = {"User-Agent": "NewsScraper"}
 
 
 def get_page_html(source: str) -> str:
-    """
-    Given a URL or file path, return the HTML as text.
-    If source starts with 'http', fetch via HTTP;
-    otherwise, read from local file.
-    """
     response = requests.get(source, headers=HEADERS)
     response.raise_for_status()
     return response.text
 
 
 def fetch_first_recent_link() -> str:
-    """
-    Load Wired's homepage and return the first article URL found.
-    """
     html = get_page_html(BASE_URL)
     soup = BeautifulSoup(html, "html.parser")
 
@@ -35,9 +27,6 @@ def fetch_first_recent_link() -> str:
 
 
 def scrape_news(source: str) -> dict:
-    """
-    Given an article URL or file, return a dict with title, date, images, and paragraphs.
-    """
     html = get_page_html(source)
     soup = BeautifulSoup(html, "html.parser")
 

@@ -3,24 +3,28 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# Load environment variables from project root .env
 env_path = Path(__file__).parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
+load_dotenv(env_path)
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL:
+# Ensure DATABASE_URL is set
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
     raise RuntimeError("DATABASE_URL is not set in .env")
 
-engine = create_engine(DATABASE_URL, echo=True)
+# Create SQLAlchemy engine and session factory
+engine = create_engine(database_url, echo=True)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-Base = declarative_base()
 
-Base.metadata.create_all(bind=engine)
+# Dependency to get DB session
 
 
 def get_db():
+    """
+    Provide a transactional scope around a series of operations.
+    """
     db = SessionLocal()
     try:
         yield db

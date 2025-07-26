@@ -1,0 +1,123 @@
+from typing import List
+
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, HttpUrl
+from pydantic.v1 import ConfigDict
+from sqlalchemy.orm import Session
+
+from app.schemas import ArticleSchema
+from app.scraper.wired import fetch_first_recent_link, scrape_news
+from database.models import WiredArticle
+from database.session import get_db
+from app.logger.logger import logger
+
+router = APIRouter(prefix="/wired", tags=["Wired"])
+
+
+class ScrapeRequest(BaseModel):
+    url: HttpUrl
+    model_config = ConfigDict(
+        url_allowed_hosts={"wired.com", "www.wired.com"},
+        json_schema_extra={"example": {"url": "https://www.wired.com/your-article"}},
+    )
+
+
+@router.get(
+    "/items", response_model=List[ArticleSchema], summary="GET all articles from DB"
+)
+def read_all_news(db: Session = Depends(get_db)):
+    articles = db.query(WiredArticle).all()
+    if not articles:
+        logger.info("[WIRED] No articles found in DB")
+        raise HTTPException(status_code=404, detail="No articles available")
+    logger.info("[WIRED] Fetching all articles from DB")
+    return articles
+
+
+@router.get(
+    "/items/{item_id}", response_model=ArticleSchema, summary="GET article by ID"
+)
+def read_item(item_id: int, db: Session = Depends(get_db)):
+    article = db.get(WiredArticle, item_id)
+    if not article:
+        logger.info(f"[WIRED] Article {item_id} not found")
+        raise HTTPException(status_code=404, detail="Article not found")
+    logger.info(f"[WIRED] Fetching article {item_id}")
+    return article
+
+
+@router.get(
+    "/latest_from_db",
+    response_model=ArticleSchema,
+    summary="GET latest article from DB",
+)
+def latest_from_db(db: Session = Depends(get_db)):
+    article = db.query(WiredArticle).order_by(WiredArticle.id.desc()).first()
+    if not article:
+        logger.info("[WIRED] No articles in DB")
+        raise HTTPException(status_code=404, detail="No articles available")
+    logger.info("[WIRED] Fetching latest article from DB")
+    return article
+
+
+@router.post(
+    "/scrape/latest",
+    response_model=ArticleSchema,
+    summary="Scrape and save latest article",
+)
+def scrape_latest(db: Session = Depends(get_db)):
+    try:
+        url = fetch_first_recent_link()
+        data = scrape_news(url)
+    except Exception as e:
+        logger.info(f"[WIRED] Error scraping latest: {e}")
+        raise HTTPException(status_code=502, detail="Error scraping the latest article")
+    existing = db.query(WiredArticle).filter_by(url=url).first()
+    if existing:
+        logger.info("[WIRED] Latest article exists, returning it")
+        return existing
+    article = WiredArticle(url=url, **data)
+    db.add(article)
+    db.commit()
+    db.refresh(article)
+    logger.info("[WIRED] Saved latest article to DB")
+    return article
+
+
+@router.post(
+    "/scrape_specific",
+    response_model=ArticleSchema,
+    summary="Scrape and save specific article",
+)
+def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
+    url = str(req.url)
+    try:
+        data = scrape_news(url)
+    except Exception as e:
+        logger.info(f"[WIRED] Error scraping URL {url}: {e}")
+        raise HTTPException(status_code=502, detail="Error scraping the page")
+    if not data.get("title"):
+        logger.info(f"[WIRED] No data found at {url}")
+        raise HTTPException(status_code=404, detail="No data found on this page")
+    existing = db.query(WiredArticle).filter_by(url=url).first()
+    if existing:
+        logger.info("[WIRED] Specific article exists, returning it")
+        return existing
+    article = WiredArticle(url=url, **data)
+    db.add(article)
+    db.commit()
+    db.refresh(article)
+    logger.info("[WIRED] Saved specific article to DB")
+    return article
+
+
+@router.delete("/items/{item_id}", summary="Delete article by ID")
+def delete_item(item_id: int, db: Session = Depends(get_db)):
+    article = db.get(WiredArticle, item_id)
+    if not article:
+        logger.info(f"[WIRED] Delete failed, article {item_id} not found")
+        raise HTTPException(status_code=404, detail="Article not found")
+    db.delete(article)
+    db.commit()
+    logger.info(f"[WIRED] Deleted article {item_id}")
+    return {"deleted_id": item_id}

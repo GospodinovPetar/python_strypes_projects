@@ -1,11 +1,11 @@
 from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
 
 HEADERS = {"User-Agent": "DevNewsScraper"}
 LISTING_URL = "https://dev.bg/digest/category/it-news/"
 
-# Bulgarian month lookup
 BG_MONTHS = {
     "януари": 1,
     "февруари": 2,
