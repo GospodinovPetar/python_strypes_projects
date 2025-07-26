@@ -6,7 +6,7 @@ from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
 
 from app.schemas import ArticleSchema
-from app.scraper.devbgnews import fetch_first_recent_link, scrape_devnews_article
+from app.scrapers.devbgnews import fetch_first_recent_link, scrape_devnews_article
 from database.models import DevNewsArticle
 from database.session import get_db
 from app.logger.logger import logger
