@@ -25,9 +25,9 @@
 
 This repository hosts individual scrapers for three Bulgarian news websites:
 
-* **TrafficNews** (`trafficnews.bg`)
+* **Tech News** (`technews.bg`)
 * **Dev BG News** (`dev.bg`)
-* **News.bg** (`news.bg`)
+* **Wired** (`wired.com`)
 
 Each scraper:
 
@@ -35,9 +35,9 @@ Each scraper:
 2. **Parses** relevant fields: title, URL, publication date, image, and content.
 3. **Stores** articles in PostgreSQL tables named per site:
 
-    * `trafficnews_articles`
     * `devnews_articles`
-    * `newsbg_articles`
+    * `technewsbg_articles`
+    * `wired_articles`
 
 By aggregating these disparate sources, you can power a **mobile app** to deliver all headlines & articles in one
 cohesive experience.
@@ -92,7 +92,7 @@ docker-compose up --build
 
 ## 📡 Example API Calls
 
-Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
+Use the `{site}` placeholder for any of: `technewsbg`, `wired`, `devnews`.
 
 * **Read Latest Article**
 
