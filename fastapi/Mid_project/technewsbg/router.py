@@ -1,23 +1,25 @@
 from typing import List
 
 from fastapi import Depends, HTTPException, APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
 from logger import logger
 from db import get_db
-from models import Article as ArticleModel
+from models import TechNewsArticle as ArticleModel
 from schemas import ArticleSchema
-from trafficnews.scraper import fetch_latest_news, scrape_trafficnews
+from technewsbg.scraper import fetch_latest_news, scrape_news
 
-router = APIRouter(prefix="/trafficnews", tags=["Traffic News"])
+router = APIRouter(prefix="/technewsbg", tags=["Tech News"])
 db_dependency: Session = Depends(get_db)
 
 
 class ScrapeRequest(BaseModel):
+    url: HttpUrl
+
     model_config = ConfigDict(
-        url_allowed_hosts={"trafficnews.bg", "www.trafficnews.bg"},
-        json_schema_extra={"example": {"url": "https://trafficnews.bg/...."}},
+        url_allowed_hosts={"technews.bg", "www.technews.bg"},
+        json_schema_extra={"example": {"url": "https://technews.bg/...."}},
     )
 
 
@@ -28,7 +30,7 @@ class ScrapeRequest(BaseModel):
 )
 def read_all_news(db: Session = db_dependency):
     """
-    # This will give you all the traffic news in our trafficnews database
+    # This will give you all the traffic news in our technewsbg database
     ## They will contain:
     - **id**
     - **url**
@@ -37,7 +39,7 @@ def read_all_news(db: Session = db_dependency):
     - **date**
     - **paragraphs**
     - **created_at**"""
-    logger.info("[TRAFFICNEWS] OK: Fetching all items in the database.")
+    logger.info("[TECHNEWS] OK: Fetching all items in the database.")
     return db.query(ArticleModel).all()
 
 
@@ -62,10 +64,10 @@ def read_item(item_id: int, db: Session = db_dependency):
 
     if not item:
         logger.info(
-            f"[TRAFFICNEWS] ERROR: Fetching specific item: {item_id}, but not found."
+            f"[TECHNEWS] ERROR: Fetching specific item: {item_id}, but not found."
         )
         raise HTTPException(status_code=404, detail="Item not found")
-    logger.info(f"[TRAFFICNEWS] OK: Fetching specific item: {item_id}")
+    logger.info(f"[TECHNEWS] OK: Fetching specific item: {item_id}")
     return item
 
 
@@ -88,10 +90,10 @@ def latest_news_from_db(db: Session = db_dependency):
     article = db.query(ArticleModel).order_by(ArticleModel.id.desc()).first()
 
     if not article:
-        logger.info("[TRAFFICNEWS] ERROR: A requested item was not found")
+        logger.info("[TECHNEWS] ERROR: A requested item was not found")
         raise HTTPException(404, detail="Няма новини")
 
-    logger.info("[TRAFFICNEWS] OK: Fetching latest trafficnews article from database")
+    logger.info("[TECHNEWS] OK: Fetching latest technewsbg article from database")
     logger.debug(f"Scraped data: {article}")
     return article
 
@@ -99,11 +101,11 @@ def latest_news_from_db(db: Session = db_dependency):
 @router.post(
     "/scrape/latest",
     response_model=ArticleSchema,
-    summary="POST Scrape the latest news from trafficnews",
+    summary="POST Scrape the latest news from technewsbg",
 )
-def scrape_latest(db: Session = Depends(get_db)) -> ArticleModel:
+def scrape_latest(db: Session = Depends(get_db)):
     """
-    # This will give you the latest news article in trafficnews
+    # This will give you the latest news article in technewsbg
     1) We get the newest article from the website
     2) We upsert it to the database
     3) We output the article
@@ -120,13 +122,13 @@ def scrape_latest(db: Session = Depends(get_db)) -> ArticleModel:
     existing = db.query(ArticleModel).filter_by(url=news["url"]).first()
     if existing:
         logger.info(
-            "[TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries"
+            "[TECHNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries"
         )
         return existing
 
     article = ArticleModel(**news)
-    logger.info("[TRAFFICNEWS] OK: Scraping latest news from website")
-    logger.debug(f"[TRAFFICNEWS] Scraped data: {article}")
+    logger.info("[TECHNEWS] OK: Scraping latest news from website")
+    logger.debug(f"[TECHNEWS] Scraped data: {article}")
     db.add(article)
     db.commit()
     db.refresh(article)
@@ -136,8 +138,9 @@ def scrape_latest(db: Session = Depends(get_db)) -> ArticleModel:
 @router.post(
     "/scrape_specific",
     response_model=ArticleSchema,
-    summary="POST Scrape a specific article from trafficnews",
+    summary="POST Scrape a specific article from technewsbg",
 )
+@router.post("/scrape_specific", response_model=ArticleSchema)
 def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
     """
     # This will give you the info about an article you give a link to
@@ -151,19 +154,23 @@ def scrape_and_store(req: ScrapeRequest, db: Session = db_dependency):
     - **created_at**
     """
     try:
-        data = scrape_trafficnews(str(req.url))
+        data = scrape_news(str(req.url))
     except Exception:
-        logger.info("[TRAFFICNEWS] ERROR: Invalid page url for scraping was given.")
+        logger.info("[TECHNEWS] ERROR: Invalid page url for scraping was given.")
         raise HTTPException(502, "Грешка при скрейпване на страницата")
 
-    if not data["title"]:
-        logger.info("[TRAFFICNEWS] ERROR: Invalid page url for scraping was given.")
+    if not data.get("title"):
+        logger.info("[TECHNEWSBG] ERROR: No data found on this page.")
         raise HTTPException(404, "Няма намерени данни на тази страница")
 
+    # ✂️ remove any url key so we don't pass two url= arguments
+    data.pop("url", None)
+
+    # now only one url= is passed
     article = db.merge(ArticleModel(url=str(req.url), **data))
 
-    logger.info("[TRAFFICNEWS] OK: Scraping latest news from url")
-    logger.debug(f"[TRAFFICNEWS] Scraped data: {article}")
+    logger.info("[TECHNEWSBG] OK: Scraped data from URL")
+    logger.debug(f"[TECHNEWSBG] Scraped data: {article}")
 
     db.commit()
     return article
@@ -180,12 +187,12 @@ def delete_item(item_id: int, db: Session = db_dependency):
     article = db.query(ArticleModel).get(item_id)
     if not article:
         logger.info(
-            "[TRAFFICNEWS] ERROR: A delete request was opened, but no article was found."
+            "[TECHNEWS] ERROR: A delete request was opened, but no article was found."
         )
         raise HTTPException(status_code=404, detail="Article not found")
     db.delete(article)
     logger.info(
-        f"[TRAFFICNEWS] OK: Deleted a specific item from the database with id {item_id}"
+        f"[TECHNEWS] OK: Deleted a specific item from the database with id {item_id}"
     )
     db.commit()
     return {"Item deleted": item_id}

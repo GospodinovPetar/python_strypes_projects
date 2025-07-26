@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
 
@@ -20,6 +20,8 @@ get_db_dep = Depends(get_db)
 
 
 class ScrapeRequest(BaseModel):
+    url: HttpUrl
+
     model_config = ConfigDict(
         url_allowed_hosts={"dev.bg", "www.dev.bg"},
         json_schema_extra={"example": {"url": "https://dev.bg/it-news/..."}},
@@ -43,7 +45,7 @@ def read_all_news(db: Session = get_db_dep):
         logger.info("[DEVNEWS] ERROR: A requested item was not found")
         raise HTTPException(404, detail="Няма новини")
 
-    logger.info("[DEVNEWS] OK: Fetching latest trafficnews article from database")
+    logger.info("[DEVNEWS] OK: Fetching latest technewsbg article from database")
     logger.debug(f"Scraped data: {article}")
     return db.query(DevNewsArticle).all()
 
@@ -89,7 +91,7 @@ def latest_news_from_db(db: Session = get_db_dep):
         logger.info("[DEVNEWS] ERROR: A requested item was not found")
         raise HTTPException(404, detail="Няма новини")
 
-    logger.info("[DEVNEWS] OK: Fetching latest trafficnews article from database")
+    logger.info("[DEVNEWS] OK: Fetching latest technewsbg article from database")
     logger.debug(f"Scraped data: {article}")
     return article
 

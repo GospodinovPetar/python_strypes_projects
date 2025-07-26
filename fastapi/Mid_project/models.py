@@ -1,7 +1,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import Column, Integer, String, DateTime, JSON, func
+from sqlalchemy import Column, Integer, String, DateTime, JSON, func, text
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -9,34 +9,39 @@ Base = declarative_base()
 SOFIA = ZoneInfo("Europe/Sofia")
 
 
-class Article(Base):
-    __tablename__ = "trafficnews_articles"
+class TechNewsArticle(Base):
+    __tablename__ = "technewsbg_articles"
+
     id = Column(Integer, primary_key=True, index=True)
-    url = Column(String, unique=True, index=True)
+    url = Column(String, unique=True, index=True, nullable=False)
     title = Column(String, nullable=False)
-    image_url = Column(String, nullable=True)
-    date = Column(String, nullable=True)
+    image_url = Column(JSON, nullable=False)
     paragraphs = Column(JSON, nullable=False)
+    date = Column(String, nullable=True)
+
     created_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(SOFIA),
-        server_default=func.timezone("Europe/Sofia", func.now()),
+        server_default=text("TIMEZONE('Europe/Sofia', now())"),
         nullable=False,
     )
 
 
-class NewsBgArticle(Base):
-    __tablename__ = "newsbg_articles"
+class WiredArticle(Base):
+    __tablename__ = "wired_articles"
+
     id = Column(Integer, primary_key=True, index=True)
-    url = Column(String, unique=True, index=True)
+    url = Column(String, unique=True, index=True, nullable=False)
     title = Column(String, nullable=False)
-    image_url = Column(String, nullable=True)
-    date = Column(String, nullable=True)
-    paragraphs = Column(JSON, nullable=False)
+
+    # These must exactly match your scraper + Pydantic schema
+    image_url = Column(JSON, nullable=False)  # List[HttpUrl] JSON array
+    paragraphs = Column(JSON, nullable=False)  # List[str] JSON array
+    date = Column(String, nullable=True)  # stored as text
     created_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(SOFIA),
-        server_default=func.timezone("Europe/Sofia", func.now()),
+        server_default=text("TIMEZONE('Europe/Sofia', now())"),
         nullable=False,
     )
 
@@ -47,9 +52,9 @@ class DevNewsArticle(Base):
     id = Column(Integer, primary_key=True, index=True)
     url = Column(String, unique=True, index=True, nullable=False)
     title = Column(String, nullable=False)
-    image_url = Column(String, nullable=True)
-    date = Column(String, nullable=True)
+    image_url = Column(JSON, nullable=False)
     paragraphs = Column(JSON, nullable=False)
+    date = Column(String, nullable=True)
     created_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(SOFIA),

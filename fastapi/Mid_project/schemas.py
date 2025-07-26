@@ -8,7 +8,7 @@ class ArticleSchema(BaseModel):
     id: int
     url: HttpUrl
     title: str
-    image_url: Optional[HttpUrl]
+    image_url: List[HttpUrl]
     date: Optional[str]
     paragraphs: List[str]
     created_at: Optional[datetime] = None

@@ -50,7 +50,8 @@ def scrape_devnews_article(url: str) -> dict:
 
     # Image URL
     img = article.find("img")
-    image_url = img["src"] if img and img.has_attr("src") else None
+    src = img["src"] if img and img.has_attr("src") else None
+    image_url = [src] if src else []
 
     # Published date
     date_tag = soup.select_one("span.post-date")

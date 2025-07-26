@@ -144,19 +144,17 @@ Use the `{site}` placeholder for any of: `trafficnews`, `devnews`, `newsbg`.
 ---
 
 ## 🛠 Logging
-### Logging is saved in logs/app.log
-Here is a quick example:
-```
-2025-07-24 13:26:28 INFO     [news_api] [TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries
-2025-07-24 16:22:36 INFO     [news_api] [TRAFFICNEWS] OK: Scraping latest news from website
-2025-07-24 16:26:14 INFO     [news_api] [TRAFFICNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries
-2025-07-25 09:14:56 INFO     [news_api] [TRAFFICNEWS] OK: Scraping latest news from website
-2025-07-25 11:21:53 INFO     [news_api] [NEWSBG] ERROR: A requested item was not found
-2025-07-25 11:21:58 INFO     [news_api] [NEWSBG] ERROR: Fetching specific item: 54, but not found.
-2025-07-25 11:22:09 INFO     [news_api] [DEVNEWS] OK: Scraping latest news from website
-2025-07-25 11:22:18 INFO     [news_api] [DEVNEWS] OK: Deleted a specific item from the database with id 1
 
+All scrapers log to console via Python `logging`:
+
+```text
+2025-07-23 12:00:00 INFO  TrafficNewsScraper: Starting crawl
+2025-07-23 12:00:02 INFO  TrafficNewsScraper: Found 1 new article
+2025-07-23 12:00:03 ERROR TrafficNewsScraper: Failed to parse https://.../page
 ```
+
+* **INFO**: crawl start, items found
+* **ERROR**: HTTP failures, parse errors, DB issues
 
 ---
 
