@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
 
-> **A unified scraping & API service** for aggregating news from multiple Bulgarian sites into a single mobile-friendly
+> **A unified scraping & API service** for aggregating news from multiple sites into a single mobile-friendly
 > feed.
 
 ---
