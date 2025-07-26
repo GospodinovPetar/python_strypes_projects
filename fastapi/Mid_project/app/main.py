@@ -7,4 +7,4 @@ from app.routers import wired
 app = fastapi.FastAPI()
 app.include_router(wired.router)
 app.include_router(technewsbg.router)
-app.include_router(devbgnews.router)
+# app.include_router(devbgnews.router)

@@ -67,4 +67,5 @@ class DevNewsArticle(Base):
         nullable=False,
     )
 
+
 Base.metadata.create_all(bind=engine)
