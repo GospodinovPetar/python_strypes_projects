@@ -17,6 +17,6 @@ app = FastAPI(
 
 models.Base.metadata.create_all(bind=engine)
 
-app.include_router(wired_router.router)
+app.include_router(wired_router)
 app.include_router(technewsbg_router.router)
 app.include_router(devbgnews_router.router)
