@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
@@ -22,22 +22,38 @@ class ScrapeRequest(BaseModel):
     )
 
 
-@router.get(
-    "/items", response_model=List[ArticleSchema], summary="GET all articles in DB"
-)
-def read_all_news(db: Session = Depends(get_db)):
+@router.get("/items", summary="GET all articles in DB")
+def read_all_news(
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+):
     """
-    # This will give you all the news in our technewsbg database
-    ## They will contain:
+    # This will give you paginated news in our technewsbg database
+    ## Each item contains:
     - **id**
     - **url**
     - **title**
     - **image_url**
     - **date**
     - **paragraphs**
-    - **created_at**"""
-    logger.info("[TECHNEWSBG] Fetching all articles from DB")
-    return db.query(TechNewsArticle).all()
+    - **created_at**
+
+    ## Supports:
+    - **limit**: Number of results per page (default=10)
+    - **offset**: How many records to skip (default=0)
+    """
+
+    total = db.query(TechNewsArticle).count()
+    articles = db.query(TechNewsArticle).offset(offset).limit(limit).all()
+
+    if not articles:
+        logger.info("[TECHNEWSBG] No articles found in DB")
+        raise HTTPException(404, detail="Няма новини")
+
+    logger.info(f"[TECHNEWSBG] Returning {len(articles)} articles from DB")
+
+    return {"total": total, "limit": limit, "offset": offset, "items": articles}
 
 
 @router.get(

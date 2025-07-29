@@ -1,6 +1,4 @@
-from typing import List
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
@@ -22,26 +20,40 @@ class ScrapeRequest(BaseModel):
     )
 
 
-@router.get(
-    "/items", response_model=List[ArticleSchema], summary="GET all articles from DB"
-)
-def read_all_news(db: Session = Depends(get_db)):
+@router.get("/items", summary="GET all articles from DB")
+def read_all_news(
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+):
     """
-    # This will give you all the news in our wired database
-    ## They will contain:
+    # Paginated list of all Wired articles in DB
+    ## Each item includes:
     - **id**
     - **url**
     - **title**
     - **image_url**
     - **date**
     - **paragraphs**
-    - **created_at**"""
-    articles = db.query(WiredArticle).all()
+    - **created_at**
+
+    ## Pagination:
+    - **limit**: Number of results to return (default: 10)
+    - **offset**: Number of results to skip (default: 0)
+    """
+
+    total = db.query(WiredArticle).count()
+    articles = db.query(WiredArticle).offset(offset).limit(limit).all()
+
     if not articles:
         logger.info("[WIRED] No articles found in DB")
         raise HTTPException(status_code=404, detail="No articles available")
-    logger.info("[WIRED] Fetching all articles from DB")
-    return articles
+
+    logger.info(
+        f"[WIRED] Fetched {len(articles)} articles (offset={offset}, limit={limit})"
+    )
+
+    return {"total": total, "limit": limit, "offset": offset, "items": articles}
 
 
 @router.get(

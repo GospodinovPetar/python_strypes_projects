@@ -12,7 +12,7 @@
 
 1. [🚀 Project Summary](#-project-summary)
 2. [🔧 Architecture & Data Flow](#-architecture--data-flow)
-3. [⚙️ Setup & Running](#️-setup--running)
+3. [⚙️ Setup & Running](#-setup--running)
 4. [📡 Example API Calls](#-example-api-calls)
 5. [📸 Screenshots](#-screenshots)
 6. [🛠 Logging](#-logging)
@@ -108,34 +108,33 @@ Use the `{site}` placeholder for any of: `technewsbg`, `wired`, `devnews`.
   curl http://localhost:8000/{site}/items
   ```
 
-  Retrieves all stored articles. Supports optional filtering via query parameters:
+  Retrieves all stored articles. Supports optional filtering and pagination via query parameters:
 
-    * `date_from=YYYY-MM-DD`
-    * `date_to=YYYY-MM-DD`
-    * `keyword=search_term`
+    * `date_from=YYYY-MM-DD` – Articles published after this date.
+    * `date_to=YYYY-MM-DD` – Articles published before this date.
+    * `keyword=search_term` – Articles containing the keyword.
+    * `offset=10` – Number of articles to skip (for pagination).
+    * `limit=5` – Number of articles per page (default: 10).
+  
 
 * **Read Article by ID**
-
   ```bash
   curl http://localhost:8000/{site}/items/{id}
   ```
-
   Retrieves a single article by its database ID.
+
 
 * **Scrape Latest Article**
 
   ```bash
   curl -X POST http://localhost:8000/{site}/scrape/latest
   ```
-
   Scrapes the newest article from the site feed and stores it in the database.
 
 * **Delete an Article**
-
   ```bash
   curl -X DELETE http://localhost:8000/{site}/items/{id}
   ```
-
   Deletes the specified article by its database ID.
 
 ## 📸 Screenshots

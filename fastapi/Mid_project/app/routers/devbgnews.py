@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
@@ -29,8 +29,12 @@ class ScrapeRequest(BaseModel):
     )
 
 
-@router.get("/items", response_model=List[ArticleSchema])
-def read_all_news(db: Session = get_db_dep):
+@router.get("/items")
+def read_all_news(
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: Session = get_db_dep,
+):
     """
     # This will give you all the news in our devbgnews database
     ## They will contain:
@@ -40,15 +44,21 @@ def read_all_news(db: Session = get_db_dep):
     - **image_url**
     - **date**
     - **paragraphs**
-    - **created_at**"""
-    article = db.query(DevNewsArticle).all()
-    if not article:
+    - **created_at**
+    - **pagination support using limit & offset**
+    """
+
+    total = db.query(DevNewsArticle).count()
+    articles = db.query(DevNewsArticle).offset(offset).limit(limit).all()
+
+    if not articles:
         logger.info("[DEVNEWS] ERROR: A requested item was not found")
         raise HTTPException(404, detail="Няма новини")
 
-    logger.info("[DEVNEWS] OK: Fetching latest technewsbg article from database")
-    logger.debug(f"Scraped data: {article}")
-    return db.query(DevNewsArticle).all()
+    logger.info("[DEVNEWS] OK: Fetching latest devbgnews articles from database")
+    logger.debug(f"Scraped data: {articles}")
+
+    return {"total": total, "limit": limit, "offset": offset, "items": articles}
 
 
 @router.get("/items/{item_id}", response_model=ArticleSchema)
@@ -140,7 +150,7 @@ def scrape_latest(db: Session = get_db_dep):
 
 
 @router.post("/scrape_specific", response_model=ArticleSchema)
-def scrape_specific(req: ScrapeRequest, db: Session = get_db_dep):
+def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     """
     # This will give you the info about an article you give a link to
     ## It will contain:
