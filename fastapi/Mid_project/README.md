@@ -39,7 +39,7 @@ Each scraper:
     * `technewsbg_articles`
     * `wired_articles`
 
-By aggregating these disparate sources, you can power a **mobile app** to deliver all headlines & articles in one
+By aggregating these sources, you can power a **mobile app** to deliver all headlines & articles in one
 cohesive experience.
 
 ---
