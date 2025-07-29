@@ -173,6 +173,5 @@ Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## 📄 License
 
-Distributed under the MIT License.
-
+Distributed under the GNU General Public License
 > _Created by Petar Gospodinov_  
