@@ -46,11 +46,11 @@ cohesive experience.
 
 ## 🔧 Architecture & Data Flow
 
-| Component         | Location / Modules                                                                   | Responsibility                                                                                                                                                                                 |
-|-------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Scraper**       | `app/scrapers/devbgnews.py`<br>`app/scrapers/technews.py`<br>`app/scrapers/wired.py` | • Identify latest article links <br>• Extract fields: title, url, image\_url, date, paragraphs                                                                                                 |
-| **Database**      | `database/models.py`, `database/session.py`                                          | • SQLAlchemy ORM with PostgreSQL <br>                                                                                                                                                          |
-| **API Service**   | `app/main.py` + `app/routers/{devbgnews, technewsbg, wired}.py`                      | • FastAPI endpoints for each site:<br>  - `GET /{site}/latest`<br>  - `POST /{site}/scrape`<br>  - `GET /{site}/items`<br>  - `DELETE /{site}/items/{id}`<br>• Supports pagination & filtering ||
+| Component       | Location / Modules                                                                   | Responsibility                                                                                                                                                                                 |
+|-----------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Scrapers**    | `app/scrapers/devbgnews.py`<br>`app/scrapers/technews.py`<br>`app/scrapers/wired.py` | • Identify latest article links <br>• Extract fields: title, url, image\_url, date, paragraphs                                                                                                 |
+| **Database**    | `database/models.py`, `database/session.py`                                          | • SQLAlchemy ORM with PostgreSQL <br>                                                                                                                                                          |
+| **API Service** | `app/main.py` + `app/routers/{devbgnews, technewsbg, wired}.py`                      | • FastAPI endpoints for each site:<br>  - `GET /{site}/latest`<br>  - `POST /{site}/scrape`<br>  - `GET /{site}/items`<br>  - `DELETE /{site}/items/{id}`<br>• Supports pagination & filtering ||
 
 ---
 
@@ -139,11 +139,13 @@ Use the `{site}` placeholder for any of: `technewsbg`, `wired`, `devnews`.
   Deletes the specified article by its database ID.
 
 ## 📸 Screenshots
-
+![Screenshot Of The Whole App](screenshots/screenshot_whole_app.png)
+![Get All Articles](screenshots/screenshot_get.png)
+![Scrape The Latest Article](screenshots/screenshot_post.png)
 ---
 
 ## 🛠 Logging
-### Logging is saved in logs/app.log
+### Logging is saved in [here](app/logger/logs/app.log)
 Here is a quick example:
 ```
 2025-07-26 12:53:49 INFO     [news_api] [WIRED] Fetching all articles from DB

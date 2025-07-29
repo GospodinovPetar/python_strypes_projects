@@ -32,7 +32,7 @@ class ScrapeRequest(BaseModel):
 @router.get("/items", response_model=List[ArticleSchema])
 def read_all_news(db: Session = get_db_dep):
     """
-    # This will give you all the traffic news in our devbgnews database
+    # This will give you all the news in our devbgnews database
     ## They will contain:
     - **id**
     - **url**
@@ -140,7 +140,7 @@ def scrape_latest(db: Session = get_db_dep):
 
 
 @router.post("/scrape_specific", response_model=ArticleSchema)
-def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
+def scrape_specific(req: ScrapeRequest, db: Session = get_db_dep):
     """
     # This will give you the info about an article you give a link to
     ## It will contain:

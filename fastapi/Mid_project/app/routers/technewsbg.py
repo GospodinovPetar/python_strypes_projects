@@ -26,6 +26,16 @@ class ScrapeRequest(BaseModel):
     "/items", response_model=List[ArticleSchema], summary="GET all articles in DB"
 )
 def read_all_news(db: Session = Depends(get_db)):
+    """
+    # This will give you all the news in our technewsbg database
+    ## They will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     logger.info("[TECHNEWSBG] Fetching all articles from DB")
     return db.query(TechNewsArticle).all()
 
@@ -34,6 +44,16 @@ def read_all_news(db: Session = Depends(get_db)):
     "/items/{item_id}", response_model=ArticleSchema, summary="GET article by ID"
 )
 def read_item(item_id: int, db: Session = Depends(get_db)):
+    """
+    # This will give you a technewsbg article based on the id in our database
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     article = db.get(TechNewsArticle, item_id)
     if not article:
         logger.info(f"[TECHNEWSBG] Article {item_id} not found")
@@ -47,6 +67,16 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
     summary="GET latest article from DB",
 )
 def latest_from_db(db: Session = Depends(get_db)):
+    """
+    # This will give you the latest technewsbg news article in our database
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     article = db.query(TechNewsArticle).order_by(TechNewsArticle.id.desc()).first()
     if not article:
         logger.info("[TECHNEWSBG] No articles in DB")
@@ -60,6 +90,20 @@ def latest_from_db(db: Session = Depends(get_db)):
     summary="Scrape and store latest news",
 )
 def scrape_latest(db: Session = Depends(get_db)):
+    """
+    # This will give you the latest news article in technews.bg news area
+    1) We get the newest article from the website
+    2) We upsert it to the database
+    3) We output the article
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+    """
     news = fetch_latest_news()
     existing = db.query(TechNewsArticle).filter_by(url=news["url"]).first()
     if existing:
@@ -77,6 +121,17 @@ def scrape_latest(db: Session = Depends(get_db)):
     summary="Scrape and store specific news",
 )
 def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
+    """
+    # This will give you the info about an article you give a link to
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+    """
     try:
         data = scrape_news(str(req.url))
     except Exception:
@@ -92,6 +147,9 @@ def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
 
 @router.delete("/items/{item_id}", summary="Delete article by ID")
 def delete_item(item_id: int, db: Session = Depends(get_db)):
+    """
+    # This will delete a specific item from the database, based on the id in our database
+    """
     article = db.get(TechNewsArticle, item_id)
     if not article:
         raise HTTPException(404, "Article not found")

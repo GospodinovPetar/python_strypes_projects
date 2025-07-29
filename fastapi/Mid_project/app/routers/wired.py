@@ -26,6 +26,16 @@ class ScrapeRequest(BaseModel):
     "/items", response_model=List[ArticleSchema], summary="GET all articles from DB"
 )
 def read_all_news(db: Session = Depends(get_db)):
+    """
+    # This will give you all the news in our wired database
+    ## They will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     articles = db.query(WiredArticle).all()
     if not articles:
         logger.info("[WIRED] No articles found in DB")
@@ -38,6 +48,16 @@ def read_all_news(db: Session = Depends(get_db)):
     "/items/{item_id}", response_model=ArticleSchema, summary="GET article by ID"
 )
 def read_item(item_id: int, db: Session = Depends(get_db)):
+    """
+    # This will give you a wired article based on the id in our database
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     article = db.get(WiredArticle, item_id)
     if not article:
         logger.info(f"[WIRED] Article {item_id} not found")
@@ -52,6 +72,16 @@ def read_item(item_id: int, db: Session = Depends(get_db)):
     summary="GET latest article from DB",
 )
 def latest_from_db(db: Session = Depends(get_db)):
+    """
+    # This will give you the latest wired news article in our database
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     article = db.query(WiredArticle).order_by(WiredArticle.id.desc()).first()
     if not article:
         logger.info("[WIRED] No articles in DB")
@@ -66,6 +96,20 @@ def latest_from_db(db: Session = Depends(get_db)):
     summary="Scrape and save latest article",
 )
 def scrape_latest(db: Session = Depends(get_db)):
+    """
+    # This will give you the latest news article in wired.com news area
+    1) We get the newest article from the website
+    2) We upsert it to the database
+    3) We output the article
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+    """
     try:
         url = fetch_first_recent_link()
         data = scrape_news(url)
@@ -90,6 +134,17 @@ def scrape_latest(db: Session = Depends(get_db)):
     summary="Scrape and save specific article",
 )
 def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
+    """
+    # This will give you the info about an article you give a link to
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+    """
     url = str(req.url)
     try:
         data = scrape_news(url)
@@ -113,6 +168,9 @@ def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
 
 @router.delete("/items/{item_id}", summary="Delete article by ID")
 def delete_item(item_id: int, db: Session = Depends(get_db)):
+    """
+    # This will delete a specific item from the database, based on the id in our database
+    """
     article = db.get(WiredArticle, item_id)
     if not article:
         logger.info(f"[WIRED] Delete failed, article {item_id} not found")
