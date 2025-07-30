@@ -127,3 +127,23 @@ FROM wired_articles
 2025-07-29 16:11:36,296 [INFO] sqlalchemy.engine.Engine - [cached since 39.42s ago] {'param_1': 10, 'param_2': 0}
 2025-07-29 16:11:36,298 [INFO] app - [WIRED] Fetched 2 articles (offset=0, limit=10)
 2025-07-29 16:11:36,299 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-30 10:38:54,822 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 500 Internal Server Error"
+2025-07-30 10:38:54,826 [INFO] app - [DEVNEWS] ERROR: Error scraping data from dev.bg news article
+2025-07-30 10:38:54,826 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-07-30 10:38:54,828 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-07-30 10:38:54,828 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-07-30 10:40:19,710 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 500 Internal Server Error"
+2025-07-30 10:40:19,714 [INFO] app - [DEVNEWS] ERROR: Error scraping data from dev.bg news article
+2025-07-30 10:40:19,714 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-07-30 10:40:19,716 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-07-30 10:40:19,716 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-07-30 10:41:18,831 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 500 Internal Server Error"
+2025-07-30 10:41:18,834 [INFO] app - [DEVNEWS] ERROR: Error scraping data from dev.bg news article
+2025-07-30 10:41:18,835 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-07-30 10:41:18,836 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-07-30 10:41:18,837 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-07-30 11:00:07,635 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-30 11:00:20,715 [INFO] app - [DEVNEWS] No articles found
+2025-07-30 11:00:52,170 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-07-30 11:00:58,340 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database

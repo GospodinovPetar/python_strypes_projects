@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
@@ -35,25 +33,12 @@ def read_all_news(
     offset: int = Query(0, ge=0),
     db: Session = get_db_dep,
 ):
-    """
-    # This will give you all the news in our devbgnews database
-    ## They will contain:
-    - **id**
-    - **url**
-    - **title**
-    - **image_url**
-    - **date**
-    - **paragraphs**
-    - **created_at**
-    - **pagination support using limit & offset**
-    """
-
     total = db.query(DevNewsArticle).count()
     articles = db.query(DevNewsArticle).offset(offset).limit(limit).all()
 
     if not articles:
-        logger.info("[DEVNEWS] ERROR: A requested item was not found")
-        raise HTTPException(404, detail="Няма новини")
+        logger.info("[DEVNEWS] No articles found")
+        return {"total": 0, "limit": limit, "offset": offset, "items": []}
 
     logger.info("[DEVNEWS] OK: Fetching latest devbgnews articles from database")
     logger.debug(f"Scraped data: {articles}")
@@ -63,17 +48,7 @@ def read_all_news(
 
 @router.get("/items/{item_id}", response_model=ArticleSchema)
 def read_item(item_id: int, db: Session = get_db_dep):
-    """
-    # This will give you a devbgnews article based on the id in our database
-    ## It will contain:
-    - **id**
-    - **url**
-    - **title**
-    - **image_url**
-    - **date**
-    - **paragraphs**
-    - **created_at**"""
-    item = db.query(DevNewsArticle).get(item_id)
+    item = db.query(DevNewsArticle).filter(DevNewsArticle.id == item_id).first()
 
     if not item:
         logger.info(
@@ -86,16 +61,6 @@ def read_item(item_id: int, db: Session = get_db_dep):
 
 @router.get("/latest_news_from_db/", response_model=ArticleSchema)
 def latest_news_from_db(db: Session = get_db_dep):
-    """
-    # This will give you the latest devbg news article in our database
-    ## It will contain:
-    - **id**
-    - **url**
-    - **title**
-    - **image_url**
-    - **date**
-    - **paragraphs**
-    - **created_at**"""
     article = db.query(DevNewsArticle).order_by(DevNewsArticle.id.desc()).first()
 
     if not article:
@@ -109,20 +74,6 @@ def latest_news_from_db(db: Session = get_db_dep):
 
 @router.post("/scrape/latest", response_model=ArticleSchema)
 def scrape_latest(db: Session = get_db_dep):
-    """
-    # This will give you the latest news article in dev.bg news area
-    1) We get the newest article from the website
-    2) We upsert it to the database
-    3) We output the article
-    ## It will contain:
-    - **id**
-    - **url**
-    - **title**
-    - **image_url**
-    - **date**
-    - **paragraphs**
-    - **created_at**
-    """
     url = fetch_first_recent_link()
 
     data = scrape_devnews_article(url)
@@ -131,7 +82,7 @@ def scrape_latest(db: Session = get_db_dep):
     existing = db.query(DevNewsArticle).filter_by(url=url).one_or_none()
     if existing:
         logger.info(
-            "[DEVNEWS] OK: Requeted a scrape of an article we already have in our database, returning it, no db entries"
+            "[DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it."
         )
         existing.title = data["title"]
         existing.image_url = data["image_url"]
@@ -151,53 +102,38 @@ def scrape_latest(db: Session = get_db_dep):
 
 @router.post("/scrape_specific", response_model=ArticleSchema)
 def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
-    """
-    # This will give you the info about an article you give a link to
-    ## It will contain:
-    - **id**
-    - **url**
-    - **title**
-    - **image_url**
-    - **date**
-    - **paragraphs**
-    - **created_at**
-    """
     url = str(req.url)
     try:
         data = scrape_devnews_article(url)
     except Exception:
-        logger.info(
-            "[DEVNEWS] ERROR: Error scraping data from dev.bg news article",
-        )
+        logger.info("[DEVNEWS] ERROR: Error scraping data from dev.bg news article")
         raise HTTPException(status_code=502, detail="Error scraping the page")
+
     if not data.get("title"):
-        logger.info(
-            "[DEVNEWS] ERROR: A requested item was not found",
-        )
+        logger.info("[DEVNEWS] ERROR: A requested item was not found")
         raise HTTPException(status_code=404, detail="No data found on this page")
-    # upsert via merge
-    article = db.merge(DevNewsArticle(url=url, **data))
+
+    try:
+        article = db.merge(DevNewsArticle(url=url, **data))
+        db.commit()
+        db.refresh(article)
+    except Exception as e:
+        db.rollback()
+        logger.error(f"[DEVNEWS] ERROR: DB error during merge: {e}")
+        raise HTTPException(status_code=500, detail="Database error")
+
     logger.info("[DEVNEWS] OK: Scraping latest news from url")
     logger.debug(f"[DEVNEWS] Scraped data: {article}")
-    db.commit()
-    db.refresh(article)
     return article
 
 
 @router.delete("/items/delete/{item_id}")
 def delete_item(item_id: int, db: Session = get_db_dep):
-    """
-    # This will delete a specific item from the database, based on the id in our database
-    """
-    article = db.get(DevNewsArticle, item_id)
+    article = db.query(DevNewsArticle).filter(DevNewsArticle.id == item_id).first()
     if not article:
-        logger.info(
-            "[DEVNEWS] ERROR: A delete request was opened, but no article was found."
-        )
+        logger.info("[DEVNEWS] ERROR: Delete request received but no article found")
         raise HTTPException(status_code=404, detail="Article not found")
     db.delete(article)
-    logger.info(
-        f"[DEVNEWS] OK: Deleted a specific item from the database with id {item_id}"
-    )
     db.commit()
+    logger.info(f"[DEVNEWS] OK: Deleted article with id {item_id}")
     return {"deleted_id": item_id}
