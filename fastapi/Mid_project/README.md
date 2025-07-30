@@ -23,7 +23,7 @@
 
 ## 🚀 Project Summary
 
-This repository hosts individual scrapers for three Bulgarian news websites:
+This repository hosts individual scrapers for three news websites:
 
 * **Tech News** (`technews.bg`)
 * **Dev BG News** (`dev.bg`)
