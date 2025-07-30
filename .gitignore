@@ -39,9 +39,6 @@ desktop.ini
 # Linux
 *~
 
-# Logs
-*.log
-
 # Dependency directories
 bower_components/
 
