@@ -147,3 +147,15 @@ To install, run: pip install email-validator
 2025-07-30 11:00:20,715 [INFO] app - [DEVNEWS] No articles found
 2025-07-30 11:00:52,170 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
 2025-07-30 11:00:58,340 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-07-30 13:09:13,615 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-30 13:10:37,189 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-30 13:10:42,297 [INFO] app - [WIRED] No articles found in DB
+2025-07-30 13:10:51,490 [INFO] app - [WIRED] Saved latest article to DB
+2025-07-30 13:13:06,657 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-30 13:13:09,357 [INFO] app - [WIRED] Latest article exists, returning it
+2025-07-30 13:13:18,207 [INFO] app - [WIRED] Fetched 1 articles (offset=0, limit=10)
+2025-07-30 13:13:33,694 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-07-30 13:13:39,741 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
