@@ -1,0 +1,129 @@
+2025-07-26 12:53:49 INFO     [news_api] [WIRED] Fetching all articles from DB
+2025-07-26 12:54:10 INFO     [news_api] [WIRED] Fetching article 1
+2025-07-26 12:54:16 INFO     [news_api] [WIRED] Fetching latest article from DB
+2025-07-26 12:54:23 INFO     [news_api] [WIRED] Deleted article 1
+2025-07-26 12:54:37 INFO     [news_api] [WIRED] Saved latest article to DB
+2025-07-26 12:54:46 INFO     [news_api] [WIRED] Deleted article 2
+2025-07-26 12:54:49 INFO     [news_api] [WIRED] Delete failed, article 12 not found
+2025-07-26 12:55:02 INFO     [news_api] [WIRED] Saved specific article to DB
+2025-07-26 12:55:11 INFO     [news_api] [TECHNEWSBG] Fetching all articles from DB
+
+2025-07-26 21:35:58,656 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-29 12:13:38,311 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-29 12:18:40,633 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-29 12:18:47,773 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 12:18:47,775 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles
+2025-07-29 12:18:47,775 [INFO] sqlalchemy.engine.Engine - [generated in 0.00026s] {}
+2025-07-29 12:18:47,780 [INFO] app - [WIRED] Fetching all articles from DB
+2025-07-29 12:18:47,782 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 12:20:25,780 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 12:20:25,781 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+WHERE wired_articles.url = %(url_1)s 
+ LIMIT %(param_1)s
+2025-07-29 12:20:25,781 [INFO] sqlalchemy.engine.Engine - [generated in 0.00023s] {'url_1': 'https://www.wired.com/story/psychedelic-therapy-mdma-maha/', 'param_1': 1}
+2025-07-29 12:20:25,786 [INFO] sqlalchemy.engine.Engine - INSERT INTO wired_articles (url, title, image_url, paragraphs, date, created_at) VALUES (%(url)s, %(title)s, %(image_url)s::JSON, %(paragraphs)s::JSON, %(date)s, %(created_at)s) RETURNING wired_articles.id
+2025-07-29 12:20:25,786 [INFO] sqlalchemy.engine.Engine - [generated in 0.00032s] {'url': 'https://www.wired.com/story/psychedelic-therapy-mdma-maha/', 'title': 'Psychedelic Therapy Crashed and Burned. MAHA Might Bring It Back', 'image_url': '["https://media.wired.com/photos/687165704aa8a8042c373ae1/3:4/w_2560%2Cc_limit/MDMA-Web-TT.jpg", "https://media.wired.com/photos/6871669a94a91b1b8d8a ... (353 characters truncated) ... 20and%2520Bruce%2520Birds%2520Eye%2520View.jpg", "https://media.wired.com/photos/687166743e1196c6e13f2132/master/w_1600%2Cc_limit/MDMA-Web-TT-2.jpg"]', 'paragraphs': '["This was supposedto be the year of the MDMA revolution.", "About this time last year, prescription MDMA looked like a sure thing. After decades of  ... (23394 characters truncated) ... ht be a strange perfection of ingredients.\\u201d", "Let us know what you think about this article. Submit a letter to the editor atmail@wired.com."]', 'date': 'Jul 29, 2025 6:00 AM', 'created_at': datetime.datetime(2025, 7, 29, 15, 20, 25, 786189, tzinfo=zoneinfo.ZoneInfo(key='Europe/Sofia'))}
+2025-07-29 12:20:25,790 [INFO] sqlalchemy.engine.Engine - COMMIT
+2025-07-29 12:20:25,791 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 12:20:25,792 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id, wired_articles.url, wired_articles.title, wired_articles.image_url, wired_articles.paragraphs, wired_articles.date, wired_articles.created_at 
+FROM wired_articles 
+WHERE wired_articles.id = %(pk_1)s
+2025-07-29 12:20:25,792 [INFO] sqlalchemy.engine.Engine - [generated in 0.00017s] {'pk_1': 2}
+2025-07-29 12:20:25,793 [INFO] app - [WIRED] Saved latest article to DB
+2025-07-29 12:20:25,793 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 12:21:06,813 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 12:21:06,815 [INFO] sqlalchemy.engine.Engine - SELECT devnews_articles.id AS devnews_articles_id, devnews_articles.url AS devnews_articles_url, devnews_articles.title AS devnews_articles_title, devnews_articles.image_url AS devnews_articles_image_url, devnews_articles.paragraphs AS devnews_articles_paragraphs, devnews_articles.date AS devnews_articles_date, devnews_articles.created_at AS devnews_articles_created_at 
+FROM devnews_articles
+2025-07-29 12:21:06,816 [INFO] sqlalchemy.engine.Engine - [generated in 0.00051s] {}
+2025-07-29 12:21:06,822 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-07-29 12:21:06,823 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 12:21:18,963 [INFO] app - [TECHNEWSBG] Fetching all articles from DB
+2025-07-29 12:21:18,963 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 12:21:18,966 [INFO] sqlalchemy.engine.Engine - SELECT technewsbg_articles.id AS technewsbg_articles_id, technewsbg_articles.url AS technewsbg_articles_url, technewsbg_articles.title AS technewsbg_articles_title, technewsbg_articles.image_url AS technewsbg_articles_image_url, technewsbg_articles.paragraphs AS technewsbg_articles_paragraphs, technewsbg_articles.date AS technewsbg_articles_date, technewsbg_articles.created_at AS technewsbg_articles_created_at 
+FROM technewsbg_articles
+2025-07-29 12:21:18,966 [INFO] sqlalchemy.engine.Engine - [generated in 0.00061s] {}
+2025-07-29 12:21:18,973 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:09:53,742 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-29 16:10:56,867 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:10:56,872 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:10:56,872 [INFO] sqlalchemy.engine.Engine - [generated in 0.00030s] {}
+2025-07-29 16:10:56,877 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:10:56,878 [INFO] sqlalchemy.engine.Engine - [generated in 0.00019s] {'param_1': 1, 'param_2': 0}
+2025-07-29 16:10:56,879 [INFO] app - [WIRED] Fetched 1 articles (offset=0, limit=1)
+2025-07-29 16:10:56,880 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:11:18,570 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:11:18,570 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:11:18,571 [INFO] sqlalchemy.engine.Engine - [cached since 21.7s ago] {}
+2025-07-29 16:11:18,573 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:11:18,574 [INFO] sqlalchemy.engine.Engine - [cached since 21.7s ago] {'param_1': 1, 'param_2': 0}
+2025-07-29 16:11:18,576 [INFO] app - [WIRED] Fetched 1 articles (offset=0, limit=1)
+2025-07-29 16:11:18,578 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:11:19,869 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:11:19,869 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:11:19,870 [INFO] sqlalchemy.engine.Engine - [cached since 23s ago] {}
+2025-07-29 16:11:19,872 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:11:19,873 [INFO] sqlalchemy.engine.Engine - [cached since 23s ago] {'param_1': 10, 'param_2': 1}
+2025-07-29 16:11:19,874 [INFO] app - [WIRED] Fetched 1 articles (offset=1, limit=10)
+2025-07-29 16:11:19,876 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:11:27,809 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:11:27,810 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:11:27,810 [INFO] sqlalchemy.engine.Engine - [cached since 30.94s ago] {}
+2025-07-29 16:11:27,811 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:11:27,811 [INFO] sqlalchemy.engine.Engine - [cached since 30.93s ago] {'param_1': 10, 'param_2': 1}
+2025-07-29 16:11:27,812 [INFO] app - [WIRED] Fetched 1 articles (offset=1, limit=10)
+2025-07-29 16:11:27,813 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:11:33,330 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:11:33,331 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:11:33,331 [INFO] sqlalchemy.engine.Engine - [cached since 36.46s ago] {}
+2025-07-29 16:11:33,333 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:11:33,333 [INFO] sqlalchemy.engine.Engine - [cached since 36.46s ago] {'param_1': 10, 'param_2': 1}
+2025-07-29 16:11:33,334 [INFO] app - [WIRED] Fetched 1 articles (offset=1, limit=10)
+2025-07-29 16:11:33,336 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:11:34,246 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:11:34,247 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:11:34,248 [INFO] sqlalchemy.engine.Engine - [cached since 37.38s ago] {}
+2025-07-29 16:11:34,249 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:11:34,250 [INFO] sqlalchemy.engine.Engine - [cached since 37.37s ago] {'param_1': 10, 'param_2': 0}
+2025-07-29 16:11:34,252 [INFO] app - [WIRED] Fetched 2 articles (offset=0, limit=10)
+2025-07-29 16:11:34,254 [INFO] sqlalchemy.engine.Engine - ROLLBACK
+2025-07-29 16:11:36,292 [INFO] sqlalchemy.engine.Engine - BEGIN (implicit)
+2025-07-29 16:11:36,292 [INFO] sqlalchemy.engine.Engine - SELECT count(*) AS count_1 
+FROM (SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles) AS anon_1
+2025-07-29 16:11:36,293 [INFO] sqlalchemy.engine.Engine - [cached since 39.42s ago] {}
+2025-07-29 16:11:36,295 [INFO] sqlalchemy.engine.Engine - SELECT wired_articles.id AS wired_articles_id, wired_articles.url AS wired_articles_url, wired_articles.title AS wired_articles_title, wired_articles.image_url AS wired_articles_image_url, wired_articles.paragraphs AS wired_articles_paragraphs, wired_articles.date AS wired_articles_date, wired_articles.created_at AS wired_articles_created_at 
+FROM wired_articles 
+ LIMIT %(param_1)s OFFSET %(param_2)s
+2025-07-29 16:11:36,296 [INFO] sqlalchemy.engine.Engine - [cached since 39.42s ago] {'param_1': 10, 'param_2': 0}
+2025-07-29 16:11:36,298 [INFO] app - [WIRED] Fetched 2 articles (offset=0, limit=10)
+2025-07-29 16:11:36,299 [INFO] sqlalchemy.engine.Engine - ROLLBACK
