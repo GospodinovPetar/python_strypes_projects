@@ -16,8 +16,9 @@
 4. [📡 Example API Calls](#-example-api-calls)
 5. [📸 Screenshots](#-screenshots)
 6. [🛠 Logging](#-logging)
-7. [🤝 Contributing](#-contributing)
-8. [📄 License](#-license)
+7. [🧪 Unit Testing](#running-tests)
+8. [🤝 Contributing](#-contributing)
+9. [📄 License](#-license)
 
 ---
 
@@ -158,6 +159,18 @@ Here is a quick example:
 2025-07-26 12:55:11 INFO     [news_api] [TECHNEWSBG] Fetching all articles from DB
 
 ```
+# 🧪 Unit Testing
+
+### Setup
+1. Ensure `.env` has the test database URL uncommented:
+   ```dotenv
+   DATABASE_URL=sqlite:///./tests/test.db
+
+### Running Tests
+From the project root, execute:
+
+    pytest -q
+All test files in tests/ will run against a fresh SQLite test.db.
 
 ---
 
