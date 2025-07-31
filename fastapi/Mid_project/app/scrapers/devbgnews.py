@@ -3,9 +3,8 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-HEADERS = {"User-Agent": "DevNewsScraper"}
 LISTING_URL = "https://dev.bg/digest/category/it-news/"
-
+DEVBG_HEADERS = {"User-Agent": "DevNewsScraper"}
 BG_MONTHS = {
     "януари": 1,
     "февруари": 2,
@@ -22,17 +21,23 @@ BG_MONTHS = {
 }
 
 
+def _get_page_html(url: str, headers: dict) -> str:
+    """Fetches the page HTML using the given headers."""
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.text
+
+
 def get_soup(url: str) -> BeautifulSoup:
-    resp = requests.get(url, headers=HEADERS)
-    resp.raise_for_status()
-    return BeautifulSoup(resp.text, "html.parser")
+    """Fetches and parses HTML from Dev.bg."""
+    html = _get_page_html(url, DEVBG_HEADERS)
+    return BeautifulSoup(html, "html.parser")
 
 
 def fetch_first_recent_link(listing_url: str = LISTING_URL) -> str:
-    selector = (
-        "section.blogroll-section.digest-section" " .blogroll-main article a[href]"
-    )
-    link = get_soup(listing_url).select_one(selector)
+    soup = get_soup(listing_url)
+    selector = "section.blogroll-section.digest-section .blogroll-main article a[href]"
+    link = soup.select_one(selector)
     if not link:
         raise RuntimeError(f"No recent article link found using selector {selector!r}")
     return link["href"]
@@ -50,8 +55,7 @@ def scrape_devnews_article(url: str) -> dict:
 
     # Image URL
     img = article.find("img")
-    src = img["src"] if img and img.has_attr("src") else None
-    image_url = [src] if src else []
+    image_url = [img["src"]] if img and img.has_attr("src") else []
 
     # Published date
     date_tag = soup.select_one("span.post-date")
@@ -62,7 +66,7 @@ def scrape_devnews_article(url: str) -> dict:
             datetime(int(year_str), BG_MONTHS[month_str.lower()], int(day_str))
             .date()
             .isoformat()
-        )  # devbg doesn't give out time of upload, just date
+        )
     else:
         date = None
 
@@ -72,9 +76,10 @@ def scrape_devnews_article(url: str) -> dict:
     ]
 
     return {
+        "url": url,
         "title": title,
-        "image_url": image_url,
         "date": date,
+        "image_url": image_url,
         "paragraphs": paragraphs,
     }
 

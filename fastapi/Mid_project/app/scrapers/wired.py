@@ -1,29 +1,30 @@
 from urllib.parse import urljoin
-
 import requests
 from bs4 import BeautifulSoup
 
-# --- Configuration ---
 BASE_URL = "https://www.wired.com"
 HEADERS = {"User-Agent": "NewsScraper"}
 
 
-def get_page_html(source: str) -> str:
-    response = requests.get(source, headers=HEADERS)
+def _get_page_html(url: str, headers: dict) -> str:
+    """Fetches the page HTML using the given headers."""
+    response = requests.get(url, headers=headers)
     response.raise_for_status()
     return response.text
+
+
+def get_page_html(source: str) -> str:
+    """Fetches Wired page HTML."""
+    return _get_page_html(source, HEADERS)
 
 
 def fetch_first_recent_link() -> str:
     html = get_page_html(BASE_URL)
     soup = BeautifulSoup(html, "html.parser")
-
-    # find the first <a> whose href contains '/story/'
-    for a in soup.find_all("a", href=True):
-        if "/story/" in a["href"]:
-            return urljoin(BASE_URL, a["href"])
-
-    raise RuntimeError("Could not find any article links on the homepage.")
+    link = soup.select_one('a[href*="/story/"]')
+    if not link:
+        raise RuntimeError("Could not find any article links on the homepage.")
+    return urljoin(BASE_URL, link["href"])
 
 
 def scrape_news(source: str) -> dict:
@@ -31,38 +32,34 @@ def scrape_news(source: str) -> dict:
     soup = BeautifulSoup(html, "html.parser")
 
     # Title
-    h1 = soup.find("h1")
-    if h1:
-        title = h1.get_text(strip=True)
+    title_tag = soup.find("h1")
+    title = title_tag.get_text(strip=True) if title_tag else None
 
     # Date
     time_tag = soup.find("time")
+    date = None
     if time_tag:
-        if time_tag.has_attr("datetime"):
-            date = time_tag["datetime"]
-        else:
-            date = time_tag.get_text(strip=True)
+        date = time_tag.get("datetime") or time_tag.get_text(strip=True)
 
     # Article body
     body = soup.find("div", itemprop="articleBody") or soup.find("article")
 
     # Images
-    images = []
+    image_url = []
     if body:
-        for img in body.find_all("img", src=True):
-            images.append(img["src"])
+        image_url = [img["src"] for img in body.find_all("img", src=True)]
 
     # Paragraphs
     paragraphs = []
     if body:
-        for p in body.find_all("p"):
-            text = p.get_text(strip=True)
-            if text:
-                paragraphs.append(text)
+        paragraphs = [
+            p.get_text(strip=True) for p in body.find_all("p") if p.get_text(strip=True)
+        ]
 
     return {
+        "url": source,
         "title": title,
         "date": date,
-        "image_url": images,
+        "image_url": image_url,
         "paragraphs": paragraphs,
     }

@@ -3,19 +3,24 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-# --- Configuration ---
-BASE_URL = "https://technews.bg"
-HEADERS = {"User-Agent": "TechNewsScraper"}
+TECHNEWS_BASE_URL = "https://technews.bg"
+TECHNEWS_HEADERS = {"User-Agent": "TechNewsScraper"}
 
 
-def get_page_html(url: str) -> str:
-    response = requests.get(url, headers=HEADERS)
+def _get_page_html(url: str, headers: dict) -> str:
+    """Fetches the page HTML using the given headers."""
+    response = requests.get(url, headers=headers)
     response.raise_for_status()
     return response.text
 
 
+def get_page_html(url: str) -> str:
+    """Fetches HTML from TechNews.bg."""
+    return _get_page_html(url, TECHNEWS_HEADERS)
+
+
 def fetch_latest_news() -> dict:
-    html = get_page_html(BASE_URL)
+    html = get_page_html(TECHNEWS_BASE_URL)
     soup = BeautifulSoup(html, "html.parser")
 
     link = soup.select_one("article.hentry a[href]")
@@ -25,7 +30,7 @@ def fetch_latest_news() -> dict:
         )
 
     href = link["href"]
-    article_url = href if href.startswith("http") else urljoin(BASE_URL, href)
+    article_url = href if href.startswith("http") else urljoin(TECHNEWS_BASE_URL, href)
 
     return scrape_news(article_url)
 
@@ -35,15 +40,15 @@ def scrape_news(url: str) -> dict:
     soup = BeautifulSoup(html, "html.parser")
 
     # Title
-    title = soup.select_one("h1.entry-title")
-    title = title.get_text(strip=True) if title else None
+    title_tag = soup.select_one("h1.entry-title")
+    title = title_tag.get_text(strip=True) if title_tag else None
 
     # Publish date
-    time = soup.select_one("time.entry-date.published")
-    if time and time.has_attr("datetime"):
-        date = time["datetime"]
-    elif time:
-        date = time.get_text(strip=True)
+    time_tag = soup.select_one("time.entry-date.published")
+    if time_tag and time_tag.has_attr("datetime"):
+        date = time_tag["datetime"]
+    elif time_tag:
+        date = time_tag.get_text(strip=True)
     else:
         date = None
 
@@ -51,26 +56,25 @@ def scrape_news(url: str) -> dict:
     body = soup.select_one("div.entry-content") or soup.select_one("article")
 
     # Images
-    images = []
+    image_url = []
     if body:
         for img in body.find_all("img"):
             src = img.get("data-src") or img.get("src")
             if src and not src.startswith("data:"):
                 full_src = src if src.startswith("http") else urljoin(url, src)
-                images.append(full_src)
+                image_url.append(full_src)
 
-    # Paragraphs: all non-empty p text
+    # Paragraphs
     paragraphs = []
     if body:
-        for p in body.find_all("p"):
-            text = p.get_text(strip=True)
-            if text:
-                paragraphs.append(text)
+        paragraphs = [
+            p.get_text(strip=True) for p in body.find_all("p") if p.get_text(strip=True)
+        ]
 
     return {
         "url": url,
         "title": title,
-        "image_url": images,
         "date": date,
+        "image_url": image_url,
         "paragraphs": paragraphs,
     }

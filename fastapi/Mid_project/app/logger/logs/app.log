@@ -833,3 +833,28 @@ To install, run: pip install email-validator
 2025-07-31 13:52:26,100 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
 2025-07-31 11:50:36,804 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
 To install, run: pip install email-validator
+2025-07-31 12:15:01,413 [INFO] app - [WIRED] Saved latest article to DB
+2025-07-31 12:16:05,892 [INFO] app - [WIRED] Saved specific article to DB
+2025-07-31 12:17:42,276 [INFO] app - [WIRED] Saved specific article to DB
+2025-07-31 12:20:38,861 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-31 12:20:53,193 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-31 12:20:56,024 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-07-31 12:27:43,343 [INFO] app - [WIRED] Fetched 4 articles (offset=0, limit=10)
+2025-07-31 12:28:06,565 [INFO] app - [WIRED] Latest article exists, returning it
+2025-07-31 12:28:19,643 [INFO] app - [WIRED] Fetching latest article from DB
+2025-07-31 12:28:27,630 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-31 12:28:32,430 [INFO] app - [WIRED] Fetched 4 articles (offset=0, limit=10)
+2025-07-31 12:28:40,365 [INFO] app - [WIRED] Latest article exists, returning it
+2025-07-31 12:30:35,120 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-31 12:30:44,423 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-07-31 12:30:52,918 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-07-31 12:31:01,442 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-07-31 12:31:12,327 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-07-31 12:34:46,076 [INFO] app - [WIRED] Specific article exists, returning it
+2025-07-31 12:51:34,215 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-07-31 12:51:48,017 [INFO] app - [TECHNEWSBG] Returning 1 articles from DB
