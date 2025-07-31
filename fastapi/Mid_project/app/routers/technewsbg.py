@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
@@ -57,7 +55,9 @@ def read_all_news(
 
 
 @router.get(
-    "/items/{item_id}", response_model=ArticleSchema, summary="GET article by ID"
+    "/items/{item_id}",
+    response_model=ArticleSchema,
+    summary="GET article by ID",
 )
 def read_item(item_id: int, db: Session = Depends(get_db)):
     """

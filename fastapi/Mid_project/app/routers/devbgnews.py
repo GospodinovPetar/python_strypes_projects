@@ -27,7 +27,7 @@ class ScrapeRequest(BaseModel):
     )
 
 
-@router.get("/items")
+@router.get("/items", summary="GET all articles in DB")
 def read_all_news(
     limit: int = Query(10, ge=1, le=100),
     offset: int = Query(0, ge=0),
@@ -46,7 +46,11 @@ def read_all_news(
     return {"total": total, "limit": limit, "offset": offset, "items": articles}
 
 
-@router.get("/items/{item_id}", response_model=ArticleSchema)
+@router.get(
+    "/items/{item_id}",
+    summary="GET article by ID",
+    response_model=ArticleSchema,
+)
 def read_item(item_id: int, db: Session = get_db_dep):
     item = db.query(DevNewsArticle).filter(DevNewsArticle.id == item_id).first()
 
@@ -59,7 +63,11 @@ def read_item(item_id: int, db: Session = get_db_dep):
     return item
 
 
-@router.get("/latest_news_from_db/", response_model=ArticleSchema)
+@router.get(
+    "/latest_news_from_db/",
+    summary="GET latest article from DB",
+    response_model=ArticleSchema,
+)
 def latest_news_from_db(db: Session = get_db_dep):
     article = db.query(DevNewsArticle).order_by(DevNewsArticle.id.desc()).first()
 
@@ -72,7 +80,11 @@ def latest_news_from_db(db: Session = get_db_dep):
     return article
 
 
-@router.post("/scrape/latest", response_model=ArticleSchema)
+@router.post(
+    "/scrape/latest",
+    summary="Scrape and store latest news",
+    response_model=ArticleSchema,
+)
 def scrape_latest(db: Session = get_db_dep):
     url = fetch_first_recent_link()
 
@@ -100,7 +112,11 @@ def scrape_latest(db: Session = get_db_dep):
     return article
 
 
-@router.post("/scrape_specific", response_model=ArticleSchema)
+@router.post(
+    "/scrape_specific",
+    summary="Scrape and store specific news",
+    response_model=ArticleSchema,
+)
 def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     url = str(req.url)
     try:
@@ -127,7 +143,7 @@ def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     return article
 
 
-@router.delete("/items/delete/{item_id}")
+@router.delete("/items/delete/{item_id}", summary="Delete article by ID")
 def delete_item(item_id: int, db: Session = get_db_dep):
     article = db.query(DevNewsArticle).filter(DevNewsArticle.id == item_id).first()
     if not article:
