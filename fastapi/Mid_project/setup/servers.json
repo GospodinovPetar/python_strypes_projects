@@ -3,11 +3,10 @@
     "1": {
       "Name": "postgres",
       "Group": "Servers",
-      "Host": "db",
+      "Host": "postgres",
       "Port": 5432,
-      "MaintenanceDB": "postgres",
+      "MaintenanceDB": "news",
       "Username": "admin",
-      "Password": "12345",
       "SSLMode": "prefer"
     }
   }
