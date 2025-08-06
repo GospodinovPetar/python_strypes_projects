@@ -878,3 +878,422 @@ To install, run: pip install email-validator
 2025-08-05 18:13:18,843 [INFO] app - [WIRED] Saved latest article to DB
 2025-08-05 18:14:16,576 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
 To install, run: pip install email-validator
+2025-08-06 15:51:42,593 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 15:51:42,594 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,604 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 15:51:42,605 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,612 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 15:51:42,613 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,620 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 15:51:42,620 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:51:42,630 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 15:51:42,630 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,637 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 15:51:42,638 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 15:51:42,644 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 15:51:42,646 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,646 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 15:51:42,648 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,655 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/specific-article
+2025-08-06 15:51:42,655 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,656 [INFO] app - [DEVNEWS] OK: Article already exists for URL https://example.com/specific-article, returning from DB
+2025-08-06 15:51:42,657 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,687 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 15:51:42,688 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 15:51:42,693 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 15:51:42,694 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:55:03,158 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 15:55:03,159 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,168 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 15:55:03,169 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,176 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 15:55:03,178 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,183 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 15:55:03,183 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:55:03,190 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 15:55:03,190 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,198 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 15:55:03,198 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 15:55:03,204 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 15:55:03,206 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,206 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 15:55:03,208 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,214 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/specific-article
+2025-08-06 15:55:03,214 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,215 [INFO] app - [DEVNEWS] OK: Article already exists for URL https://example.com/specific-article, returning from DB
+2025-08-06 15:55:03,216 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,242 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 15:55:03,243 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 15:55:03,248 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 15:55:03,248 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:25,022 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 15:56:25,023 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:25,024 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 15:56:25,024 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 15:56:25,025 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 15:56:25,025 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:29,660 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 15:56:29,661 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:29,662 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 15:56:29,663 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 15:56:29,663 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 15:56:29,664 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:33,685 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 15:56:33,686 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,696 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 15:56:33,697 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,703 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 15:56:33,704 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,709 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 15:56:33,710 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:33,718 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 15:56:33,719 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,724 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 15:56:33,725 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:33,731 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 15:56:33,732 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,733 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 15:56:33,734 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,745 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 15:56:33,745 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,746 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 15:56:33,746 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 15:56:33,747 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 15:56:33,747 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:33,756 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 15:56:33,756 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:33,762 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 15:56:33,762 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:41,982 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 15:56:41,983 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 15:56:41,995 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 15:56:41,995 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,003 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 15:56:42,004 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,011 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 15:56:42,011 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,019 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 15:56:42,019 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,025 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 15:56:42,025 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,033 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 15:56:42,034 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,035 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 15:56:42,037 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,045 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 15:56:42,045 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,046 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 15:56:42,046 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 15:56:42,047 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 15:56:42,047 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,055 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 15:56:42,056 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,066 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 15:56:42,066 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,073 [INFO] app - [TECHNEWSBG] No articles found in DB
+2025-08-06 15:56:42,073 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,083 [INFO] app - [TECHNEWSBG] Returning 2 articles from DB
+2025-08-06 15:56:42,083 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,090 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,096 [INFO] app - [TECHNEWSBG] Article 9999 not found
+2025-08-06 15:56:42,096 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,105 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,111 [INFO] app - [TECHNEWSBG] No articles in DB
+2025-08-06 15:56:42,111 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,119 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,120 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,128 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,129 [INFO] app - [TECHNEWSBG] Article already exists, returning from DB
+2025-08-06 15:56:42,129 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,157 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,164 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,170 [INFO] app - [WIRED] No articles found in DB
+2025-08-06 15:56:42,171 [INFO] httpx - HTTP Request: GET http://testserver/wired/items "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,181 [INFO] app - [WIRED] Fetched 2 articles (offset=1, limit=2)
+2025-08-06 15:56:42,182 [INFO] httpx - HTTP Request: GET http://testserver/wired/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,189 [INFO] app - [WIRED] Fetching article 1
+2025-08-06 15:56:42,190 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,204 [INFO] app - [WIRED] Article 9999 not found
+2025-08-06 15:56:42,204 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,213 [INFO] app - [WIRED] Fetching latest article from DB
+2025-08-06 15:56:42,214 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,219 [INFO] app - [WIRED] No articles in DB
+2025-08-06 15:56:42,220 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,227 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-06 15:56:42,227 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,228 [INFO] app - [WIRED] Latest article exists, returning it
+2025-08-06 15:56:42,228 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,235 [INFO] app - [WIRED] Saved article from https://wired.com/specific to DB
+2025-08-06 15:56:42,236 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,242 [INFO] app - [WIRED] Error scraping URL https://wired.com/error: scrape failed
+2025-08-06 15:56:42,242 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 15:56:42,248 [INFO] app - [WIRED] No data found at https://wired.com/notfound
+2025-08-06 15:56:42,248 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 15:56:42,255 [INFO] app - [WIRED] Deleted article 1
+2025-08-06 15:56:42,255 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 15:56:42,261 [INFO] app - [WIRED] Delete failed, article 9999 not found
+2025-08-06 15:56:42,262 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,521 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 16:05:22,522 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,535 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 16:05:22,535 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,551 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 16:05:22,556 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,568 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 16:05:22,568 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,598 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 16:05:22,598 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,604 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 16:05:22,605 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,614 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 16:05:22,615 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,616 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 16:05:22,617 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,625 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 16:05:22,625 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,626 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 16:05:22,627 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:05:22,627 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 16:05:22,628 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,636 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 16:05:22,636 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,642 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 16:05:22,643 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,668 [INFO] app - [TECHNEWSBG] No articles found in DB
+2025-08-06 16:05:22,669 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,688 [INFO] app - [TECHNEWSBG] Returning 2 articles from DB
+2025-08-06 16:05:22,689 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,696 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,702 [INFO] app - [TECHNEWSBG] Article 9999 not found
+2025-08-06 16:05:22,703 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,712 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,717 [INFO] app - [TECHNEWSBG] No articles in DB
+2025-08-06 16:05:22,718 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,725 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,727 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,735 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,736 [INFO] app - [TECHNEWSBG] Error scraping URL
+2025-08-06 16:05:22,736 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:05:22,737 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,745 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,751 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,759 [INFO] app - [WIRED] No articles found in DB
+2025-08-06 16:05:22,759 [INFO] httpx - HTTP Request: GET http://testserver/wired/items "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,769 [INFO] app - [WIRED] Fetched 2 articles (offset=1, limit=2)
+2025-08-06 16:05:22,770 [INFO] httpx - HTTP Request: GET http://testserver/wired/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,776 [INFO] app - [WIRED] Fetching article 1
+2025-08-06 16:05:22,777 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,784 [INFO] app - [WIRED] Article 9999 not found
+2025-08-06 16:05:22,785 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,808 [INFO] app - [WIRED] Fetching latest article from DB
+2025-08-06 16:05:22,809 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,837 [INFO] app - [WIRED] No articles in DB
+2025-08-06 16:05:22,837 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,845 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-06 16:05:22,845 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,846 [INFO] app - [WIRED] Latest article exists, returning it
+2025-08-06 16:05:22,846 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,853 [INFO] app - [WIRED] Saved article from https://wired.com/specific to DB
+2025-08-06 16:05:22,854 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,859 [INFO] app - [WIRED] Error scraping URL https://wired.com/error: scrape failed
+2025-08-06 16:05:22,860 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:05:22,866 [INFO] app - [WIRED] No data found at https://wired.com/notfound
+2025-08-06 16:05:22,866 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:22,873 [INFO] app - [WIRED] Deleted article 1
+2025-08-06 16:05:22,874 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:05:22,879 [INFO] app - [WIRED] Delete failed, article 9999 not found
+2025-08-06 16:05:22,880 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:05:50,804 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 16:05:50,805 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:02,742 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 16:06:02,743 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,754 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 16:06:02,755 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,763 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 16:06:02,764 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,769 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 16:06:02,770 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:02,777 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 16:06:02,777 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,783 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 16:06:02,783 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:02,810 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 16:06:02,811 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,812 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 16:06:02,814 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,821 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 16:06:02,821 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,822 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 16:06:02,823 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:06:02,824 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 16:06:02,824 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:02,831 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 16:06:02,831 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:02,836 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 16:06:02,837 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:39,368 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 16:06:39,369 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,382 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 16:06:39,383 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,390 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 16:06:39,391 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,396 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 16:06:39,397 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:39,404 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 16:06:39,405 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,410 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 16:06:39,411 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:39,417 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 16:06:39,418 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,419 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 16:06:39,421 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,428 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 16:06:39,428 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,429 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 16:06:39,429 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:06:39,430 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 16:06:39,431 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:39,438 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 16:06:39,438 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:39,443 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 16:06:39,444 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,633 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 16:06:44,634 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,645 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 16:06:44,646 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,653 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 16:06:44,654 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,659 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 16:06:44,659 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,667 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 16:06:44,668 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,675 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 16:06:44,675 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,684 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 16:06:44,685 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,686 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 16:06:44,688 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,694 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 16:06:44,695 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,696 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 16:06:44,696 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:06:44,697 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 16:06:44,697 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,704 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 16:06:44,705 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,710 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 16:06:44,711 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,717 [INFO] app - [TECHNEWSBG] No articles found in DB
+2025-08-06 16:06:44,718 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,726 [INFO] app - [TECHNEWSBG] Returning 2 articles from DB
+2025-08-06 16:06:44,726 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,733 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,738 [INFO] app - [TECHNEWSBG] Article 9999 not found
+2025-08-06 16:06:44,739 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,751 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,759 [INFO] app - [TECHNEWSBG] No articles in DB
+2025-08-06 16:06:44,759 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,771 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,772 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,782 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,783 [INFO] app - [TECHNEWSBG] Error scraping URL
+2025-08-06 16:06:44,783 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:06:44,785 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,800 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,806 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,820 [INFO] app - [WIRED] No articles found in DB
+2025-08-06 16:06:44,820 [INFO] httpx - HTTP Request: GET http://testserver/wired/items "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,843 [INFO] app - [WIRED] Fetched 2 articles (offset=1, limit=2)
+2025-08-06 16:06:44,844 [INFO] httpx - HTTP Request: GET http://testserver/wired/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,854 [INFO] app - [WIRED] Fetching article 1
+2025-08-06 16:06:44,854 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,870 [INFO] app - [WIRED] Article 9999 not found
+2025-08-06 16:06:44,871 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,883 [INFO] app - [WIRED] Fetching latest article from DB
+2025-08-06 16:06:44,883 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,893 [INFO] app - [WIRED] No articles in DB
+2025-08-06 16:06:44,893 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,905 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-06 16:06:44,905 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,906 [INFO] app - [WIRED] Latest article exists, returning it
+2025-08-06 16:06:44,907 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,918 [INFO] app - [WIRED] Saved article from https://wired.com/specific to DB
+2025-08-06 16:06:44,918 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,927 [INFO] app - [WIRED] Error scraping URL https://wired.com/error: scrape failed
+2025-08-06 16:06:44,927 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:06:44,937 [INFO] app - [WIRED] No data found at https://wired.com/notfound
+2025-08-06 16:06:44,938 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:06:44,946 [INFO] app - [WIRED] Deleted article 1
+2025-08-06 16:06:44,946 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:06:44,971 [INFO] app - [WIRED] Delete failed, article 9999 not found
+2025-08-06 16:06:44,972 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,387 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 16:07:20,389 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,398 [INFO] app - [DEVNEWS] OK: Fetching latest devbgnews articles from database
+2025-08-06 16:07:20,399 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,406 [INFO] app - [DEVNEWS] OK: Fetching specific item: 1
+2025-08-06 16:07:20,408 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,413 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 9999, but not found.
+2025-08-06 16:07:20,413 [INFO] httpx - HTTP Request: GET http://testserver/devnews/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,420 [INFO] app - [DEVNEWS] OK: Fetching latest technewsbg article from database
+2025-08-06 16:07:20,421 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,427 [INFO] app - [DEVNEWS] ERROR: A requested item was not found
+2025-08-06 16:07:20,427 [INFO] httpx - HTTP Request: GET http://testserver/devnews/latest_news_from_db/ "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,435 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-06 16:07:20,436 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,437 [INFO] app - [DEVNEWS] OK: Requested a scrape of an article already in DB. Returning it.
+2025-08-06 16:07:20,438 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,445 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://example.com/article-success
+2025-08-06 16:07:20,445 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,446 [INFO] app - [DEVNEWS] ERROR: Error scraping data from https://example.com/article-error
+2025-08-06 16:07:20,446 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:07:20,447 [INFO] app - [DEVNEWS] ERROR: No title found at https://example.com/article-empty
+2025-08-06 16:07:20,447 [INFO] httpx - HTTP Request: POST http://testserver/devnews/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,453 [INFO] app - [DEVNEWS] OK: Deleted article with id 1
+2025-08-06 16:07:20,454 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,459 [INFO] app - [DEVNEWS] ERROR: Delete request received but no article found
+2025-08-06 16:07:20,459 [INFO] httpx - HTTP Request: DELETE http://testserver/devnews/items/delete/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,466 [INFO] app - [TECHNEWSBG] No articles found in DB
+2025-08-06 16:07:20,466 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,475 [INFO] app - [TECHNEWSBG] Returning 2 articles from DB
+2025-08-06 16:07:20,476 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,482 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,488 [INFO] app - [TECHNEWSBG] Article 9999 not found
+2025-08-06 16:07:20,488 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,495 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,501 [INFO] app - [TECHNEWSBG] No articles in DB
+2025-08-06 16:07:20,501 [INFO] httpx - HTTP Request: GET http://testserver/technewsbg/latest_news_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,509 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,510 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,517 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,518 [INFO] app - [TECHNEWSBG] Error scraping URL
+2025-08-06 16:07:20,518 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:07:20,519 [INFO] httpx - HTTP Request: POST http://testserver/technewsbg/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,526 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,532 [INFO] httpx - HTTP Request: DELETE http://testserver/technewsbg/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,538 [INFO] app - [WIRED] No articles found in DB
+2025-08-06 16:07:20,538 [INFO] httpx - HTTP Request: GET http://testserver/wired/items "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,547 [INFO] app - [WIRED] Fetched 2 articles (offset=1, limit=2)
+2025-08-06 16:07:20,548 [INFO] httpx - HTTP Request: GET http://testserver/wired/items?limit=2&offset=1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,554 [INFO] app - [WIRED] Fetching article 1
+2025-08-06 16:07:20,554 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,559 [INFO] app - [WIRED] Article 9999 not found
+2025-08-06 16:07:20,560 [INFO] httpx - HTTP Request: GET http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,566 [INFO] app - [WIRED] Fetching latest article from DB
+2025-08-06 16:07:20,567 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,573 [INFO] app - [WIRED] No articles in DB
+2025-08-06 16:07:20,573 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,580 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-06 16:07:20,580 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,581 [INFO] app - [WIRED] Latest article exists, returning it
+2025-08-06 16:07:20,581 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,591 [INFO] app - [WIRED] Saved article from https://wired.com/specific to DB
+2025-08-06 16:07:20,592 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,601 [INFO] app - [WIRED] Error scraping URL https://wired.com/error: scrape failed
+2025-08-06 16:07:20,601 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:07:20,610 [INFO] app - [WIRED] No data found at https://wired.com/notfound
+2025-08-06 16:07:20,611 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,628 [INFO] app - [WIRED] Deleted article 1
+2025-08-06 16:07:20,628 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,634 [INFO] app - [WIRED] Delete failed, article 9999 not found
+2025-08-06 16:07:20,634 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"

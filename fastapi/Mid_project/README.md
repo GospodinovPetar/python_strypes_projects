@@ -170,7 +170,16 @@ Here is a quick example:
 From the project root, execute:
 
     pytest -q
-All test files in tests/ will run against a fresh SQLite test.db.
+All test files in tests/ will run against a fresh SQLite test.db. 
+And the output will be
+
+
+    collected 32 items
+    tests/test_devbgnews.py ..........                                                                                                                   [ 31%]
+    tests/test_technewsbg.py ..........                                                                                                                  [ 62%]
+    tests/test_wired.py ............                                                                                                                     [100%]
+    
+    ==================================================================== 32 passed in 0.27s ====================================================================
 
 ---
 
