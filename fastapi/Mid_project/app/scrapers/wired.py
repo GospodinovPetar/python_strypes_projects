@@ -41,11 +41,9 @@ def scrape_news(source: str) -> dict:
     if time_tag:
         date = time_tag.get("datetime") or time_tag.get_text(strip=True)
 
-    # Article body
-    body = soup.find("div", itemprop="articleBody") or soup.find("article")
-
     # Images
     image_url = []
+    body = soup.find("div", itemprop="articleBody") or soup.find("article")
     if body:
         image_url = [img["src"] for img in body.find_all("img", src=True)]
 

@@ -5,7 +5,7 @@ from app.routers import wired
 
 app = FastAPI(
     title="Tech News API",
-    description="🛣️ Real‑time news articles from Bulgaria",
+    description="🛣️ Scrape real-time news articles from tech websites",
     version="1.2.0",
     docs_url="/docs",
     redoc_url="/redoc",

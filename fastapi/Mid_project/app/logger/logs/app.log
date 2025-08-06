@@ -858,3 +858,23 @@ To install, run: pip install email-validator
 2025-07-31 12:51:34,215 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
 To install, run: pip install email-validator
 2025-07-31 12:51:48,017 [INFO] app - [TECHNEWSBG] Returning 1 articles from DB
+2025-08-05 17:49:50,527 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-05 17:58:32,005 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-05 17:58:36,996 [INFO] app - [WIRED] No articles found in DB
+2025-08-05 18:02:19,804 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-05 18:02:29,386 [INFO] app - [WIRED] Fetched 1 articles (offset=0, limit=10)
+2025-08-05 18:02:38,151 [INFO] app - [WIRED] Fetching article 1
+2025-08-05 18:02:45,208 [INFO] app - [WIRED] Fetching latest article from DB
+2025-08-05 18:02:52,307 [INFO] app - [WIRED] Deleted article 1
+2025-08-05 18:03:24,060 [INFO] app - [TECHNEWSBG] Returning 1 articles from DB
+2025-08-05 18:06:55,574 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-05 18:07:02,311 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-05 18:07:20,641 [INFO] app - [DEVNEWS] OK: Article already exists for URL https://dev.bg/digest/burnout-prevention-svetoslav-elenkov-dc06/, returning from DB
+2025-08-05 18:13:12,703 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-05 18:13:18,843 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-05 18:14:16,576 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator

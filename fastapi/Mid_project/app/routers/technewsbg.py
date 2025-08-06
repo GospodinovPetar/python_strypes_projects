@@ -148,16 +148,28 @@ def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
     - **paragraphs**
     - **created_at**
     """
+    url = str(req.url)
+
+    existing = db.query(TechNewsArticle).filter_by(url=url).first()
+    if existing:
+        logger.info("[TECHNEWSBG] Article already exists, returning from DB")
+        return existing
+
     try:
-        data = scrape_news(str(req.url))
+        data = scrape_news(url)
     except Exception:
         logger.info("[TECHNEWSBG] Error scraping URL")
-        raise HTTPException(502, "Error scraping the page")
+        raise HTTPException(status_code=502, detail="Error scraping the page")
+
     if not data.get("title"):
-        raise HTTPException(404, "No data found on this page")
+        raise HTTPException(status_code=404, detail="No data found on this page")
+
     data.pop("url", None)
-    article = db.merge(TechNewsArticle(url=str(req.url), **data))
+    article = TechNewsArticle(url=url, **data)
+
+    db.add(article)
     db.commit()
+    db.refresh(article)
     return article
 
 

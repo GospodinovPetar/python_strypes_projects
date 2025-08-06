@@ -128,11 +128,15 @@ def scrape_latest(db: Session = Depends(get_db)):
     except Exception as e:
         logger.info(f"[WIRED] Error scraping latest: {e}")
         raise HTTPException(status_code=502, detail="Error scraping the latest article")
+
     existing = db.query(WiredArticle).filter_by(url=url).first()
     if existing:
         logger.info("[WIRED] Latest article exists, returning it")
         return existing
+
+    data.pop("url", None)  # Prevent duplicate keyword arg
     article = WiredArticle(url=url, **data)
+
     db.add(article)
     db.commit()
     db.refresh(article)
@@ -158,23 +162,29 @@ def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
     - **created_at**
     """
     url = str(req.url)
+
+    existing = db.query(WiredArticle).filter_by(url=url).first()
+    if existing:
+        logger.info(f"[WIRED] Article already exists for URL {url}, returning from DB")
+        return existing
+
     try:
         data = scrape_news(url)
     except Exception as e:
         logger.info(f"[WIRED] Error scraping URL {url}: {e}")
         raise HTTPException(status_code=502, detail="Error scraping the page")
+
     if not data.get("title"):
         logger.info(f"[WIRED] No data found at {url}")
         raise HTTPException(status_code=404, detail="No data found on this page")
-    existing = db.query(WiredArticle).filter_by(url=url).first()
-    if existing:
-        logger.info("[WIRED] Specific article exists, returning it")
-        return existing
+
+    data.pop("url", None) # Prevent duplicate keyword arg
     article = WiredArticle(url=url, **data)
+
     db.add(article)
     db.commit()
     db.refresh(article)
-    logger.info("[WIRED] Saved specific article to DB")
+    logger.info(f"[WIRED] Saved article from {url} to DB")
     return article
 
 

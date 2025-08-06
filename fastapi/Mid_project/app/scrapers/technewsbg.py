@@ -52,11 +52,9 @@ def scrape_news(url: str) -> dict:
     else:
         date = None
 
-    # Article body
-    body = soup.select_one("div.entry-content") or soup.select_one("article")
-
     # Images
     image_url = []
+    body = soup.select_one("div.entry-content") or soup.select_one("article")
     if body:
         for img in body.find_all("img"):
             src = img.get("data-src") or img.get("src")

@@ -119,26 +119,36 @@ def scrape_latest(db: Session = get_db_dep):
 )
 def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
     url = str(req.url)
+
+    existing = db.query(DevNewsArticle).filter_by(url=url).first()
+    if existing:
+        logger.info(
+            f"[DEVNEWS] OK: Article already exists for URL {url}, returning from DB"
+        )
+        return existing
+
     try:
         data = scrape_devnews_article(url)
     except Exception:
-        logger.info("[DEVNEWS] ERROR: Error scraping data from dev.bg news article")
+        logger.info(f"[DEVNEWS] ERROR: Error scraping data from {url}")
         raise HTTPException(status_code=502, detail="Error scraping the page")
 
     if not data.get("title"):
-        logger.info("[DEVNEWS] ERROR: A requested item was not found")
+        logger.info(f"[DEVNEWS] ERROR: No title found at {url}")
         raise HTTPException(status_code=404, detail="No data found on this page")
 
     try:
-        article = db.merge(DevNewsArticle(url=url, **data))
+        data.pop("url", None)
+        article = DevNewsArticle(url=url, **data)
+        db.add(article)
         db.commit()
         db.refresh(article)
     except Exception as e:
         db.rollback()
-        logger.error(f"[DEVNEWS] ERROR: DB error during merge: {e}")
+        logger.error(f"[DEVNEWS] ERROR: DB error while saving article from {url}: {e}")
         raise HTTPException(status_code=500, detail="Database error")
 
-    logger.info("[DEVNEWS] OK: Scraping latest news from url")
+    logger.info(f"[DEVNEWS] OK: Scraped and saved article from {url}")
     logger.debug(f"[DEVNEWS] Scraped data: {article}")
     return article
 
