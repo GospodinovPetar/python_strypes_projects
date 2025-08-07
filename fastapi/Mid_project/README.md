@@ -189,8 +189,6 @@ And the output will be
 2. Make your changes
 3. Submit a pull request
 
-Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
-
 ---
 
 ## 📄 License
