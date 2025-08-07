@@ -11,7 +11,10 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     contact={"name": "Petar Gospodinov", "email": "petarjordanov2003@gmail.com"},
-    license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
+    license_info={
+        "name": "GNU GENERAL PUBLIC LICENSE",
+        "url": "https://opensource.org/license/gpl-3-0",
+    },
 )
 
 app.include_router(wired.router)
