@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from app.routers import devbgnews
 from app.routers import technewsbg
 from app.routers import wired

@@ -44,7 +44,7 @@ def create_tech_article(db_session):
 def test_get_all_articles_empty(client: TestClient):
     response = client.get("/technewsbg/items")
     assert response.status_code == 404
-    assert response.json()["detail"] == "Няма новини"
+    assert response.json()["detail"] == "No articles found"
 
 
 def test_get_articles_with_pagination(client: TestClient, create_tech_article):

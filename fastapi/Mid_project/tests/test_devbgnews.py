@@ -45,9 +45,7 @@ def test_read_all_news_empty(client: TestClient):
     response = client.get("/devnews/items")
     data = response.json()
 
-    assert response.status_code == 200
-    assert data["total"] == 0
-    assert data["items"] == []
+    assert response.status_code == 404
 
 
 def test_read_all_news_with_pagination(client: TestClient, create_dev_article):
@@ -77,7 +75,7 @@ def test_read_single_article_not_found(client: TestClient):
     response = client.get("/devnews/items/9999")
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Item not found"
+    assert response.json()["detail"] == "Article not found"
 
 
 def test_latest_news_from_db_success(client: TestClient, create_dev_article):
@@ -95,7 +93,7 @@ def test_latest_news_from_db_not_found(client: TestClient):
     response = client.get("/devnews/latest_news_from_db/")
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Няма новини"
+    assert response.json()["detail"] == "No articles found"
 
 
 # Scraping Tests

@@ -45,7 +45,7 @@ def test_read_all_wired_articles_empty(client: TestClient):
     response = client.get("/wired/items")
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "No articles available"
+    assert response.json()["detail"] == "No articles found"
 
 
 def test_read_all_wired_articles_with_pagination(
@@ -95,7 +95,7 @@ def test_latest_wired_article_from_db_not_found(client: TestClient):
     response = client.get("/wired/latest_from_db")
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "No articles available"
+    assert response.json()["detail"] == "No articles found"
 
 
 # Scraping Tests

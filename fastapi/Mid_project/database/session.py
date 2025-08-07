@@ -1,8 +1,9 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.exc import OperationalError
+
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import sessionmaker, Session
 from tenacity import retry, wait_fixed, stop_after_attempt
 
 env_path = os.getenv(

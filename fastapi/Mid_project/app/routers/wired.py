@@ -3,11 +3,11 @@ from pydantic import BaseModel, HttpUrl
 from pydantic.v1 import ConfigDict
 from sqlalchemy.orm import Session
 
+from app.logger.logger import logger
 from app.schemas import ArticleSchema
 from app.scrapers.wired import fetch_first_recent_link, scrape_news
 from database.models import WiredArticle
 from database.session import get_db
-from app.logger.logger import logger
 
 router = APIRouter(prefix="/wired", tags=["wired.com"])
 

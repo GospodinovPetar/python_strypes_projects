@@ -1,7 +1,6 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.functions import func

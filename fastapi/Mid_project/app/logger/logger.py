@@ -1,5 +1,6 @@
-import logging
 from pathlib import Path
+
+import logging
 
 log_dir = Path(__file__).parent / "logs"
 log_dir.mkdir(exist_ok=True)
