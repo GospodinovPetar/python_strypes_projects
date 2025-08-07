@@ -9,7 +9,7 @@ from database.models import TechNewsArticle
 from database.session import get_db
 from app.logger.logger import logger
 
-router = APIRouter(prefix="/technewsbg", tags=["TechNewsBG"])
+router = APIRouter(prefix="/technewsbg", tags=["technews.bg"])
 
 
 class ScrapeRequest(BaseModel):
@@ -47,7 +47,7 @@ def read_all_news(
 
     if not articles:
         logger.info("[TECHNEWSBG] No articles found in DB")
-        raise HTTPException(404, detail="Няма новини")
+        raise HTTPException(404, detail="No articles found")
 
     logger.info(f"[TECHNEWSBG] Returning {len(articles)} articles from DB")
 

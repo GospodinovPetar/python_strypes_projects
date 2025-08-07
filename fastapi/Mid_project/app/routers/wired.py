@@ -9,7 +9,7 @@ from database.models import WiredArticle
 from database.session import get_db
 from app.logger.logger import logger
 
-router = APIRouter(prefix="/wired", tags=["Wired"])
+router = APIRouter(prefix="/wired", tags=["wired.com"])
 
 
 class ScrapeRequest(BaseModel):
@@ -47,7 +47,7 @@ def read_all_news(
 
     if not articles:
         logger.info("[WIRED] No articles found in DB")
-        raise HTTPException(status_code=404, detail="No articles available")
+        raise HTTPException(status_code=404, detail="No articles found")
 
     logger.info(
         f"[WIRED] Fetched {len(articles)} articles (offset={offset}, limit={limit})"
@@ -97,7 +97,7 @@ def latest_from_db(db: Session = Depends(get_db)):
     article = db.query(WiredArticle).order_by(WiredArticle.id.desc()).first()
     if not article:
         logger.info("[WIRED] No articles in DB")
-        raise HTTPException(status_code=404, detail="No articles available")
+        raise HTTPException(status_code=404, detail="No articles found")
     logger.info("[WIRED] Fetching latest article from DB")
     return article
 
@@ -178,7 +178,7 @@ def scrape_specific(req: ScrapeRequest, db: Session = Depends(get_db)):
         logger.info(f"[WIRED] No data found at {url}")
         raise HTTPException(status_code=404, detail="No data found on this page")
 
-    data.pop("url", None) # Prevent duplicate keyword arg
+    data.pop("url", None)  # Prevent duplicate keyword arg
     article = WiredArticle(url=url, **data)
 
     db.add(article)

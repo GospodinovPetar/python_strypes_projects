@@ -12,7 +12,7 @@ from app.logger.logger import logger
 
 router = APIRouter(
     prefix="/devnews",
-    tags=["devnews"],
+    tags=["dev.bg news"],
 )
 
 get_db_dep = Depends(get_db)
@@ -33,12 +33,27 @@ def read_all_news(
     offset: int = Query(0, ge=0),
     db: Session = get_db_dep,
 ):
+    """
+    # This will give you paginated news in our devnews database
+    ## Each item contains:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+
+    ## Supports:
+    - **limit**: Number of results per page (default=10)
+    - **offset**: How many records to skip (default=0)
+    """
     total = db.query(DevNewsArticle).count()
     articles = db.query(DevNewsArticle).offset(offset).limit(limit).all()
 
     if not articles:
         logger.info("[DEVNEWS] No articles found")
-        return {"total": 0, "limit": limit, "offset": offset, "items": []}
+        raise HTTPException(status_code=404, detail="No articles found")
 
     logger.info("[DEVNEWS] OK: Fetching latest devbgnews articles from database")
     logger.debug(f"Scraped data: {articles}")
@@ -52,13 +67,23 @@ def read_all_news(
     response_model=ArticleSchema,
 )
 def read_item(item_id: int, db: Session = get_db_dep):
+    """
+    # This will give you a devnews article based on the id in our database
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     item = db.query(DevNewsArticle).filter(DevNewsArticle.id == item_id).first()
 
     if not item:
         logger.info(
             f"[DEVNEWS] ERROR: Fetching specific item: {item_id}, but not found."
         )
-        raise HTTPException(status_code=404, detail="Item not found")
+        raise HTTPException(status_code=404, detail="Article not found")
     logger.info(f"[DEVNEWS] OK: Fetching specific item: {item_id}")
     return item
 
@@ -69,11 +94,21 @@ def read_item(item_id: int, db: Session = get_db_dep):
     response_model=ArticleSchema,
 )
 def latest_news_from_db(db: Session = get_db_dep):
+    """
+    # This will give you the latest devnews article in our database
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**"""
     article = db.query(DevNewsArticle).order_by(DevNewsArticle.id.desc()).first()
 
     if not article:
         logger.info("[DEVNEWS] ERROR: A requested item was not found")
-        raise HTTPException(404, detail="Няма новини")
+        raise HTTPException(404, detail="No articles found")
 
     logger.info("[DEVNEWS] OK: Fetching latest technewsbg article from database")
     logger.debug(f"Scraped data: {article}")
@@ -86,6 +121,20 @@ def latest_news_from_db(db: Session = get_db_dep):
     response_model=ArticleSchema,
 )
 def scrape_latest(db: Session = get_db_dep):
+    """
+    # This will give you the latest news article in the dev.bg news area
+    1) We get the newest article from the website
+    2) We upsert it to the database
+    3) We output the article
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+    """
     url = fetch_first_recent_link()
 
     data = scrape_devnews_article(url)
@@ -118,6 +167,17 @@ def scrape_latest(db: Session = get_db_dep):
     response_model=ArticleSchema,
 )
 def scrape_and_store(req: ScrapeRequest, db: Session = get_db_dep):
+    """
+    # This will give you the info about an article you give a link to
+    ## It will contain:
+    - **id**
+    - **url**
+    - **title**
+    - **image_url**
+    - **date**
+    - **paragraphs**
+    - **created_at**
+    """
     url = str(req.url)
 
     existing = db.query(DevNewsArticle).filter_by(url=url).first()

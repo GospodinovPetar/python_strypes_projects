@@ -9,11 +9,13 @@ from database.models import DevNewsArticle
 
 # Fixtures
 
+
 @pytest.fixture
 def create_dev_article(db_session):
     """
     Fixture that creates and saves a DevNewsArticle in the test database.
     """
+
     def create(
         article_url: str = "https://dev.bg/test",
         article_title: str = "Sample Title",
@@ -37,6 +39,7 @@ def create_dev_article(db_session):
 
 
 # Read Tests
+
 
 def test_read_all_news_empty(client: TestClient):
     response = client.get("/devnews/items")
@@ -97,12 +100,11 @@ def test_latest_news_from_db_not_found(client: TestClient):
 
 # Scraping Tests
 
+
 @patch("app.routers.devbgnews.fetch_first_recent_link")
 @patch("app.routers.devbgnews.scrape_devnews_article")
 def test_scrape_latest_article_updates_or_creates(
-    mock_scrape_function,
-    mock_fetch_link,
-    client: TestClient
+    mock_scrape_function, mock_fetch_link, client: TestClient
 ):
     mock_fetch_link.return_value = "https://example.com/latest-article"
 
@@ -130,8 +132,7 @@ def test_scrape_latest_article_updates_or_creates(
 
 @patch("app.routers.devbgnews.scrape_devnews_article")
 def test_scrape_specific_article_various_outcomes(
-    mock_scrape_function,
-    client: TestClient
+    mock_scrape_function, client: TestClient
 ):
     url_success = "https://example.com/article-success"
     mock_scrape_function.return_value = {
@@ -141,7 +142,9 @@ def test_scrape_specific_article_various_outcomes(
         "paragraphs": ["Content paragraph"],
     }
 
-    response_success = client.post("/devnews/scrape_specific", json={"url": url_success})
+    response_success = client.post(
+        "/devnews/scrape_specific", json={"url": url_success}
+    )
     assert response_success.status_code == 200
 
     url_error = "https://example.com/article-error"
@@ -161,6 +164,7 @@ def test_scrape_specific_article_various_outcomes(
 
 
 # Delete Tests
+
 
 def test_delete_article_success(client: TestClient, create_dev_article):
     article = create_dev_article()

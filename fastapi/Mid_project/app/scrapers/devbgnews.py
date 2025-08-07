@@ -54,8 +54,21 @@ def scrape_devnews_article(url: str) -> dict:
     title = title_tag.get_text(strip=True) if title_tag else None
 
     # Image URL
-    img = article.find("img")
-    image_url = [img["src"]] if img and img.has_attr("src") else []
+    image_urls = []
+
+    header_image = article.select_one("section.article-head img.wp-post-image[src]")
+    if header_image:
+        src = header_image["src"].strip()
+        if src:
+            image_urls.append(src)
+
+    body_images = [
+        img["src"].strip()
+        for block in article.select("div.wp-block-image")
+        for img in block.find_all("img", src=True)
+        if img["src"].strip()
+    ]
+    image_urls.extend(body_images)
 
     # Published date
     date_tag = soup.select_one("span.post-date")
@@ -79,7 +92,7 @@ def scrape_devnews_article(url: str) -> dict:
         "url": url,
         "title": title,
         "date": date,
-        "image_url": image_url,
+        "image_url": image_urls,
         "paragraphs": paragraphs,
     }
 

@@ -1297,3 +1297,49 @@ To install, run: pip install email-validator
 2025-08-06 16:07:20,628 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/1 "HTTP/1.1 200 OK"
 2025-08-06 16:07:20,634 [INFO] app - [WIRED] Delete failed, article 9999 not found
 2025-08-06 16:07:20,634 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
+2025-08-06 15:13:21,586 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-06 15:13:25,777 [INFO] app - [WIRED] No articles found in DB
+2025-08-06 15:13:32,971 [INFO] app - [TECHNEWSBG] No articles found in DB
+2025-08-06 15:13:39,604 [INFO] app - [DEVNEWS] No articles found
+2025-08-06 15:15:43,253 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-06 15:15:47,031 [INFO] app - [WIRED] No articles found in DB
+2025-08-06 15:15:55,734 [INFO] app - [WIRED] Article 21312 not found
+2025-08-06 15:16:01,497 [INFO] app - [TECHNEWSBG] Article 123123 not found
+2025-08-06 15:16:07,685 [INFO] app - [DEVNEWS] ERROR: Fetching specific item: 123213, but not found.
+2025-08-06 15:16:37,383 [INFO] app - [WIRED] No articles in DB
+2025-08-06 15:16:43,358 [INFO] app - [TECHNEWSBG] No articles in DB
+2025-08-07 08:59:34,180 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:00:12,252 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:00:39,799 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:03:22,593 [INFO] app - [DEVNEWS] OK: Scraping latest news from website
+2025-08-07 09:03:39,021 [INFO] app - [DEVNEWS] OK: Article already exists for URL https://dev.bg/digest/eu-blue-cards-dc06/, returning from DB
+2025-08-07 09:03:58,559 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/job-interviews-recruitment-ict-strypes-dc06/
+2025-08-07 09:06:15,445 [INFO] app - [DEVNEWS] OK: Article already exists for URL https://dev.bg/digest/job-interviews-recruitment-ict-strypes-dc06/, returning from DB
+2025-08-07 09:06:40,387 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/trusted-advisor-soft-skills-pills-dc05/
+2025-08-07 09:09:11,163 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/it-news-july-2025-dc01/
+2025-08-07 09:10:06,309 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:10:13,197 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/delasport-case-study-platform-migration-dc03/
+2025-08-07 09:10:45,035 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/8-questions-pavlina-mratsenkova-cloud-operations-engineer-dc06/
+2025-08-07 09:13:01,286 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/ict-strypes-lab-2025-dc03/
+2025-08-07 09:14:47,759 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:14:54,074 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/victor-valtchev-building-ai-agents-dc06/
+2025-08-07 09:16:16,804 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:16:32,186 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/alexander-mansour-image-and-design-with-ai-dc06/
+2025-08-07 09:17:13,619 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/sap-labs-bulgaria-database-team-dc02/
+2025-08-07 09:18:13,127 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:18:20,218 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/tinqin-employer-award-2025-dc03/
+2025-08-07 09:20:55,276 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:21:01,853 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/xebia-poland-hiring-in-bulgaria-remote-dc05/
+2025-08-07 09:22:37,609 [WARNING] fastapi - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-07 09:22:44,026 [INFO] app - [DEVNEWS] OK: Scraped and saved article from https://dev.bg/digest/dataart-proggy-buggy-2024-dc03/

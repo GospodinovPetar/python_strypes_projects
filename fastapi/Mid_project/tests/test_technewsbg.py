@@ -9,11 +9,13 @@ from database.models import TechNewsArticle
 
 # Fixtures
 
+
 @pytest.fixture
 def create_tech_article(db_session):
     """
     Fixture that creates and saves a TechNewsArticle in the test database.
     """
+
     def create(
         url: str = "https://technews.bg/test-article",
         title: str = "Sample Title",
@@ -37,6 +39,7 @@ def create_tech_article(db_session):
 
 
 # Read Tests
+
 
 def test_get_all_articles_empty(client: TestClient):
     response = client.get("/technewsbg/items")
@@ -91,6 +94,7 @@ def test_get_latest_article_not_found(client: TestClient):
 
 
 # Scraping Tests
+
 
 @patch("app.routers.technewsbg.fetch_latest_news")
 def test_scrape_latest_article_returns_existing(mock_fetch, client: TestClient):
@@ -151,6 +155,7 @@ def test_scrape_specific_article(mock_scrape, client: TestClient):
 
 
 # Delete Tests
+
 
 def test_delete_article(client: TestClient, create_tech_article):
     article = create_tech_article()

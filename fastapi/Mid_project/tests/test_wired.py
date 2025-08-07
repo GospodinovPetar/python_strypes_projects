@@ -9,11 +9,13 @@ from database.models import WiredArticle
 
 # Fixtures
 
+
 @pytest.fixture
 def create_wired_article(db_session):
     """
     Fixture to create and save a WiredArticle in the test database.
     """
+
     def create(
         article_url: str = "https://wired.com/test",
         article_title: str = "Sample Title",
@@ -38,6 +40,7 @@ def create_wired_article(db_session):
 
 # Read Tests
 
+
 def test_read_all_wired_articles_empty(client: TestClient):
     response = client.get("/wired/items")
 
@@ -46,8 +49,7 @@ def test_read_all_wired_articles_empty(client: TestClient):
 
 
 def test_read_all_wired_articles_with_pagination(
-    client: TestClient,
-    create_wired_article
+    client: TestClient, create_wired_article
 ):
     for i in range(5):
         create_wired_article(article_url=f"https://wired.com/article{i}")
@@ -62,10 +64,7 @@ def test_read_all_wired_articles_with_pagination(
     assert len(data["items"]) == 2
 
 
-def test_read_wired_article_by_id_success(
-    client: TestClient,
-    create_wired_article
-):
+def test_read_wired_article_by_id_success(client: TestClient, create_wired_article):
     article = create_wired_article()
     response = client.get(f"/wired/items/{article.id}")
     data = response.json()
@@ -81,10 +80,7 @@ def test_read_wired_article_by_id_not_found(client: TestClient):
     assert response.json()["detail"] == "Article not found"
 
 
-def test_latest_wired_article_from_db_success(
-    client: TestClient,
-    create_wired_article
-):
+def test_latest_wired_article_from_db_success(client: TestClient, create_wired_article):
     create_wired_article(article_url="https://wired.com/old")
     latest = create_wired_article(article_url="https://wired.com/new")
 
@@ -104,12 +100,11 @@ def test_latest_wired_article_from_db_not_found(client: TestClient):
 
 # Scraping Tests
 
+
 @patch("app.routers.wired.scrape_news")
 @patch("app.routers.wired.fetch_first_recent_link")
 def test_scrape_latest_wired_article_creates_or_returns_existing(
-    mock_fetch_recent_link,
-    mock_scrape_news,
-    client: TestClient
+    mock_fetch_recent_link, mock_scrape_news, client: TestClient
 ):
     mock_fetch_recent_link.return_value = "https://example.com/latest-wired"
     mock_scrape_news.return_value = {
@@ -137,8 +132,7 @@ def test_scrape_latest_wired_article_creates_or_returns_existing(
 
 @patch("app.routers.wired.scrape_news")
 def test_scrape_specific_wired_article_success(
-    mock_scrape_function,
-    client: TestClient
+    mock_scrape_function, client: TestClient
 ):
     test_url = "https://wired.com/specific"
     mock_scrape_function.return_value = {
@@ -155,10 +149,7 @@ def test_scrape_specific_wired_article_success(
 
 
 @patch("app.routers.wired.scrape_news")
-def test_scrape_specific_wired_article_error(
-    mock_scrape_function,
-    client: TestClient
-):
+def test_scrape_specific_wired_article_error(mock_scrape_function, client: TestClient):
     test_url = "https://wired.com/error"
     mock_scrape_function.side_effect = Exception("scrape failed")
 
@@ -170,8 +161,7 @@ def test_scrape_specific_wired_article_error(
 
 @patch("app.routers.wired.scrape_news")
 def test_scrape_specific_wired_article_not_found(
-    mock_scrape_function,
-    client: TestClient
+    mock_scrape_function, client: TestClient
 ):
     test_url = "https://wired.com/notfound"
     mock_scrape_function.return_value = {}
@@ -184,10 +174,8 @@ def test_scrape_specific_wired_article_not_found(
 
 # Delete Tests
 
-def test_delete_wired_article_success(
-    client: TestClient,
-    create_wired_article
-):
+
+def test_delete_wired_article_success(client: TestClient, create_wired_article):
     article = create_wired_article()
     response = client.delete(f"/wired/items/{article.id}")
     data = response.json()
