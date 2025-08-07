@@ -5,7 +5,6 @@ from sqlalchemy.exc import OperationalError
 from dotenv import load_dotenv
 from tenacity import retry, wait_fixed, stop_after_attempt
 
-# Load environment variables
 env_path = os.getenv(
     "ENV_PATH", os.path.join(os.path.dirname(__file__), "../setup/.env")
 )
@@ -18,26 +17,22 @@ if not DATABASE_URL:
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
 
-# Retry DB connection up to 10 times, waiting 2 seconds between each try
 @retry(stop=stop_after_attempt(10), wait=wait_fixed(2))
 def create_engine_with_retry():
     try:
         engine = create_engine(DATABASE_URL, connect_args=connect_args)
-        # Try connecting to verify if DB is ready
         with engine.connect() as connection:
-            print("✅ Database connected successfully!")
+            print("Database connected successfully!")
         return engine
     except OperationalError as e:
-        print("❌ Database not ready, retrying...")
+        print("Database not ready, retrying...")
         raise e
 
 
-# Create engine and session factory
 engine = create_engine_with_retry()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-# Dependency for FastAPI
 def get_db() -> Session:
     db = SessionLocal()
     try:
