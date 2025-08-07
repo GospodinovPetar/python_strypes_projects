@@ -62,12 +62,11 @@ def scrape_devnews_article(url: str) -> dict:
         if src:
             image_urls.append(src)
 
-    body_images = [
-        img["src"].strip()
-        for block in article.select("div.wp-block-image")
-        for img in block.find_all("img", src=True)
-        if img["src"].strip()
-    ]
+    body_images = []
+    for img in article.select("div.wp-block-image img[src]"):
+        src = img["src"].strip()
+        if src:
+            body_images.append(src)
     image_urls.extend(body_images)
 
     # Published date
