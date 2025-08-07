@@ -175,11 +175,11 @@ And the output will be
 
 
     collected 32 items
-    tests/test_devbgnews.py ..........                                                                                                                   [ 31%]
-    tests/test_technewsbg.py ..........                                                                                                                  [ 62%]
-    tests/test_wired.py ............                                                                                                                     [100%]
+    tests/test_devbgnews.py ..........                      [ 31%]
+    tests/test_technewsbg.py ..........                     [ 62%]
+    tests/test_wired.py ............                        [100%]
     
-    ==================================================================== 32 passed in 0.27s ====================================================================
+    ===================== 32 passed in 0.27s =====================
 
 ---
 
