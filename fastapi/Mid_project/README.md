@@ -148,16 +148,21 @@ Use the `{site}` placeholder for any of: `technewsbg`, `wired`, `devnews`.
 ### Logging is saved in [here](app/logger/logs/app.log)
 Here is a quick example:
 ```
-2025-07-26 12:53:49 INFO     [news_api] [WIRED] Fetching all articles from DB
-2025-07-26 12:54:10 INFO     [news_api] [WIRED] Fetching article 1
-2025-07-26 12:54:16 INFO     [news_api] [WIRED] Fetching latest article from DB
-2025-07-26 12:54:23 INFO     [news_api] [WIRED] Deleted article 1
-2025-07-26 12:54:37 INFO     [news_api] [WIRED] Saved latest article to DB
-2025-07-26 12:54:46 INFO     [news_api] [WIRED] Deleted article 2
-2025-07-26 12:54:49 INFO     [news_api] [WIRED] Delete failed, article 12 not found
-2025-07-26 12:55:02 INFO     [news_api] [WIRED] Saved specific article to DB
-2025-07-26 12:55:11 INFO     [news_api] [TECHNEWSBG] Fetching all articles from DB
-
+2025-08-06 16:07:20,573 [INFO] httpx - HTTP Request: GET http://testserver/wired/latest_from_db "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,580 [INFO] app - [WIRED] Saved latest article to DB
+2025-08-06 16:07:20,580 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,581 [INFO] app - [WIRED] Latest article exists, returning it
+2025-08-06 16:07:20,581 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape/latest "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,591 [INFO] app - [WIRED] Saved article from https://wired.com/specific to DB
+2025-08-06 16:07:20,592 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,601 [INFO] app - [WIRED] Error scraping URL https://wired.com/error: scrape failed
+2025-08-06 16:07:20,601 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 502 Bad Gateway"
+2025-08-06 16:07:20,610 [INFO] app - [WIRED] No data found at https://wired.com/notfound
+2025-08-06 16:07:20,611 [INFO] httpx - HTTP Request: POST http://testserver/wired/scrape_specific "HTTP/1.1 404 Not Found"
+2025-08-06 16:07:20,628 [INFO] app - [WIRED] Deleted article 1
+2025-08-06 16:07:20,628 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/1 "HTTP/1.1 200 OK"
+2025-08-06 16:07:20,634 [INFO] app - [WIRED] Delete failed, article 9999 not found
+2025-08-06 16:07:20,634 [INFO] httpx - HTTP Request: DELETE http://testserver/wired/items/9999 "HTTP/1.1 404 Not Found"
 ```
 # 🧪 Unit Testing
 
