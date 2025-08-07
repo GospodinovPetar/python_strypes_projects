@@ -12,7 +12,7 @@
 
 1. [🚀 Project Summary](#-project-summary)
 2. [🔧 Architecture & Data Flow](#-architecture--data-flow)
-3. [⚙️ Setup & Running](#setup)
+3. [⚙️ Setup](#setup)
 4. [📡 Example API Calls](#-example-api-calls)
 5. [📸 Screenshots](#-screenshots)
 6. [🛠 Logging](#-logging)
