@@ -28,58 +28,70 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
         "listing_url": "https://techcrunch.com/",
         "listing_page_format": "/page/{page}/",
 
-        # article links on listing pages
-        "listing_link_selector": "a.post-block__title__link[href]",
-        "listing_link_exclude_contains": ["/video/"],
+        "listing_link_selector": "a.loop-card__title-link[href], .loop-card__title a[href]",
+        "listing_link_exclude_contains": [
+            "/video/", "/videos/", "/podcasts/", "/events/",
+            "/sponsored/", "/brand-studio/", "/category/", "/tag/"
+        ],
 
-        # where article content lives
-        "article_root_selectors": ["article", ".article-content"],
+        "article_root_selectors": ["article", ".wp-block-post-content", ".entry-content", ".article-content"],
 
-        # title/date
         "title_selector": "h1",
         "date_selector": "time[datetime]",
 
-        # images (inside the article only)
-        "header_image_selectors": ["figure img[src]", "header img[src]"],
-        "body_image_selectors": [".article-content img[src]"],
+        "header_image_selectors": [
+            "header img[src]",
+            "figure img.wp-post-image[src]",
+            "figure.wp-block-image img[src]"
+        ],
+        "body_image_selectors": [
+            ".wp-block-post-content img[src]",
+            ".article-content img[src]",
+            ".entry-content img[src]"
+        ],
     },
 
     "technewsbg": {
         "base_url": "https://technews.bg",
         "listing_url": "https://technews.bg/",
         "listing_page_format": "/page/{page}/",
-
         "listing_link_selector": "article .entry-title a[href], .entry-title a[href]",
         "listing_link_exclude_contains": [
-            "/article-category/", "/category/", "/tag/", "/author/", "/search/", "/page/",
+            "/article-category/",
+            "/category/",
+            "/tag/",
+            "/author/",
+            "/search/",
+            "/page/",
         ],
-
         "article_root_selectors": ["article", ".entry-content"],
         "title_selector": "h1.entry-title",
         "date_selector": "time.entry-date, span.posted-on time, .entry-meta time",
-
         "header_image_selectors": [
-            "header img[src]", ".post-header img[src]", ".entry-header img[src]"
+            "header img[src]",
+            ".post-header img[src]",
+            ".entry-header img[src]",
         ],
         "body_image_selectors": [
-            "div.wp-block-image img[src]", ".entry-content img[src]"
+            "div.wp-block-image img[src]",
+            ".entry-content img[src]",
         ],
     },
-
     "wired": {
         "base_url": "https://www.wired.com",
         "listing_url": "https://www.wired.com/most-recent/",
         "listing_page_format": "/page/{page}/",
-
         "listing_link_selector": ".archive-item-component a[href], a[href^='/story/']",
         "listing_link_exclude_contains": [],
-
         "article_root_selectors": ["article"],
         "title_selector": "h1",
         "date_selector": "time[datetime]",
-
         "header_image_selectors": ["header img[src]", ".article-header img[src]"],
-        "body_image_selectors": ["figure img[src]", ".body__inner-container img[src]", ".content img[src]"],
+        "body_image_selectors": [
+            "figure img[src]",
+            ".body__inner-container img[src]",
+            ".content img[src]",
+        ],
     },
 }
 
@@ -119,7 +131,9 @@ def parse_title(soup: BeautifulSoup, site_config: Dict[str, Any]) -> str:
     if title_text:
         return title_text
 
-    meta_tag = soup.find("meta", property="og:title") or soup.find("meta", attrs={"name": "og:title"})
+    meta_tag = soup.find("meta", property="og:title") or soup.find(
+        "meta", attrs={"name": "og:title"}
+    )
     if meta_tag:
         content = meta_tag.get("content")
         if content:
