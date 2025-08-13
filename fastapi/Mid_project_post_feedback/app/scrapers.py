@@ -13,12 +13,12 @@ DEFAULT_USER_AGENT = (
 
 # Config-driven sites (add more below)
 SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
-    # TechCrunch homepage / recent pages (loop-card layout).
+    # TechCrunch homepage
     "techcrunch": {
         "base_url": "https://techcrunch.com",
         "listing_url": "https://techcrunch.com/",
         "listing_page_format": "/page/{page}/",
-        # Article links on listing pages (new TC theme uses loop-card*)
+        # Article links on listing pages
         "listing_link_selector": "a.loop-card__title-link[href], .loop-card__title a[href]",
         "listing_link_exclude_contains": [
             "/video/",
@@ -40,7 +40,7 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
         # Title / date
         "title_selector": "h1",
         "date_selector": "time[datetime]",
-        # Images (inside the article only)
+        # Images
         "header_image_selectors": [
             "header img[src]",
             "figure img.wp-post-image[src]",
@@ -52,7 +52,7 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
             ".entry-content img[src]",
         ],
     },
-    # TechNews.bg (WordPress-based).
+    # TechNews.bg
     "technewsbg": {
         "base_url": "https://technews.bg",
         "listing_url": "https://technews.bg/",
@@ -102,9 +102,6 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
 def download_html(url: str) -> str:
     """
     Fetch a URL and return HTML text.
-
-    Sends a GET request with a fixed User-Agent and a 20s timeout.
-    Raises for non-2xx responses so callers can fail fast.
 
     Args:
         url: Absolute URL to download.
@@ -198,6 +195,30 @@ def parse_title(soup: BeautifulSoup, site_config: Dict[str, Any]) -> str:
 
     return ""
 
+def _normalize_isoish(value: str) -> Optional[str]:
+    """Make timestamps friendlier to `fromisoformat()` (Z → +00:00, ±HHMM → ±HH:MM)."""
+    if not value:
+        return None
+    string = value.strip()
+    if not string:
+        return None
+    if string.endswith("Z"):
+        string = string[:-1] + "+00:00"
+    if len(string) >= 5 and (string[-5] in "+-") and string[-3] != ":" and string[-2:].isdigit():
+        string = string[:-2] + ":" + string[-2:]
+    return string
+
+def _take_date_only(ts: str) -> Optional[str]:
+    """Parse a timestamp to date-only ISO; fallback if already like 'YYYY-MM-DD'."""
+    normal = _normalize_isoish(ts)
+    if not normal:
+        return None
+    try:
+        return datetime.fromisoformat(normal).date().isoformat()
+    except Exception:
+        if len(normal) >= 10 and normal[4] == "-" and normal[7] == "-":
+            return normal[:10]
+        return None
 
 def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str]:
     """
@@ -216,31 +237,6 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
     Returns:
         Date string or `None`.
     """
-
-    def _normalize_isoish(value: str) -> Optional[str]:
-        """Make timestamps friendlier to `fromisoformat()` (Z → +00:00, ±HHMM → ±HH:MM)."""
-        if not value:
-            return None
-        string = value.strip()
-        if not string:
-            return None
-        if string.endswith("Z"):
-            string = string[:-1] + "+00:00"
-        if len(string) >= 5 and (string[-5] in "+-") and string[-3] != ":" and string[-2:].isdigit():
-            string = string[:-2] + ":" + string[-2:]
-        return string
-
-    def _take_date_only(ts: str) -> Optional[str]:
-        """Parse a timestamp to date-only ISO; fallback if already like 'YYYY-MM-DD'."""
-        normal = _normalize_isoish(ts)
-        if not normal:
-            return None
-        try:
-            return datetime.fromisoformat(normal).date().isoformat()
-        except Exception:
-            if len(normal) >= 10 and normal[4] == "-" and normal[7] == "-":
-                return normal[:10]
-            return None
 
     selector = site_config.get("date_selector")
     if selector:

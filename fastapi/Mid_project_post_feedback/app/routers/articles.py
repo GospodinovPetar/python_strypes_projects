@@ -157,8 +157,13 @@ def scrape_and_store(
 
     output: List[ArticleOut] = []
     for item in items:
-        article = _upsert_article(db, item)
-        output.append(ArticleOut.from_orm(article))
+        try:
+            article = _upsert_article(db, item)
+            print(article)
+            output.append(ArticleOut.from_orm(article))
+        except Exception as e:
+            print(e)
+            print(item)
 
     db.commit()
     return output
