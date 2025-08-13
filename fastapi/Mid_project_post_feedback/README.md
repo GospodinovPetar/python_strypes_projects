@@ -126,7 +126,7 @@ curl -X POST "http://localhost:8000/articles/scrape?site=wired&page=1&pages=3"
 
 ```bash
 # List stored (latest 20 from TechNews BG)
-curl -s "http://localhost:8000/articles?source=technewsbg&limit=20" | jq '.[0]'
+curl -s "http://localhost:8000/articles?source=technewsbg&limit=20"
 ```
 
 ```bash
