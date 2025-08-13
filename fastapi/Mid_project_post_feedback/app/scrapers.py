@@ -101,24 +101,16 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
 
 def download_html(url: str) -> str:
     """
-    Fetch a URL and return its HTML as text.
+    Fetch a URL and return HTML text.
 
-    Parameters
-    ----------
-    url : str
-        Absolute URL to download.
+    Sends a GET request with a fixed User-Agent and a 20s timeout.
+    Raises for non-2xx responses so callers can fail fast.
 
-    Returns
-    -------
-    str
-        Response body as text.
+    Args:
+        url: Absolute URL to download.
 
-    Raises
-    ------
-    requests.HTTPError
-        If the response status is not 2xx.
-    requests.RequestException
-        For other network issues (timeouts, DNS, etc.).
+    Returns:
+        Raw HTML string.
     """
     headers = {"User-Agent": DEFAULT_USER_AGENT}
     response = requests.get(url, headers=headers, timeout=20)
@@ -128,24 +120,18 @@ def download_html(url: str) -> str:
 
 def build_listing_url(listing_url: str, page_format: str, page_number: int) -> str:
     """
-    Build a listing page URL for the requested page number.
+    Build the listing URL for a given page.
 
-    Page 1 returns `listing_url` unchanged; for page >= 2 the `page_format`
-    is appended to the stripped `listing_url`, with `{page}` replaced.
+    Page 1 returns `listing_url` as-is. For page >= 2, appends
+    the `page_format` (e.g. "/page/{page}/" or "?page={page}").
 
-    Parameters
-    ----------
-    listing_url : str
-        Base listing URL (page 1).
-    page_format : str
-        Format pattern such as "/page/{page}/" or "?page={page}".
-    page_number : int
-        Desired page number (1-based).
+    Args:
+        listing_url: Base listing URL.
+        page_format: Pattern containing "{page}".
+        page_number: 1-based page number.
 
-    Returns
-    -------
-    str
-        Fully formed listing URL for the page.
+    Returns:
+        Fully formed listing URL.
     """
     if page_number <= 1:
         return listing_url
@@ -156,21 +142,17 @@ def get_text_or_default(
     soup: BeautifulSoup, css_selector: str, default_value: str = ""
 ) -> str:
     """
-    Get the stripped text content of the first node matching a CSS selector.
+    Return the stripped text of the first element matching a selector.
 
-    Parameters
-    ----------
-    soup : BeautifulSoup
-        Document or element to search within.
-    css_selector : str
-        CSS selector to match a single element.
-    default_value : str, optional
-        Value to return if no element or no text is found, by default "".
+    If no element (or no text) is found, returns `default_value`.
 
-    Returns
-    -------
-    str
-        Extracted text or the provided default.
+    Args:
+        soup: Document or element to search within.
+        css_selector: CSS selector string.
+        default_value: Fallback value.
+
+    Returns:
+        Text content or the given default.
     """
     element = soup.select_one(css_selector)
     if element:
@@ -182,24 +164,19 @@ def get_text_or_default(
 
 def parse_title(soup: BeautifulSoup, site_config: Dict[str, Any]) -> str:
     """
-    Extract an article title using site config, with simple fallbacks.
+    Extract a title using simple, predictable fallbacks.
 
     Order:
-      1) site_config["title_selector"]
-      2) <h1>
-      3) <meta property='og:title'> (or name='og:title')
+      1) `site_config["title_selector"]`
+      2) `<h1>`
+      3) `<meta property="og:title">` (or `name="og:title"`)
 
-    Parameters
-    ----------
-    soup : BeautifulSoup
-        Parsed article document.
-    site_config : Dict[str, Any]
-        Configuration block for the target site.
+    Args:
+        soup: Parsed article document.
+        site_config: Current site configuration.
 
-    Returns
-    -------
-    str
-        Title string (may be empty if none found).
+    Returns:
+        Title string (empty if none found).
     """
     selector = site_config.get("title_selector", "")
     if selector:
@@ -221,52 +198,32 @@ def parse_title(soup: BeautifulSoup, site_config: Dict[str, Any]) -> str:
 
     return ""
 
+
 def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str]:
     """
-    Extract a publication date from an article and return it as 'YYYY-MM-DD'.
+    Return an ISO date ('YYYY-MM-DD') using pragmatic fallbacks.
 
-    Strategy (kept deliberately simple):
-      1) Use the site-configured selector (e.g., "time[datetime]"), reading either
-         the element's 'datetime' attribute or its text content.
-      2) Fallback to the first <time> tag on the page (same read logic).
-      3) Fallback to a few common <meta> tags (article:published_time, og:updated_time,
-         datePublished, publish-date).
+    Strategy:
+      1) Site selector (read `datetime` attribute or text).
+      2) First `<time>` tag on the page (same read logic).
+      3) Common meta tags: `article:published_time`, `og:updated_time`,
+         `datePublished`, `publish-date`.
 
-    All values are normalized to a format acceptable by datetime.fromisoformat(),
-    handling common variants like trailing 'Z' and timezone offsets without a colon.
+    Notes:
+      • Normalizes common timestamp variants (e.g., trailing 'Z', ±HHMM zones).
+      • If parsing fails but value already looks like 'YYYY-MM-DD',
+        returns the first 10 chars.
 
-    Parameters
-    ----------
-    soup : BeautifulSoup
-        Parsed document for the article page.
-    site_config : Dict[str, Any]
-        Configuration block for the current site (may contain 'date_selector').
+    Args:
+        soup: Parsed article document.
+        site_config: Current site configuration.
 
-    Returns
-    -------
-    Optional[str]
-        ISO date string 'YYYY-MM-DD' if parsed; otherwise None.
+    Returns:
+        ISO date string or `None`.
     """
 
     def _normalize_isoish(value: str) -> Optional[str]:
-        """
-        Normalize common ISO-like timestamp strings so they parse reliably.
-
-        Rules:
-          - Trailing 'Z' is treated as UTC → replaced with '+00:00'.
-          - Timezone offsets without a colon (e.g., '-0700', '+0530') are converted
-            to a colonized form (e.g., '-07:00', '+05:30').
-
-        Parameters
-        ----------
-        value : str
-            Raw timestamp string (possibly ISO-like).
-
-        Returns
-        -------
-        Optional[str]
-            Normalized timestamp string, or None if input is empty/whitespace.
-        """
+        """Make timestamps friendlier to `fromisoformat()` (Z → +00:00, ±HHMM → ±HH:MM)."""
         if not value:
             return None
         string = value.strip()
@@ -279,23 +236,7 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
         return string
 
     def _take_date_only(ts: str) -> Optional[str]:
-        """
-        Convert a timestamp string to a date-only ISO string ('YYYY-MM-DD').
-
-        Attempts datetime.fromisoformat() after normalizing common variants.
-        If parsing still fails but the string already looks like 'YYYY-MM-DD',
-        returns the first 10 characters as a last-resort heuristic.
-
-        Parameters
-        ----------
-        ts : str
-            Timestamp value (attribute or text) to parse.
-
-        Returns
-        -------
-        Optional[str]
-            Date-only ISO string or None if parsing fails.
-        """
+        """Parse a timestamp to date-only ISO; fallback if already like 'YYYY-MM-DD'."""
         normal = _normalize_isoish(ts)
         if not normal:
             return None
@@ -341,21 +282,18 @@ def collect_image_urls(
     article_url: str, container: Tag | BeautifulSoup, css_selectors: List[str]
 ) -> List[str]:
     """
-    Collect unique absolute image URLs (<img src=...>) matched by given selectors.
+    Collect unique, absolute `<img src=...>` URLs from an article container.
 
-    Parameters
-    ----------
-    article_url : str
-        The current article URL; used to absolutize relative image sources.
-    container : Tag | BeautifulSoup
-        Root element to scope the search to (usually the article root).
-    css_selectors : List[str]
-        One or more CSS selectors for images within the article.
+    Relative/`//cdn` URLs are normalized with `urljoin` and `https:` where needed.
+    Order of discovery is preserved; duplicates are removed.
 
-    Returns
-    -------
-    List[str]
-        Ordered list of unique absolute image URLs.
+    Args:
+        article_url: Article URL used as the base for `urljoin`.
+        container: Root element to search within.
+        css_selectors: One or more image selectors.
+
+    Returns:
+        List of absolute image URLs.
     """
     image_urls: List[str] = []
     seen: set = set()
@@ -378,17 +316,16 @@ def collect_image_urls(
 
 def parse_paragraphs(container: Tag | BeautifulSoup) -> List[str]:
     """
-    Extract all non-empty paragraph texts (<p>) from a container in order.
+    Extract all non-empty `<p>` texts in order.
 
-    Parameters
-    ----------
-    container : Tag | BeautifulSoup
-        Article root (or any element) to search for <p> nodes.
+    Keeps the natural reading flow by selecting paragraphs directly
+    from the article container.
 
-    Returns
-    -------
-    List[str]
-        Ordered list of paragraph strings (empty texts are skipped).
+    Args:
+        container: Element to search for `<p>` nodes.
+
+    Returns:
+        Ordered list of paragraph strings.
     """
     paragraphs: List[str] = []
     paragraph_nodes = container.select("p")
@@ -403,22 +340,17 @@ def find_article_root(
     soup: BeautifulSoup, site_config: Dict[str, Any]
 ) -> Tag | BeautifulSoup:
     """
-    Locate the main article container using configured selectors.
+    Find the main article container using configured selectors.
 
-    The first selector in `article_root_selectors` that matches is returned.
-    If none match, the entire document is returned as a safe fallback.
+    Returns the first matching selector from `article_root_selectors`.
+    If none match, falls back to the entire document.
 
-    Parameters
-    ----------
-    soup : BeautifulSoup
-        Parsed article document.
-    site_config : Dict[str, Any]
-        Configuration block for the target site.
+    Args:
+        soup: Parsed article document.
+        site_config: Current site configuration.
 
-    Returns
-    -------
-    Tag | BeautifulSoup
-        The article root element or the full document.
+    Returns:
+        The article root element, or the full document.
     """
     selectors = site_config.get("article_root_selectors", [])
     for selector in selectors:
@@ -432,25 +364,19 @@ def extract_links_from_listing(
     listing_html: str, site_config: Dict[str, Any]
 ) -> List[str]:
     """
-    Extract absolute article links from a listing page.
+    Extract article links from a listing page.
 
-    The function:
-      1) Parses the listing HTML.
-      2) Selects link elements using `listing_link_selector`.
-      3) Absolutizes hrefs against `base_url`.
-      4) Filters out links containing any fragment from `listing_link_exclude_contains`.
-      5) Deduplicates while preserving order.
+    Steps:
+      • Select links via `listing_link_selector`.
+      • Absolutize against `base_url`.
+      • Exclude if URL contains any configured fragment.
+      • Deduplicate in discovery order.
 
-    Parameters
-    ----------
-    listing_html : str
-        The listing page HTML.
-    site_config : Dict[str, Any]
-        Configuration block for the target site.
+    Args:
+        listing_html: Raw listing page HTML.
+        site_config: Current site configuration.
 
-    Returns
-    -------
-    List[str]
+    Returns:
         Ordered list of absolute article URLs.
     """
     soup = BeautifulSoup(listing_html, "html.parser")
@@ -489,30 +415,21 @@ def parse_article(
     article_url: str, article_html: str, site_name: str, site_config: Dict[str, Any]
 ) -> ArticleData:
     """
-    Parse one article page into an `ArticleData` record.
+    Parse an article page into `ArticleData`.
 
-    Steps:
-      - Find the article root using `article_root_selectors`.
-      - Extract title and date (prefers <time datetime> → ISO).
-      - Collect at most one header image (first match across header selectors).
-      - Collect all unique body images (across body selectors).
-      - Extract ordered non-empty paragraph texts.
+    Includes:
+      • Title and ISO date.
+      • First matching header image (max one) + all body images.
+      • Ordered non-empty paragraph texts.
 
-    Parameters
-    ----------
-    article_url : str
-        Absolute URL of the article.
-    article_html : str
-        Raw HTML of the article page.
-    site_name : str
-        Site key (as in `SITE_CONFIGS`), stored into `ArticleData.source`.
-    site_config : Dict[str, Any]
-        Configuration block for the target site.
+    Args:
+        article_url: Absolute URL of the article.
+        article_html: Raw HTML content.
+        site_name: Site key (stored in `ArticleData.source`).
+        site_config: Current site configuration.
 
-    Returns
-    -------
-    ArticleData
-        Structured representation of the parsed article.
+    Returns:
+        Structured article record.
     """
     soup = BeautifulSoup(article_html, "html.parser")
     article_root = find_article_root(soup, site_config)
@@ -558,19 +475,17 @@ def parse_article(
 
 def scrape_site(site_name: str, page_number: int = 1) -> List[ArticleData]:
     """
-    Scrape a single listing page for a configured site and parse each article.
+    Scrape a single listing page and parse each article.
 
-    Parameters
-    ----------
-    site_name : str
-        Key present in `SITE_CONFIGS`.
-    page_number : int, optional
-        Listing page number (1-based), by default 1.
+    Uses the configured selectors for the target site. A light quality
+    gate keeps articles with very short bodies out (`len(paragraphs) > 2`).
 
-    Returns
-    -------
-    List[ArticleData]
-        Parsed articles for the given listing page.
+    Args:
+        site_name: Key present in `SITE_CONFIGS`.
+        page_number: Listing page number (1-based).
+
+    Returns:
+        List of parsed articles for the page.
     """
     site_key = site_name.lower()
     site_config = SITE_CONFIGS[site_key]
@@ -598,21 +513,18 @@ def scrape_pages(
     site_name: str, start_page: int = 1, number_of_pages: int = 1
 ) -> List[ArticleData]:
     """
-    Scrape multiple consecutive listing pages and return all parsed articles.
+    Scrape multiple consecutive listing pages and combine results.
 
-    Parameters
-    ----------
-    site_name : str
-        Key present in `SITE_CONFIGS`.
-    start_page : int, optional
-        First listing page (1-based), by default 1.
-    number_of_pages : int, optional
-        How many pages to scrape (>= 1), by default 1.
+    Iterates from `start_page` through `start_page + number_of_pages - 1`,
+    collecting parsed articles from each listing.
 
-    Returns
-    -------
-    List[ArticleData]
-        Combined list of parsed articles from all requested pages.
+    Args:
+        site_name: Key present in `SITE_CONFIGS`.
+        start_page: First listing page (1-based).
+        number_of_pages: How many pages to scrape (>= 1).
+
+    Returns:
+        Combined list of parsed articles.
     """
     if number_of_pages < 1:
         number_of_pages = 1
