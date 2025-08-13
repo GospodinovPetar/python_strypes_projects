@@ -50,7 +50,7 @@ def _ensure_known_site(site: str) -> None:
 
 def _upsert_article(db: Session, data: Any) -> Article:
     """
-    Insert or update an article row based on its URL (idempotent upsert).
+    Insert or update an article row based on its URL.
 
     Parameters
     ----------
@@ -66,9 +66,8 @@ def _upsert_article(db: Session, data: Any) -> Article:
         - date: Optional[str]
 
     Returns
-    -------
-    Article
-        The persisted SQLAlchemy model instance (new or updated).
+    ---------
+        Article
     """
     images = getattr(data, "image_urls", None)
     if images is None:
@@ -101,7 +100,6 @@ def _upsert_article(db: Session, data: Any) -> Article:
         )
         db.add(obj)
 
-    db.flush()  # ensure PK is assigned (and defaults populated if any)
     return obj
 
 
@@ -160,7 +158,6 @@ def scrape_and_store(
     output: List[ArticleOut] = []
     for item in items:
         article = _upsert_article(db, item)
-        # If your DB sets created_at via server default, consider db.refresh(article)
         output.append(ArticleOut.from_orm(article))
 
     db.commit()

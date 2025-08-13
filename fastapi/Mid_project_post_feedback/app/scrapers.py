@@ -201,7 +201,7 @@ def parse_title(soup: BeautifulSoup, site_config: Dict[str, Any]) -> str:
 
 def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str]:
     """
-    Return an ISO date ('YYYY-MM-DD') using pragmatic fallbacks.
+    Return a date ('YYYY-MM-DD').
 
     Strategy:
       1) Site selector (read `datetime` attribute or text).
@@ -209,17 +209,12 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
       3) Common meta tags: `article:published_time`, `og:updated_time`,
          `datePublished`, `publish-date`.
 
-    Notes:
-      • Normalizes common timestamp variants (e.g., trailing 'Z', ±HHMM zones).
-      • If parsing fails but value already looks like 'YYYY-MM-DD',
-        returns the first 10 chars.
-
     Args:
         soup: Parsed article document.
         site_config: Current site configuration.
 
     Returns:
-        ISO date string or `None`.
+        Date string or `None`.
     """
 
     def _normalize_isoish(value: str) -> Optional[str]:
@@ -284,8 +279,7 @@ def collect_image_urls(
     """
     Collect unique, absolute `<img src=...>` URLs from an article container.
 
-    Relative/`//cdn` URLs are normalized with `urljoin` and `https:` where needed.
-    Order of discovery is preserved; duplicates are removed.
+    Relative URLs are normalized with `urljoin` and `https:` where needed.
 
     Args:
         article_url: Article URL used as the base for `urljoin`.
@@ -418,7 +412,7 @@ def parse_article(
     Parse an article page into `ArticleData`.
 
     Includes:
-      • Title and ISO date.
+      • Title and date.
       • First matching header image (max one) + all body images.
       • Ordered non-empty paragraph texts.
 
