@@ -1079,3 +1079,134 @@
 2025-08-13 10:32:19,235 [INFO] app - [PARSE] site=wired title_len=61 date=2025-08-02 images=1 paragraphs=10 url=https://www.wired.com/story/peacock-feathers-laser-beams/
 2025-08-13 10:32:19,235 [INFO] app - [SCRAPE] accepted (paragraphs=10) https://www.wired.com/story/peacock-feathers-laser-beams/
 2025-08-13 10:32:19,235 [INFO] app - [SCRAPE] page done. kept=12 of 12
+2025-08-13 10:41:08,560 [INFO] app - [LISTING] page=12 -> https://www.wired.com/most-recent/page/12/
+2025-08-13 10:41:08,562 [INFO] app - [SCRAPE] site=wired page=12 listing=https://www.wired.com/most-recent/page/12/
+2025-08-13 10:41:08,563 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/12/
+2025-08-13 10:41:09,131 [INFO] app - [HTTP] 200 https://www.wired.com/most-recent/page/12/ (918237 bytes)
+2025-08-13 10:41:09,170 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 20 links (raw)
+2025-08-13 10:41:09,170 [INFO] app - [LISTING] usable article links: 10
+2025-08-13 10:41:09,170 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/uncanny-valley-podcast-is-silicon-valley-losing-its-influence-on-dc/
+2025-08-13 10:41:09,170 [INFO] app - [HTTP] GET https://www.wired.com/story/uncanny-valley-podcast-is-silicon-valley-losing-its-influence-on-dc/
+2025-08-13 10:41:09,592 [INFO] app - [HTTP] 200 https://www.wired.com/story/uncanny-valley-podcast-is-silicon-valley-losing-its-influence-on-dc/ (1254152 bytes)
+2025-08-13 10:41:09,621 [INFO] app - [PARSE] site=wired title_len=45 date=2025-07-28 images=1 paragraphs=59 url=https://www.wired.com/story/uncanny-valley-podcast-is-silicon-valley-losing-its-influence-on-dc/
+2025-08-13 10:41:09,621 [INFO] app - [SCRAPE] accepted (paragraphs=59) https://www.wired.com/story/uncanny-valley-podcast-is-silicon-valley-losing-its-influence-on-dc/
+2025-08-13 10:41:09,621 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/what-is-microsd-express/
+2025-08-13 10:41:09,622 [INFO] app - [HTTP] GET https://www.wired.com/story/what-is-microsd-express/
+2025-08-13 10:41:10,070 [INFO] app - [HTTP] 200 https://www.wired.com/story/what-is-microsd-express/ (1316346 bytes)
+2025-08-13 10:41:10,113 [INFO] app - [PARSE] site=wired title_len=49 date=2025-07-28 images=8 paragraphs=27 url=https://www.wired.com/story/what-is-microsd-express/
+2025-08-13 10:41:10,113 [INFO] app - [SCRAPE] accepted (paragraphs=27) https://www.wired.com/story/what-is-microsd-express/
+2025-08-13 10:41:10,113 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/programmers-arent-humble-anymore-nobody-codes-in-perl/
+2025-08-13 10:41:10,113 [INFO] app - [HTTP] GET https://www.wired.com/story/programmers-arent-humble-anymore-nobody-codes-in-perl/
+2025-08-13 10:41:10,515 [INFO] app - [HTTP] 200 https://www.wired.com/story/programmers-arent-humble-anymore-nobody-codes-in-perl/ (1160615 bytes)
+2025-08-13 10:41:10,547 [INFO] app - [PARSE] site=wired title_len=71 date=2025-07-28 images=2 paragraphs=11 url=https://www.wired.com/story/programmers-arent-humble-anymore-nobody-codes-in-perl/
+2025-08-13 10:41:10,548 [INFO] app - [SCRAPE] accepted (paragraphs=11) https://www.wired.com/story/programmers-arent-humble-anymore-nobody-codes-in-perl/
+2025-08-13 10:41:10,548 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/from-cheating-exposes-to-dating-background-checks-tiktok-detectives-are-thriving/
+2025-08-13 10:41:10,548 [INFO] app - [HTTP] GET https://www.wired.com/story/from-cheating-exposes-to-dating-background-checks-tiktok-detectives-are-thriving/
+2025-08-13 10:41:10,965 [INFO] app - [HTTP] 200 https://www.wired.com/story/from-cheating-exposes-to-dating-background-checks-tiktok-detectives-are-thriving/ (1206310 bytes)
+2025-08-13 10:41:11,004 [INFO] app - [PARSE] site=wired title_len=81 date=2025-07-28 images=1 paragraphs=52 url=https://www.wired.com/story/from-cheating-exposes-to-dating-background-checks-tiktok-detectives-are-thriving/
+2025-08-13 10:41:11,004 [INFO] app - [SCRAPE] accepted (paragraphs=52) https://www.wired.com/story/from-cheating-exposes-to-dating-background-checks-tiktok-detectives-are-thriving/
+2025-08-13 10:41:11,004 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/this-star-system-contains-five-potentially-habitable-planets/
+2025-08-13 10:41:11,005 [INFO] app - [HTTP] GET https://www.wired.com/story/this-star-system-contains-five-potentially-habitable-planets/
+2025-08-13 10:41:11,463 [INFO] app - [HTTP] 200 https://www.wired.com/story/this-star-system-contains-five-potentially-habitable-planets/ (1157254 bytes)
+2025-08-13 10:41:11,526 [INFO] app - [PARSE] site=wired title_len=57 date=2025-07-28 images=2 paragraphs=11 url=https://www.wired.com/story/this-star-system-contains-five-potentially-habitable-planets/
+2025-08-13 10:41:11,527 [INFO] app - [SCRAPE] accepted (paragraphs=11) https://www.wired.com/story/this-star-system-contains-five-potentially-habitable-planets/
+2025-08-13 10:41:11,527 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/seriously-why-do-some-ai-chatbot-subscriptions-cost-more-than-200/
+2025-08-13 10:41:11,527 [INFO] app - [HTTP] GET https://www.wired.com/story/seriously-why-do-some-ai-chatbot-subscriptions-cost-more-than-200/
+2025-08-13 10:41:11,960 [INFO] app - [HTTP] 200 https://www.wired.com/story/seriously-why-do-some-ai-chatbot-subscriptions-cost-more-than-200/ (1207622 bytes)
+2025-08-13 10:41:11,996 [INFO] app - [PARSE] site=wired title_len=68 date=2025-07-28 images=1 paragraphs=16 url=https://www.wired.com/story/seriously-why-do-some-ai-chatbot-subscriptions-cost-more-than-200/
+2025-08-13 10:41:11,996 [INFO] app - [SCRAPE] accepted (paragraphs=16) https://www.wired.com/story/seriously-why-do-some-ai-chatbot-subscriptions-cost-more-than-200/
+2025-08-13 10:41:11,996 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/what-is-qi2-wireless-charging/
+2025-08-13 10:41:11,996 [INFO] app - [HTTP] GET https://www.wired.com/story/what-is-qi2-wireless-charging/
+2025-08-13 10:41:12,486 [INFO] app - [HTTP] 200 https://www.wired.com/story/what-is-qi2-wireless-charging/ (1286383 bytes)
+2025-08-13 10:41:12,528 [INFO] app - [PARSE] site=wired title_len=57 date=2025-07-27 images=3 paragraphs=22 url=https://www.wired.com/story/what-is-qi2-wireless-charging/
+2025-08-13 10:41:12,528 [INFO] app - [SCRAPE] accepted (paragraphs=22) https://www.wired.com/story/what-is-qi2-wireless-charging/
+2025-08-13 10:41:12,528 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/a-grand-unified-theory-of-math-just-got-a-little-bit-closer-fermats-last-theorem/
+2025-08-13 10:41:12,528 [INFO] app - [HTTP] GET https://www.wired.com/story/a-grand-unified-theory-of-math-just-got-a-little-bit-closer-fermats-last-theorem/
+2025-08-13 10:41:13,090 [INFO] app - [HTTP] 200 https://www.wired.com/story/a-grand-unified-theory-of-math-just-got-a-little-bit-closer-fermats-last-theorem/ (1184570 bytes)
+2025-08-13 10:41:13,123 [INFO] app - [PARSE] site=wired title_len=61 date=2025-07-27 images=3 paragraphs=41 url=https://www.wired.com/story/a-grand-unified-theory-of-math-just-got-a-little-bit-closer-fermats-last-theorem/
+2025-08-13 10:41:13,123 [INFO] app - [SCRAPE] accepted (paragraphs=41) https://www.wired.com/story/a-grand-unified-theory-of-math-just-got-a-little-bit-closer-fermats-last-theorem/
+2025-08-13 10:41:13,124 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/best-amazon-prime-movies/
+2025-08-13 10:41:13,124 [INFO] app - [HTTP] GET https://www.wired.com/story/best-amazon-prime-movies/
+2025-08-13 10:41:13,582 [INFO] app - [HTTP] 200 https://www.wired.com/story/best-amazon-prime-movies/ (1286623 bytes)
+2025-08-13 10:41:13,621 [INFO] app - [PARSE] site=wired title_len=44 date=2025-07-26 images=1 paragraphs=24 url=https://www.wired.com/story/best-amazon-prime-movies/
+2025-08-13 10:41:13,621 [INFO] app - [SCRAPE] accepted (paragraphs=24) https://www.wired.com/story/best-amazon-prime-movies/
+2025-08-13 10:41:13,621 [INFO] app - [SCRAPE] fetching article https://www.wired.com/story/kerr-countys-tragic-flood-wasnt-an-outlier-it-was-a-preview/
+2025-08-13 10:41:13,622 [INFO] app - [HTTP] GET https://www.wired.com/story/kerr-countys-tragic-flood-wasnt-an-outlier-it-was-a-preview/
+2025-08-13 10:41:14,033 [INFO] app - [HTTP] 200 https://www.wired.com/story/kerr-countys-tragic-flood-wasnt-an-outlier-it-was-a-preview/ (1163942 bytes)
+2025-08-13 10:41:14,071 [INFO] app - [PARSE] site=wired title_len=49 date=2025-07-26 images=1 paragraphs=23 url=https://www.wired.com/story/kerr-countys-tragic-flood-wasnt-an-outlier-it-was-a-preview/
+2025-08-13 10:41:14,071 [INFO] app - [SCRAPE] accepted (paragraphs=23) https://www.wired.com/story/kerr-countys-tragic-flood-wasnt-an-outlier-it-was-a-preview/
+2025-08-13 10:41:14,071 [INFO] app - [SCRAPE] page done. kept=10 of 10
+2025-08-13 10:41:24,020 [INFO] app - [LISTING] page=92139123 -> https://www.wired.com/most-recent/page/92139123/
+2025-08-13 10:41:24,021 [INFO] app - [SCRAPE] site=wired page=92139123 listing=https://www.wired.com/most-recent/page/92139123/
+2025-08-13 10:41:24,021 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/92139123/
+2025-08-13 10:41:25,965 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/92139123/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=92139123
+2025-08-13 10:58:05,597 [INFO] app - [LISTING] page=1213213 -> https://www.wired.com/most-recent/page/1213213/
+2025-08-13 10:58:05,598 [INFO] app - [SCRAPE] site=wired page=1213213 listing=https://www.wired.com/most-recent/page/1213213/
+2025-08-13 10:58:05,598 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1213213/
+2025-08-13 10:58:06,909 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1213213/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1213213
+2025-08-13 10:58:06,912 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 10:58:06,913 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 10:58:06,913 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:00:25,365 [INFO] app - [LISTING] page=1213213 -> https://www.wired.com/most-recent/page/1213213/
+2025-08-13 11:00:25,367 [INFO] app - [SCRAPE] site=wired page=1213213 listing=https://www.wired.com/most-recent/page/1213213/
+2025-08-13 11:00:25,367 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1213213/
+2025-08-13 11:00:27,300 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1213213/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1213213
+2025-08-13 11:00:27,303 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:00:27,303 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:00:27,304 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:00:29,190 [INFO] app - [LISTING] page=1213213 -> https://www.wired.com/most-recent/page/1213213/
+2025-08-13 11:00:29,193 [INFO] app - [SCRAPE] site=wired page=1213213 listing=https://www.wired.com/most-recent/page/1213213/
+2025-08-13 11:00:29,193 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1213213/
+2025-08-13 11:00:29,808 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1213213/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1213213
+2025-08-13 11:00:29,810 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:00:29,810 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:00:29,811 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:00:38,701 [INFO] app - [LISTING] page=1312321 -> https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:00:38,702 [INFO] app - [SCRAPE] site=wired page=1312321 listing=https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:00:38,703 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:00:40,292 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1312321/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1312321
+2025-08-13 11:00:40,294 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:00:40,294 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:00:40,295 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:01:19,364 [INFO] app - [LISTING] page=1312321 -> https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:01:19,366 [INFO] app - [SCRAPE] site=wired page=1312321 listing=https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:01:19,367 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:01:20,043 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1312321/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1312321
+2025-08-13 11:01:20,046 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:01:20,046 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:01:20,046 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:01:48,438 [INFO] app - [LISTING] page=1312321 -> https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:01:48,438 [INFO] app - [SCRAPE] site=wired page=1312321 listing=https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:01:48,439 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:01:49,007 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1312321/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1312321
+2025-08-13 11:01:49,010 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:01:49,010 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:01:49,011 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:04:30,152 [INFO] app - [LISTING] page=1312321 -> https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:04:30,153 [INFO] app - [SCRAPE] site=wired page=1312321 listing=https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:04:30,153 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/1312321/
+2025-08-13 11:04:30,976 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/1312321/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=1312321
+2025-08-13 11:04:30,978 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:04:30,978 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:04:30,979 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:04:38,932 [INFO] app - [LISTING] page=121321312 -> https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:04:38,932 [INFO] app - [SCRAPE] site=wired page=121321312 listing=https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:04:38,932 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:04:39,963 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/121321312/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=121321312
+2025-08-13 11:04:39,965 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:04:39,966 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:04:39,966 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:09:07,350 [INFO] app - [LISTING] page=121321312 -> https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:09:07,351 [INFO] app - [SCRAPE] site=wired page=121321312 listing=https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:09:07,351 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:09:08,482 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/121321312/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=121321312
+2025-08-13 11:09:08,485 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:09:08,485 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:09:08,485 [INFO] app - [SCRAPE] page done. kept=0 of 0
+2025-08-13 11:11:37,080 [INFO] app - [LISTING] page=121321312 -> https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:11:37,081 [INFO] app - [SCRAPE] site=wired page=121321312 listing=https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:11:37,081 [INFO] app - [HTTP] GET https://www.wired.com/most-recent/page/121321312/
+2025-08-13 11:11:37,800 [INFO] app - [HTTP] ERROR fetching https://www.wired.com/most-recent/page/121321312/: 500 Server Error: Internal Server Error for url: https://www.wired.com/most-recent/?page=121321312
+2025-08-13 11:11:37,804 [INFO] app - [LISTING] selector='.archive-item-component a[href], a[href^='/story/']' matched 0 links (raw)
+2025-08-13 11:11:37,805 [INFO] app - [LISTING] usable article links: 0
+2025-08-13 11:11:37,805 [INFO] app - [SCRAPE] page done. kept=0 of 0

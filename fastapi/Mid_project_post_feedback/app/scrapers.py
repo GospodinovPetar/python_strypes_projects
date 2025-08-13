@@ -27,7 +27,7 @@ def download_html(url: str) -> str:
         return response.text
     except requests.RequestException as exc:
         logger.info(f"[HTTP] ERROR fetching {url}: {exc}")
-        raise
+        return f'Unable to fetch {url}'
 
 
 def build_listing_url(listing_url: str, page_format: str, page_number: int) -> str:
@@ -302,7 +302,7 @@ def parse_article(
     )
 
 
-def scrape_site(site_name: str, page_number: int = 1) -> List[ArticleData]:
+def scrape_site(site_name: str, page_number: int = 1) -> List[ArticleData] | str:
     """
     Scrape a single listing page and parse each article.
     """

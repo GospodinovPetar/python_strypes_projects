@@ -5,6 +5,7 @@ from typing import List, Optional, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
 from sqlalchemy.orm import Session
+from fastapi.responses import PlainTextResponse
 
 from app.scrapers import scrape_site, scrape_pages
 from app.site_configs import SITE_CONFIGS
@@ -129,7 +130,7 @@ def scrape_and_store(
         1, ge=1, description="How many pages to scrape starting from 'page'"
     ),
     db: Session = Depends(get_db),
-) -> List[ArticleOut]:
+) -> List[ArticleOut] | str:
     """
     Scrape one or more listing pages for the selected site and upsert results.
 
@@ -165,7 +166,10 @@ def scrape_and_store(
     for obj in saved:
         db.refresh(obj)
 
-    return [ArticleOut.from_orm(obj) for obj in saved]
+    articles = [ArticleOut.from_orm(obj) for obj in saved]
+    if not articles:
+        return PlainTextResponse("No articles found for those arguments", status_code=200)
+    return articles
 
 
 @router.get("", summary="List stored articles", response_model=List[ArticleOut])
