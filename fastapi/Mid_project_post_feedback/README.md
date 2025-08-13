@@ -89,7 +89,7 @@ setup/
 ```bash
 cd setup
 cp env.example .env
-# Edit if needed, e.g.
+# uncomment this for postgres database to work
 # DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/news
 ```
 
