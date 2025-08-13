@@ -90,7 +90,12 @@ def _normalize_isoish(value: str) -> Optional[str]:
         return None
     if string.endswith("Z"):
         string = string[:-1] + "+00:00"
-    if len(string) >= 5 and (string[-5] in "+-") and string[-3] != ":" and string[-2:].isdigit():
+    if (
+        len(string) >= 5
+        and (string[-5] in "+-")
+        and string[-3] != ":"
+        and string[-2:].isdigit()
+    ):
         string = string[:-2] + ":" + string[-2:]
     return string
 
@@ -128,7 +133,12 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
         if date:
             return date
 
-    for key in ("article:published_time", "og:updated_time", "datePublished", "publish-date"):
+    for key in (
+        "article:published_time",
+        "og:updated_time",
+        "datePublished",
+        "publish-date",
+    ):
         tag = (
             soup.find("meta", property=key)
             or soup.find("meta", attrs={"name": key})
@@ -208,7 +218,9 @@ def extract_links_from_listing(
 
     link_selector = site_config["listing_link_selector"]
     link_elements = soup.select(link_selector)
-    logger.info(f"[LISTING] selector='{link_selector}' matched {len(link_elements)} links (raw)")
+    logger.info(
+        f"[LISTING] selector='{link_selector}' matched {len(link_elements)} links (raw)"
+    )
 
     for a in link_elements:
         href_value = a.get("href")
@@ -314,12 +326,18 @@ def scrape_site(site_name: str, page_number: int = 1) -> List[ArticleData]:
         article_html = download_html(link)
         article = parse_article(link, article_html, site_key, site_config)
         if len(article.paragraphs) > 2:
-            logger.info(f"[SCRAPE] accepted (paragraphs={len(article.paragraphs)}) {link}")
+            logger.info(
+                f"[SCRAPE] accepted (paragraphs={len(article.paragraphs)}) {link}"
+            )
             scraped_articles.append(article)
         else:
-            logger.info(f"[SCRAPE] skipped (too short: {len(article.paragraphs)} paragraphs) {link}")
+            logger.info(
+                f"[SCRAPE] skipped (too short: {len(article.paragraphs)} paragraphs) {link}"
+            )
 
-    logger.info(f"[SCRAPE] page done. kept={len(scraped_articles)} of {len(article_links)}")
+    logger.info(
+        f"[SCRAPE] page done. kept={len(scraped_articles)} of {len(article_links)}"
+    )
     return scraped_articles
 
 
@@ -332,7 +350,9 @@ def scrape_pages(
     if number_of_pages < 1:
         number_of_pages = 1
 
-    logger.info(f"[SCRAPE:MULTI] site={site_name} pages={start_page}..{start_page + number_of_pages - 1}")
+    logger.info(
+        f"[SCRAPE:MULTI] site={site_name} pages={start_page}..{start_page + number_of_pages - 1}"
+    )
 
     all_articles: List[ArticleData] = []
 
