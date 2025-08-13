@@ -156,18 +156,16 @@ def scrape_and_store(
     else:
         items = scrape_pages(site_name=site, start_page=page, number_of_pages=pages)
 
-    output: List[ArticleOut] = []
+    saved: List[Article] = []
     for item in items:
-        try:
-            article = _upsert_article(db, item)
-            print(article)
-            output.append(ArticleOut.from_orm(article))
-        except Exception as e:
-            print(e)
-            print(item)
+        saved.append(_upsert_article(db, item))
 
     db.commit()
-    return output
+
+    for obj in saved:
+        db.refresh(obj)
+
+    return [ArticleOut.from_orm(obj) for obj in saved]
 
 
 @router.get("", summary="List stored articles", response_model=List[ArticleOut])
