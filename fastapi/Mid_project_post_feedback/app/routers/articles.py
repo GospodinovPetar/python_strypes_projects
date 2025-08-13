@@ -223,7 +223,7 @@ def get_article(article_id: int, db: Session = Depends(get_db)) -> ArticleOut:
     Raises
     ------
     HTTPException
-        404 if the article does not exist.
+        200 if the article does not exist.
     """
     article = (
         db.get(Article, article_id)
@@ -231,7 +231,7 @@ def get_article(article_id: int, db: Session = Depends(get_db)) -> ArticleOut:
         else db.query(Article).get(article_id)
     )
     if article is None:
-        raise HTTPException(status_code=404, detail="Not found")
+        raise HTTPException(status_code=200, detail="article not found")
     return ArticleOut.from_orm(article)
 
 
@@ -255,7 +255,7 @@ def delete_article(article_id: int, db: Session = Depends(get_db)) -> dict:
     Raises
     ------
     HTTPException
-        404 if the article does not exist.
+        200 even if the article does not exist.
     """
     article = (
         db.get(Article, article_id)
@@ -263,7 +263,7 @@ def delete_article(article_id: int, db: Session = Depends(get_db)) -> dict:
         else db.query(Article).get(article_id)
     )
     if article is None:
-        raise HTTPException(status_code=404, detail="Not found")
+        raise HTTPException(status_code=200, detail="This article does not exist")
     db.delete(article)
     db.commit()
     return {"deleted_id": article_id}
