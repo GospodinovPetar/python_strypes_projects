@@ -19,34 +19,40 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
         "base_url": "https://techcrunch.com",
         "listing_url": "https://techcrunch.com/",
         "listing_page_format": "/page/{page}/",
-
         # Article links on listing pages (new TC theme uses loop-card*)
         "listing_link_selector": "a.loop-card__title-link[href], .loop-card__title a[href]",
         "listing_link_exclude_contains": [
-            "/video/", "/videos/", "/podcasts/", "/events/",
-            "/sponsored/", "/brand-studio/", "/category/", "/tag/"
+            "/video/",
+            "/videos/",
+            "/podcasts/",
+            "/events/",
+            "/sponsored/",
+            "/brand-studio/",
+            "/category/",
+            "/tag/",
         ],
-
         # Where article content lives
-        "article_root_selectors": ["article", ".wp-block-post-content", ".entry-content", ".article-content"],
-
+        "article_root_selectors": [
+            "article",
+            ".wp-block-post-content",
+            ".entry-content",
+            ".article-content",
+        ],
         # Title / date
         "title_selector": "h1",
         "date_selector": "time[datetime]",
-
         # Images (inside the article only)
         "header_image_selectors": [
             "header img[src]",
             "figure img.wp-post-image[src]",
-            "figure.wp-block-image img[src]"
+            "figure.wp-block-image img[src]",
         ],
         "body_image_selectors": [
             ".wp-block-post-content img[src]",
             ".article-content img[src]",
-            ".entry-content img[src]"
+            ".entry-content img[src]",
         ],
     },
-
     # TechNews.bg (WordPress-based).
     "technewsbg": {
         "base_url": "https://technews.bg",
@@ -74,7 +80,6 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
             ".entry-content img[src]",
         ],
     },
-
     # WIRED "Most Recent".
     "wired": {
         "base_url": "https://www.wired.com",
@@ -121,11 +126,15 @@ def download_html(url: str) -> str:
     response.raise_for_status()
     return response.text
 
+
 def _first_meta(soup: BeautifulSoup, key: str) -> Optional[str]:
-    tag = (soup.find("meta", property=key)
-           or soup.find("meta", attrs={"name": key})
-           or soup.find("meta", itemprop=key))
-    return (tag.get("content").strip() if tag and tag.get("content") else None)
+    tag = (
+        soup.find("meta", property=key)
+        or soup.find("meta", attrs={"name": key})
+        or soup.find("meta", itemprop=key)
+    )
+    return tag.get("content").strip() if tag and tag.get("content") else None
+
 
 def build_listing_url(listing_url: str, page_format: str, page_number: int) -> str:
     """
@@ -238,6 +247,7 @@ def _normalize_isoish(value: str) -> Optional[str]:
         str = str[:-2] + ":" + str[-2:]
     return str
 
+
 def _take_date_only(ts: str) -> Optional[str]:
     """Return YYYY-MM-DD if ts parses, else None."""
     normal = _normalize_isoish(ts)
@@ -250,6 +260,7 @@ def _take_date_only(ts: str) -> Optional[str]:
         if len(normal) >= 10 and normal[4] == "-" and normal[7] == "-":
             return normal[:10]
         return None
+
 
 def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str]:
     """
@@ -276,7 +287,12 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
             return date
 
     # 3) Meta fallbacks
-    for key in ("article:published_time", "og:updated_time", "datePublished", "publish-date"):
+    for key in (
+        "article:published_time",
+        "og:updated_time",
+        "datePublished",
+        "publish-date",
+    ):
         val = _first_meta(soup, key)
         if val:
             date = _take_date_only(val)
@@ -284,7 +300,6 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
                 return date
 
     return None
-
 
 
 def collect_image_urls(

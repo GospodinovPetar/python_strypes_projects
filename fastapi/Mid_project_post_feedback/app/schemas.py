@@ -5,6 +5,7 @@ from typing import List, Optional, Any
 from pydantic import BaseModel, HttpUrl
 from datetime import datetime
 
+
 @dataclass(frozen=True)
 class ArticleData:
     source: str
@@ -13,6 +14,7 @@ class ArticleData:
     date: Optional[str]
     image_urls: List[str]
     paragraphs: List[str]
+
 
 class ArticleBase(BaseModel):
     id: int
