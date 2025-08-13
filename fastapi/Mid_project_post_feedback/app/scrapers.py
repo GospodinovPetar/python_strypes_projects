@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from urllib.parse import urljoin
@@ -127,15 +126,6 @@ def download_html(url: str) -> str:
     return response.text
 
 
-def _first_meta(soup: BeautifulSoup, key: str) -> Optional[str]:
-    tag = (
-        soup.find("meta", property=key)
-        or soup.find("meta", attrs={"name": key})
-        or soup.find("meta", itemprop=key)
-    )
-    return tag.get("content").strip() if tag and tag.get("content") else None
-
-
 def build_listing_url(listing_url: str, page_format: str, page_number: int) -> str:
     """
     Build a listing page URL for the requested page number.
@@ -231,45 +221,91 @@ def parse_title(soup: BeautifulSoup, site_config: Dict[str, Any]) -> str:
 
     return ""
 
-
-def _normalize_isoish(value: str) -> Optional[str]:
-    """Make common ISO-ish timestamps acceptable to fromisoformat()."""
-    if not value:
-        return None
-    str = value.strip()
-    if not str:
-        return None
-    # 'Z' -> UTC
-    if str.endswith("Z"):
-        str = str[:-1] + "+00:00"
-    # Fix zone like -0700 or +0530 -> -07:00 / +05:30
-    if len(str) >= 5 and (str[-5] in "+-") and str[-3] != ":" and str[-2:].isdigit():
-        str = str[:-2] + ":" + str[-2:]
-    return str
-
-
-def _take_date_only(ts: str) -> Optional[str]:
-    """Return YYYY-MM-DD if ts parses, else None."""
-    normal = _normalize_isoish(ts)
-    if not normal:
-        return None
-    try:
-        return datetime.fromisoformat(normal).date().isoformat()
-    except Exception:
-        # last chance: if it already looks like YYYY-MM-DD, take first 10
-        if len(normal) >= 10 and normal[4] == "-" and normal[7] == "-":
-            return normal[:10]
-        return None
-
-
 def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str]:
     """
-    Simple date extraction:
-      1) site-configured selector (node.text or node['datetime'])
-      2) first <time> tag (datetime attr or text)
-      3) a couple of common meta fallbacks
+    Extract a publication date from an article and return it as 'YYYY-MM-DD'.
+
+    Strategy (kept deliberately simple):
+      1) Use the site-configured selector (e.g., "time[datetime]"), reading either
+         the element's 'datetime' attribute or its text content.
+      2) Fallback to the first <time> tag on the page (same read logic).
+      3) Fallback to a few common <meta> tags (article:published_time, og:updated_time,
+         datePublished, publish-date).
+
+    All values are normalized to a format acceptable by datetime.fromisoformat(),
+    handling common variants like trailing 'Z' and timezone offsets without a colon.
+
+    Parameters
+    ----------
+    soup : BeautifulSoup
+        Parsed document for the article page.
+    site_config : Dict[str, Any]
+        Configuration block for the current site (may contain 'date_selector').
+
+    Returns
+    -------
+    Optional[str]
+        ISO date string 'YYYY-MM-DD' if parsed; otherwise None.
     """
-    # 1) Configured selector
+
+    def _normalize_isoish(value: str) -> Optional[str]:
+        """
+        Normalize common ISO-like timestamp strings so they parse reliably.
+
+        Rules:
+          - Trailing 'Z' is treated as UTC → replaced with '+00:00'.
+          - Timezone offsets without a colon (e.g., '-0700', '+0530') are converted
+            to a colonized form (e.g., '-07:00', '+05:30').
+
+        Parameters
+        ----------
+        value : str
+            Raw timestamp string (possibly ISO-like).
+
+        Returns
+        -------
+        Optional[str]
+            Normalized timestamp string, or None if input is empty/whitespace.
+        """
+        if not value:
+            return None
+        string = value.strip()
+        if not string:
+            return None
+        if string.endswith("Z"):
+            string = string[:-1] + "+00:00"
+        if len(string) >= 5 and (string[-5] in "+-") and string[-3] != ":" and string[-2:].isdigit():
+            string = string[:-2] + ":" + string[-2:]
+        return string
+
+    def _take_date_only(ts: str) -> Optional[str]:
+        """
+        Convert a timestamp string to a date-only ISO string ('YYYY-MM-DD').
+
+        Attempts datetime.fromisoformat() after normalizing common variants.
+        If parsing still fails but the string already looks like 'YYYY-MM-DD',
+        returns the first 10 characters as a last-resort heuristic.
+
+        Parameters
+        ----------
+        ts : str
+            Timestamp value (attribute or text) to parse.
+
+        Returns
+        -------
+        Optional[str]
+            Date-only ISO string or None if parsing fails.
+        """
+        normal = _normalize_isoish(ts)
+        if not normal:
+            return None
+        try:
+            return datetime.fromisoformat(normal).date().isoformat()
+        except Exception:
+            if len(normal) >= 10 and normal[4] == "-" and normal[7] == "-":
+                return normal[:10]
+            return None
+
     selector = site_config.get("date_selector")
     if selector:
         node = soup.select_one(selector)
@@ -286,14 +322,13 @@ def parse_date(soup: BeautifulSoup, site_config: Dict[str, Any]) -> Optional[str
         if date:
             return date
 
-    # 3) Meta fallbacks
-    for key in (
-        "article:published_time",
-        "og:updated_time",
-        "datePublished",
-        "publish-date",
-    ):
-        val = _first_meta(soup, key)
+    for key in ("article:published_time", "og:updated_time", "datePublished", "publish-date"):
+        tag = (
+            soup.find("meta", property=key)
+            or soup.find("meta", attrs={"name": key})
+            or soup.find("meta", itemprop=key)
+        )
+        val = tag.get("content").strip() if tag and tag.get("content") else None
         if val:
             date = _take_date_only(val)
             if date:
