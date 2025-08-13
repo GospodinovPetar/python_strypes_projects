@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import List, Optional, Any
-from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, HttpUrl
@@ -10,38 +9,38 @@ from sqlalchemy.orm import Session
 from app.scrapers import scrape_site, scrape_pages, SITE_CONFIGS
 from database.session import get_db
 from database.models import Article
+from app.schemas import ArticleOut
 
 
 router = APIRouter(prefix="/articles", tags=["Articles"])
 
 
-# -----------------------------
-# Pydantic output schema
-# -----------------------------
-class ArticleOut(BaseModel):
-    id: int
-    source: str
-    url: HttpUrl
-    title: str
-    image_urls: List[str]
-    paragraphs: List[str]
-    date: Optional[str]
-    created_at: datetime
-
-    class Config:
-        from_attributes = True  # Pydantic v2-style ORM mode
-
-
-# -----------------------------
-# Small helpers
-# -----------------------------
 def list_sites() -> List[str]:
-    """Return the configured site keys from the scraper."""
+    """
+    Return the configured site keys available to the scraper.
+
+    Returns
+    -------
+    List[str]
+        Sorted list of site keys (e.g., ["techcrunch", "technewsbg", "wired"]).
+    """
     return sorted(SITE_CONFIGS.keys())
 
 
 def _ensure_known_site(site: str) -> None:
-    """Raise a 400 error if site key is not supported."""
+    """
+    Validate that the provided site key exists in `SITE_CONFIGS`.
+
+    Parameters
+    ----------
+    site : str
+        Site key supplied by the client.
+
+    Raises
+    ------
+    HTTPException
+        400 error when the site key is not supported.
+    """
     if site not in SITE_CONFIGS:
         valid = ", ".join(list_sites())
         raise HTTPException(
@@ -51,8 +50,25 @@ def _ensure_known_site(site: str) -> None:
 
 def _upsert_article(db: Session, data: Any) -> Article:
     """
-    Insert or update an article row based on URL.
-    `data` is the scraper's ArticleData (dataclass-like with attributes).
+    Insert or update an article row based on its URL (idempotent upsert).
+
+    Parameters
+    ----------
+    db : Session
+        SQLAlchemy session (scoped to the request).
+    data : Any
+        Scraper result object (e.g., `ArticleData` dataclass) with attributes:
+        - source: str
+        - url: str
+        - title: str
+        - image_urls: list[str]
+        - paragraphs: list[str]
+        - date: Optional[str]
+
+    Returns
+    -------
+    Article
+        The persisted SQLAlchemy model instance (new or updated).
     """
     images = getattr(data, "image_urls", None)
     if images is None:
@@ -65,14 +81,13 @@ def _upsert_article(db: Session, data: Any) -> Article:
     if not isinstance(paragraphs, list):
         paragraphs = []
 
-    # Prefer SQLAlchemy 2.x style get if available; fallback to query().filter().first()
     existing = db.query(Article).filter(Article.url == data.url).first()
 
     if existing:
         existing.title = data.title
         existing.image_urls = images
         existing.paragraphs = paragraphs
-        existing.date = data.date  # Optional[str]
+        existing.date = data.date
         existing.source = data.source
         obj = existing
     else:
@@ -86,16 +101,20 @@ def _upsert_article(db: Session, data: Any) -> Article:
         )
         db.add(obj)
 
-    db.flush()
+    db.flush()  # ensure PK is assigned (and defaults populated if any)
     return obj
 
 
-# -----------------------------
-# Routes
-# -----------------------------
 @router.get("/sites", summary="List supported sites", response_model=List[str])
 def get_sites() -> List[str]:
-    """Show the site keys you can scrape."""
+    """
+    List the site keys supported by the scraper.
+
+    Returns
+    -------
+    List[str]
+        Sorted array of keys you can pass to `/articles/scrape?site=...`.
+    """
     return list_sites()
 
 
@@ -113,12 +132,26 @@ def scrape_and_store(
     db: Session = Depends(get_db),
 ) -> List[ArticleOut]:
     """
-    Scrape one or more listing pages for the selected site and upsert results
-    into the `articles` table.
+    Scrape one or more listing pages for the selected site and upsert results.
+
+    Parameters
+    ----------
+    site : str
+        Site key (must be present in `/articles/sites`).
+    page : int
+        Listing page to start from (1-based).
+    pages : int
+        Number of consecutive pages to scrape starting at `page`.
+    db : Session
+        Request-scoped SQLAlchemy session.
+
+    Returns
+    -------
+    List[ArticleOut]
+        Array of stored article rows (serialized).
     """
     _ensure_known_site(site)
 
-    # Use the scraper's API
     if pages == 1:
         items = scrape_site(site_name=site, page_number=page)
     else:
@@ -127,6 +160,7 @@ def scrape_and_store(
     output: List[ArticleOut] = []
     for item in items:
         article = _upsert_article(db, item)
+        # If your DB sets created_at via server default, consider db.refresh(article)
         output.append(ArticleOut.from_orm(article))
 
     db.commit()
@@ -142,16 +176,26 @@ def list_articles(
     limit: int = Query(50, ge=1, le=200),
 ) -> List[ArticleOut]:
     """
-    Return the most recent stored articles.
-    You can filter by source and limit the number of rows.
+    Return the most recent stored articles, optionally filtered by source.
+
+    Parameters
+    ----------
+    db : Session
+        Request-scoped SQLAlchemy session.
+    source : Optional[str]
+        Site key to filter by (e.g., "wired"). If omitted, returns all sources.
+    limit : int
+        Maximum number of rows to return (1–200).
+
+    Returns
+    -------
+    List[ArticleOut]
+        The result set as API-friendly objects.
     """
     query = db.query(Article)
 
     if source:
         query = query.filter(Article.source == source)
-
-    # If your model has created_at with an index, you can order by it:
-    # query = query.order_by(Article.created_at.desc())
 
     query = query.limit(limit)
     rows = query.all()
@@ -164,7 +208,26 @@ def list_articles(
 
 @router.get("/{article_id}", summary="Get an article by ID", response_model=ArticleOut)
 def get_article(article_id: int, db: Session = Depends(get_db)) -> ArticleOut:
-    """Fetch one article by its database id."""
+    """
+    Fetch a single article by its primary key.
+
+    Parameters
+    ----------
+    article_id : int
+        The article's database ID.
+    db : Session
+        Request-scoped SQLAlchemy session.
+
+    Returns
+    -------
+    ArticleOut
+        The article row serialized for API output.
+
+    Raises
+    ------
+    HTTPException
+        404 if the article does not exist.
+    """
     article = (
         db.get(Article, article_id)
         if hasattr(db, "get")
@@ -177,7 +240,26 @@ def get_article(article_id: int, db: Session = Depends(get_db)) -> ArticleOut:
 
 @router.delete("/{article_id}", summary="Delete an article by ID")
 def delete_article(article_id: int, db: Session = Depends(get_db)) -> dict:
-    """Delete one article by id."""
+    """
+    Delete a single article by its primary key.
+
+    Parameters
+    ----------
+    article_id : int
+        The article's database ID.
+    db : Session
+        Request-scoped SQLAlchemy session.
+
+    Returns
+    -------
+    dict
+        A confirmation payload containing the deleted ID.
+
+    Raises
+    ------
+    HTTPException
+        404 if the article does not exist.
+    """
     article = (
         db.get(Article, article_id)
         if hasattr(db, "get")

@@ -1,10 +1,21 @@
 from __future__ import annotations
+
+from dataclasses import dataclass
 from typing import List, Optional, Any
 from pydantic import BaseModel, HttpUrl
 from datetime import datetime
 
+@dataclass(frozen=True)
+class ArticleData:
+    source: str
+    url: str
+    title: str
+    date: Optional[str]
+    image_urls: List[str]
+    paragraphs: List[str]
 
 class ArticleBase(BaseModel):
+    id: int
     source: str
     url: HttpUrl
     title: str
@@ -19,7 +30,6 @@ class ArticleCreate(ArticleBase):
 
 
 class ArticleOut(ArticleBase):
-    id: int
 
     class Config:
         from_attributes = True
