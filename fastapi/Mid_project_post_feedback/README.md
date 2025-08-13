@@ -1,203 +1,169 @@
-# Universal News Scraper API
+# 📰 News Scraper
 
-A small, a FastAPI app that scrapes tech news articles from multiple sites using a **single, config‑driven scraper**. It stores results in a database and exposes clean REST endpoints to list, fetch, and delete articles.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()
+[![License](https://img.shields.io/badge/license-MIT-blue)]()
 
----
-
-## Features
-
-* **One scraper for many sites** via `SITE_CONFIGS` (CSS selectors per site)
+> **A unified scraping & API service** that aggregates tech news from multiple sites into one simple, mobile‑friendly feed.
 
 ---
 
-## Project structure
+## 📖 Table of Contents
+
+1. [🚀 Project Summary](#-project-summary)
+2. [🔧 Architecture & Data Flow](#-architecture--data-flow)
+3. [⚙️ Setup](#setup)
+4. [📡 Example API Calls](#-example-api-calls)
+5. [🤝 Contributing](#-contributing)
+6. [📄 License](#-license)
+
+---
+
+## 🚀 Project Summary
+
+This repo implements a **single, config‑driven scraper** and a **FastAPI** service.
+
+Supported sources (out of the box):
+
+* **TechCrunch** (`techcrunch.com`)
+* **TechNews BG** (`technews.bg`)
+* **WIRED** (`wired.com`)
+
+Each scrape cycle:
+
+1. **Fetches** listing pages and discovers article links.
+2. **Parses** title, URL, ISO publication date, images (header + body), and paragraphs.
+3. **Upserts** into a **single `articles` table** (index on `source` recommended).
+
+The API then exposes clean endpoints to scrape, list, fetch, and delete articles.
+
+---
+
+## 🔧 Architecture & Data Flow
+
+| Component       | Location / Modules                          | Responsibility                                                                                               |
+| --------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Scraper**     | `app/scrapers.py`                           | Config‑driven selectors per site (`SITE_CONFIGS`), pagination, parsing (title/date/images/paragraphs).       |
+| **Database**    | `database/models.py`, `database/session.py` | SQLAlchemy + Postgres (or SQLite). **Single** `articles` table; JSON arrays for `image_urls` & `paragraphs`. |
+| **API Service** | `app/main.py`, `app/routers/articles.py`    | REST endpoints: `/articles/sites`, `/articles/scrape`, `/articles`, `/articles/{id}` (GET/DELETE).           |
+
+**Flow**
+
+```
+Listing page → extract article links → download articles → parse fields → upsert rows → API returns JSON
+```
+
+**Conventions**
+
+* Empty lists return **200** with `[]` (not 404).
+* Only article‑scoped images (header + body), no site‑wide OG image fallbacks.
+* Pagination: page 1 uses `listing_url`; page ≥2 uses `listing_page_format`.
+
+---
+
+## ⚙️ Setup
+
+### Project structure
 
 ```
 app/
   ├─ routers/
   │   └─ articles.py            # FastAPI router (endpoints)
   ├─ scrapers.py                # Universal, config‑driven scraper
-  ├─ schemas.py                 # Response schemas
+  ├─ schemas.py                 # Pydantic schemas (ORM‑compatible)
   ├─ main.py                    # FastAPI app
 
 database/
-  ├─ session.py                 # SQLAlchemy SessionLocal + engine
+  ├─ session.py                 # SQLAlchemy engine + SessionLocal
   └─ models.py                  # Article model
-
-README.md                       # this file
 
 setup/
   ├─ docker-compose.yml         # Local dev stack (API + DB)
-  ├─ Dockerfile                 # Container image for the API
-  ├─ env.example                # Example environment variables
-  ├─ requirements.txt           # Python dependencies
-  └─ servers.json               # Server process config
+  ├─ Dockerfile                 # API image
+  ├─ env.example                # Sample env vars
+  ├─ requirements.txt           # Python deps
+  └─ servers.json               # Procfile‑style server config
 ```
 
----
-# Setup
-
-
-1. **Environment variables**
-   Copy the example env file and adjust values as needed (e.g., `DATABASE_URL`).
+### 1) Environment
 
 ```bash
-cp setup/env.example .env
+cd setup
+cp env.example .env
+# Edit if needed, e.g.
+# DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/news
 ```
 
-> Everything is set up in the default .env, you only need to uncomment DATABASE_URL
-
-2. **Build and start the stack**
-   (You have to be in the setup directory)
+### 2) Launch with Docker Compose
 
 ```bash
 docker compose up --build -d
 ```
 
-## The universal scraper (how it works)
+API: [http://localhost:8000](http://localhost:8000)  ·  Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-The scraper lives in `scraper.py`:
-
-* `SITE_CONFIGS`: a dict keyed by site (e.g., `"devbg"`, `"technewsbg"`, `"wired"`)
-
-**What it extracts**
-
-* `title`: via site `title_selector`, or `<h1>`, or fallback `og:title`
-* `date`: prefers `<time datetime>`, else parses text (supports BG month names & `dd.mm.yyyy`)
-* `image_urls`: only images **inside the article root** (header first, then body)
-* `paragraphs`: all non‑empty `<p>` texts inside the article root
-
-**Pagination**
-
-* Uses `listing_page_format`, default `"/page/{page}/"` → page 1 returns `listing_url` as‑is
 
 ---
 
-## Supported sites (out of the box)
+## 📡 Example API Calls
 
-* `devbg` – [https://dev.bg](https://dev.bg)
-* `technewsbg` – [https://technews.bg](https://technews.bg)
-* `wired` – [https://www.wired.com](https://www.wired.com)
-
-List them at runtime:
-
-```
-GET /articles/sites
-```
-
----
-
-## API
-
-### List supported sites
-
-```
-GET /articles/sites
-```
-
-Response: `["devbg", "technewsbg", "wired"]`
-
-### Scrape & store
-
-```
-POST /articles/scrape?site=devbg&page=1&pages=1
-```
-
-* `site` – one of `/articles/sites`
-* `page` – listing page to start from (default 1)
-* `pages` – how many pages to scrape starting at `page` (default 1)
-
-**Example (curl):**
+Site keys are discovered at runtime.
 
 ```bash
-curl -X POST "http://localhost:8000/articles/scrape?site=devbg&page=1&pages=1" \
+# Supported sites
+curl -s http://localhost:8000/articles/sites
+```
+
+```bash
+# Scrape page 1 from TechCrunch
+curl -X POST "http://localhost:8000/articles/scrape?site=techcrunch&page=1" \
      -H "accept: application/json"
 ```
 
-### List stored articles
-
-```
-GET /articles?source=devbg&limit=50
-```
-
-**Query params**
-
-* `source` (optional): filter by site key
-* `limit` (1–200): max rows to return (default 50)
-
-### Get article by ID
-
-```
-GET /articles/{article_id}
+```bash
+# Scrape multiple pages (first 3 pages of WIRED)
+curl -X POST "http://localhost:8000/articles/scrape?site=wired&page=1&pages=3"
 ```
 
-### Delete article by ID
-
+```bash
+# List stored (latest 20 from TechNews BG)
+curl -s "http://localhost:8000/articles?source=technewsbg&limit=20" | jq '.[0]'
 ```
-DELETE /articles/{article_id}
+
+```bash
+# Get one by ID
+curl -s http://localhost:8000/articles/123
 ```
 
-**Response model** (`ArticleOut`):
+```bash
+# Delete one by ID
+curl -X DELETE http://localhost:8000/articles/123
+```
+
+**Response model** (`ArticleOut`)
 
 ```json
 {
   "id": 1,
-  "source": "devbg",
-  "url": "https://dev.bg/...",
+  "source": "wired",
+  "url": "https://www.wired.com/story/...",
   "title": "...",
-  "image_urls": ["https://.../img.jpg"],
+  "image_urls": ["https://.../hero.jpg"],
   "paragraphs": ["para1", "para2"],
   "date": "2025-08-12",
   "created_at": "2025-08-12T09:30:00"
 }
 ```
+---
+
+
+## 🤝 Contributing
+
+1. Fork & branch
+2. Make your changes
+3. Open a PR with a clear description and screenshots (if UI‑relevant)
 
 ---
 
-## Adding a new site
+## 📄 License
 
-Open `scraper.py` and add a block in `SITE_CONFIGS`:
-
-```python
-SITE_CONFIGS["example"] = {
-    "base_url": "https://example.com",
-    "listing_url": "https://example.com/news/",
-    "listing_page_format": "/page/{page}/",     # or "?page={page}"
-
-    # Find article links on listing pages
-    "listing_link_selector": "article .title a[href]",
-    "listing_link_exclude_contains": ["/tag/", "/author/"],
-
-    # Where the article lives
-    "article_root_selectors": ["article", ".entry-content"],
-
-    # Title & date
-    "title_selector": "h1",
-    "date_selector": "span.post-date, time[datetime]",
-    "date_prefixes_to_strip": ["Published on", "г.", "Публикувано на"],
-    "months": {  # only if you need non‑English months
-        "януари":1, "февруари":2, "март":3, "април":4, "май":5, "юни":6,
-        "юли":7, "август":8, "септември":9, "октомври":10, "ноември":11, "декември":12
-    },
-
-    # Images (inside the article only)
-    "header_image_selectors": ["header img[src]"],
-    "body_image_selectors": [".content img[src]"],
-}
-```
-
-Tips:
-
-* Keep selectors **specific** to avoid sidebars/ads.
-* If dates come back `None`, confirm `date_selector` matches the actual element and (if needed) supply a `months` map.
-* If images are missing/too many, tweak `header_image_selectors` and `body_image_selectors`.
-
----
-
-## Implementation notes
-
-* **Dates**: the parser first tries `<time datetime>`. If missing, it parses text and supports BG month names and numeric `dd.mm.yyyy`.
-* **Pagination**: page 1 is the listing URL as‑is; page ≥2 uses `listing_page_format`.
-
-
-
+MIT. © Petar Gospodinov
